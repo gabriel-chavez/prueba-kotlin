@@ -1,0 +1,20 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="activar_gps"
+        android:summary="@string/pref_description_activar_gps"
+        android:title="@string/pref_tittulo_activar_gps" />
+
+    <EditTextPreference
+        android:defaultValue="5"
+        android:inputType="number|time"
+        android:key="tiempo_espera_gps"
+        android:maxLines="1"
+        android:digits="1234567890"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_titulo_tiempo_espera"
+        />
+
+</PreferenceScreen>

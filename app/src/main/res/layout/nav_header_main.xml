@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/espacio_form"
+    android:paddingTop="@dimen/espacio_form"
+    android:paddingRight="@dimen/espacio_form"
+    android:paddingBottom="@dimen/espacio_form"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    <!--android:layout_height="@dimen/nav_header_height"-->
+<!--
+
+    android:background="#fA5"-->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="21dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="Logo"
+        android:visibility="gone"
+        app:srcCompat="@drawable/logounivida" />
+    <fragment
+        android:id="@+id/fragmentDatosUsuario"
+        android:name="com.emizor.univida.fragmento.DatosUsuarioFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!--<TextView
+        android:id="@+id/tvNombreEmpresaV3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:text="[NOMBRE EMPRESA]"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/tvNombreSucursalV3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[NOMBRE SUCURSAL]" />-->
+
+</LinearLayout>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="@dimen/espacio_form"
+    tools:context=".fragmento.NuevaVentaFragment">
+
+    <LinearLayout
+        android:id="@+id/vistaBuscar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gestión: " />
+
+        <Spinner
+            android:id="@+id/spGestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        </Spinner>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Criterio de búsqueda: " />
+
+        <Spinner
+            android:id="@+id/spTipoPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+        </Spinner>
+        <TextView
+            android:id="@+id/txtNumeroPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Número de []: " />
+
+
+        <EditText
+            android:id="@+id/etPlacaBuscar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese un número de (Criterio de Búsqueda)"
+            android:inputType="text|textCapCharacters"
+            />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/bsbAceptarBuscarPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="3dp"
+            app:bootstrapBrand="success"
+            app:bootstrapSize="lg"
+            app:bootstrapText="{fa_search} BUSCAR (Criterio de Búsqueda)"
+            app:roundedCorners="true" />
+    </LinearLayout>
+
+
+
+    <!--<Button
+        android:id="@+id/btnBuscarPlaca"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buscar placa" />-->
+
+    <LinearLayout
+        android:id="@+id/vistaObtenerPrima"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/tvGestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="GESTIÓN : 2018 "
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/tvPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PLACA: 1234POT"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipo de uso: "
+            />
+        <Spinner
+            android:id="@+id/spTipoUso"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </Spinner>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipo de vehiculo: "
+            />
+        <Spinner
+            android:id="@+id/spTipoVehiculo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </Spinner>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Plaza de circulación: "
+            />
+        <Spinner
+            android:id="@+id/spPlazaCirculacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </Spinner>
+
+        <!--<Button
+            android:id="@+id/btnCalcularPrima"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calcular PRIMA" />-->
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/bsbAceptarCalcularPrima"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="3dp"
+            app:bootstrapBrand="success"
+            app:bootstrapSize="lg"
+            app:bootstrapText="CALCULAR PRIMA"
+            app:roundedCorners="true" />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/bsbCancelarCalcularPrima"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="3dp"
+            app:bootstrapBrand="danger"
+            app:bootstrapSize="lg"
+            app:bootstrapText="CANCELAR"
+            app:roundedCorners="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

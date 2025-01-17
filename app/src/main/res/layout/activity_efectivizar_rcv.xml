@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.EfectivizarRcvActivity">
+    <LinearLayout
+        android:id="@+id/vista_progress_efectivizar_rcv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="..." />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/vista_full_efectivizar_rcv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_efectivizar_rcv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:elevation="6dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <fragment
+                    android:id="@+id/fragmentDatosUsuario"
+                    android:name="com.emizor.univida.fragmento.DatosUsuarioFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    >
+
+                    <TextView
+                        android:id="@+id/tvMontoEfectivizarRcv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Bs 120"
+                        android:textSize="25sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvCantidadesEfectivizarRcv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cantidad A, Cantidad B, Cantidad C, Cantidad D"
+                        android:textSize="20sp"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pagos:"
+                        />
+
+                    <HorizontalScrollView
+                        android:id="@+id/horizontalScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            >
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:visibility="visible">
+
+                                <TextView
+                                    android:layout_width="@dimen/dimen_ancho_item_venta"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/contorno_datos_sincorte_head"
+                                    android:gravity="center_vertical|center_horizontal"
+                                    android:maxLines="1"
+                                    android:text="NÚMERO"
+                                    android:textColor="@color/blanco"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="@dimen/dimen_ancho_item_venta"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/contorno_datos_sincorte_head"
+                                    android:gravity="center_vertical|center_horizontal"
+                                    android:text="MEDIO PAGO"
+                                    android:textColor="@color/blanco"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="@dimen/dimen_ancho_item_venta"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/contorno_datos_sincorte_head"
+                                    android:gravity="center_vertical|center_horizontal"
+                                    android:text="MONTO PRIMA"
+                                    android:textColor="@color/blanco"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+                                <TextView
+                                    android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/contorno_datos_sincorte_head"
+                                    android:gravity="center_vertical|center_horizontal"
+                                    android:maxLines="1"
+                                    android:text="BANCO"
+                                    android:textColor="@color/blanco"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:visibility="visible" />
+                                <TextView
+                                    android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/contorno_datos_sincorte_head"
+                                    android:gravity="center_vertical|center_horizontal"
+                                    android:maxLines="1"
+                                    android:text="REFERENCIA"
+                                    android:textColor="@color/blanco"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:visibility="visible" />
+
+                                <TextView
+                                    android:layout_width="@dimen/dimen_ancho_item_venta"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/contorno_datos_sincorte_head"
+                                    android:gravity="center_vertical|center_horizontal"
+                                    android:maxLines="1"
+                                    android:text="FECHA"
+                                    android:textColor="@color/blanco"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:visibility="visible" />
+
+                            </LinearLayout>
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/rvListaPagosRcv"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scrollbars="vertical"
+                                />
+
+                        </LinearLayout>
+
+                    </HorizontalScrollView>
+
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="right"
+                        >
+
+                        <com.beardedhen.androidbootstrap.BootstrapButton
+                            android:id="@+id/btnAgregarPago"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            app:bootstrapBrand="primary"
+                            app:bootstrapSize="lg"
+                            app:buttonMode="regular"
+                            app:showOutline="false"
+                            app:roundedCorners="true"
+                            app:bootstrapText="ADICIONAR PAGO"
+                            android:onClick="adicionarMedioPago"
+                            />
+
+                    </LinearLayout>
+
+                    <com.beardedhen.androidbootstrap.BootstrapButton
+                        android:id="@+id/btnEfectivizarRcv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:bootstrapBrand="success"
+                        app:bootstrapSize="lg"
+                        app:buttonMode="regular"
+                        app:showOutline="false"
+                        app:roundedCorners="true"
+                        app:bootstrapText="EFECTIVIZAR RCV"
+                        android:onClick="efectivizarRcv"
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

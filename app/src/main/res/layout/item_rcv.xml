@@ -1,0 +1,126 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:visibility="visible"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:elevation="2dp"
+        >
+        <TextView
+            android:id="@+id/tvFechaRcvItem"
+            android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="FECHA RCV"
+            android:textColor="@color/colorTexto"
+            android:textSize="18sp"
+            android:background="@drawable/contorno_datos_sincorte"
+             />
+
+        <TextView
+            android:id="@+id/tvImporteRcvItem"
+            android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|right"
+            android:text="IMPORTE RCV"
+            android:textColor="@color/colorTexto"
+            android:textSize="18sp"
+            android:paddingRight="5dp"
+            android:background="@drawable/contorno_datos_sincorte"
+            />
+
+        <TextView
+            android:id="@+id/tvEstadoRemitidoRcvItem"
+            android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/colorTexto"
+            android:textSize="18sp"
+            android:paddingRight="5dp"
+            android:visibility="visible"
+            android:background="@drawable/contorno_datos_sincorte"
+            />
+
+        <TextView
+            android:id="@+id/tvCantidadTotalRcvItem"
+            android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="CANT TOTAL"
+            android:textColor="@color/colorTexto"
+            android:textSize="18sp"
+            android:visibility="visible"
+            android:background="@drawable/contorno_datos_sincorte"
+            />
+
+        <TextView
+            android:id="@+id/tvCantidadValidosRcvItem"
+            android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="CANT VALIDOS"
+            android:textColor="@color/colorTexto"
+            android:textSize="18sp"
+            android:visibility="visible"
+            android:background="@drawable/contorno_datos_sincorte"
+            />
+
+        <TextView
+            android:id="@+id/tvCantidadAnuladosRcvItem"
+            android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="CANT ANULADOS"
+            android:textColor="@color/colorTexto"
+            android:textSize="18sp"
+            android:visibility="visible"
+            android:background="@drawable/contorno_datos_sincorte"
+            />
+
+        <TextView
+            android:id="@+id/tvCantidadRevertidosRcvItem"
+            android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="CANT REVERTIDOS"
+            android:textColor="@color/colorTexto"
+            android:textSize="18sp"
+            android:visibility="visible"
+            android:background="@drawable/contorno_datos_sincorte"
+            />
+
+        <TextView
+            android:id="@+id/tvEstadoRcvItem"
+            android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="ESTADO"
+            android:textColor="@color/colorTexto"
+            android:textSize="18sp"
+            android:paddingEnd="5dp"
+            android:visibility="visible"
+            android:background="@drawable/contorno_datos_sincorte"
+            />
+
+
+    </LinearLayout>
+
+</LinearLayout>

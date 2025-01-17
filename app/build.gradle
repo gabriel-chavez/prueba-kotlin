@@ -1,0 +1,74 @@
+apply plugin: 'com.android.application'
+
+android {
+    def _versionCode = 603
+    def _major = 1
+    def _minor = 5
+    def _patch = "87"
+
+    def _versionName = "${_major}.${_minor}.${_patch}"
+
+    signingConfigs {
+        config {
+            keyAlias 'unipax'
+            keyPassword 'MRc(Y/Jfn8C*X@3n'
+            storeFile file('D:/Fuentes/vulcan/Aplicacion Android/unividapax.jks')
+            storePassword 'G/BP/wmBgUz9X+Y?'
+        }
+    }
+    compileSdkVersion 28
+
+    defaultConfig {
+        applicationId "com.emizor.univida"
+        minSdkVersion 17
+        targetSdkVersion 28
+        versionCode _versionCode
+        versionName _versionName
+        multiDexEnabled true //importantmultiDexEnabled true //important
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+//    implementation 'com.android.support:support-vector-drawable:28.0.0'
+    testImplementation 'junit:junit:4.12'
+    implementation files('libs/core.jar')
+    implementation project(':AndroidBootstrap')
+    implementation project(':bottomsheetbuilder')
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation files('libs/commons-codec-1.11.jar')
+    implementation files('libs/PaxNeptuneLiteApi_V2.00.04_20170815.jar')
+    implementation 'org.apache.commons:commons-lang3:3.7'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.10.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:multidex:1.0.3'
+
+    implementation 'com.yandex.android:mobmetricalib:3.16.2'
+
+}

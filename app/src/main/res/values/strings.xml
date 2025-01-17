@@ -1,0 +1,137 @@
+<resources>
+    <string name="app_name">UNIVIDA</string>
+    <string name="title_activity_login">Iniciar Session</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_usuario">Usuario</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="prompt_dominio">Dominio</string>
+    <string name="accion_dominio">Dominio</string>
+    <string name="accion_loguear">Ingresar</string>
+    <string name="accion_loguear_peq">Ingresar</string>
+    <!--<string name="error_invalid_email">This email address is invalid</string>-->
+    <string name="error_invalid_password">La Contraseña es muy corta</string>
+    <string name="error_incorrect_password">La contraseña es incorrecta</string>
+    <string name="error_field_required">Campo requerido</string>
+    <string name="permission_rationale">"Se necesitan permisos de contactos para proporcionar terminaciones de correo electrónico."
+    </string>
+    <string name="texto_crear_cuenta">Crear cuenta</string>
+    <string name="texto_ingresar">Ingresar</string>
+    <string name="texto_inicio">Inicio</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="str_precio">Bs 12345678923.00</string>
+    <!-- toolbar strings-->
+    <string name="drawer_abrir">Cerrar</string>
+    <string name="drawer_cerrar">Abrir</string>
+
+    <string name="texto_vacio"> </string>
+    <string name="texto_nombre">Carlos</string>
+    <string name="texto_apellido">Perez</string>
+    <string name="prompt_nit">NIT</string>
+    <string name="prompt_razonsocial">Razón social</string>
+    <string name="prompt_nombre_cliente">Nombre</string>
+    <string name="prompt_monto_total">Total a pagar</string>
+
+    <!-- Mensajes de dialogos-->
+    <string name="dialog_text_cliente_factura">Cliente seleccionado!. Guardar factura?</string>
+    <string name="dialog_btntext_aceptar">Aceptar</string>
+    <string name="dialog_btntext_cancelar">Cancelar</string>
+    <string name="dialog_btntext_aceptar_producto">Aceptar</string>
+    <string name="dialog_btntext_cancelar_producto">Cancelar</string>
+
+    <!-- Pantalla de Buscar Cliente-->
+    <string name="texto_nitcli_errorvacio">Campo "Nit" necesario.</string>
+    <string name="texto_nitcli_errortamanio">Campo "Nit" debe tener entre 5 y 18 números.</string>
+    <string name="texto_nitcli_errorletras">Campo "Nit" solo números.</string>
+    <string name="texto_razonsocialcli_errorvacio">Campo "Razón social" necesario.</string>
+    <string name="texto_razonsocialcli_errortamanio">Campo "Razón social" debe tener entre 3 y 250 caracteres.</string>
+    <string name="texto_nombrecli_errorvacio">Campo "Nombre" necesario.</string>
+    <string name="texto_nombrecli_errortamanio">Campo "Nombre" debe tener entre 3 y 30 caracteres.</string>
+
+    <string name="texto_nombrecli_localrepetido">Ya existe un local con ese nombre.</string>
+
+    <!-- Pantalla de Recibir Pago -->
+    <string name="texto_montototal_errornumero">El monto debe contener solo números </string>
+    <string name="texto_montototal_errormontomenor">El monto es menor al total.</string>
+    <string name="subraydao"><u>6638075</u></string>
+    <string name="error_clientenit_vacio">El campo \"Nit\" es necesario.</string>
+    <string name="erro_clientenit_incorrecto">El campo \"NIT\" debe ser solo números.</string>
+    <string name="erro_clientenit_tamanio">El campo \"NIT\" debe tener entre 5 y 18 números.</string>
+    <string name="error_clienterazonsocial_vacio">El campo \"Razón social\" es necesario.</string>
+    <string name="erro_clienterazonsocial_incorrecto">El campo \"Razón social\" debe contener solo letras alfanumericas.</string>
+    <string name="erro_clienterazonsocial_tamanio">El campo \"Razón social\" debe tener un tamaño entre 3 y 60 caracteres.</string>
+
+    <string name="title_err_code">Error Code</string>
+    <string name="title_err_method">Metodo</string>
+    <string name="title_msg_result">Resultado</string>
+    <string name="title_msg_description">Descripción</string>
+    <string name="title_target">Dispositivo</string>
+
+    <string name="handlingmsg_warn_receipt_near_end">Roll paper is nearly end.\n</string>
+    <string name="handlingmsg_warn_battery_near_end">Battery level of printer is low.\n</string>
+    <string name="handlingmsg_err_no_response">Please check the connection of the printer and the mobile terminal.\nConnection get lost.\n</string>
+    <string name="handlingmsg_err_cover_open">Please close roll paper cover.\n</string>
+    <string name="handlingmsg_err_receipt_end">Please check roll paper.\n</string>
+    <string name="handlingmsg_err_paper_feed">Please release a paper feed switch.\n</string>
+    <string name="handlingmsg_err_autocutter">Please remove jammed paper and close roll paper cover.\nRemove any jammed paper or foreign substances in the printer, and then turn the printer off and turn the printer on again.\n</string>
+    <string name="handlingmsg_err_need_recover">Then, If the printer doesn\'t recover from error, please cycle the power switch.\n</string>
+    <string name="handlingmsg_err_unrecover">Please cycle the power switch of the printer.\nIf same errors occurred even power cycled, the printer may out of order.</string>
+    <string name="handlingmsg_err_overheat">Please wait until error LED of the printer turns off. \n</string>
+    <string name="handlingmsg_err_head">Print head of printer is hot.\n</string>
+    <string name="handlingmsg_err_motor">Motor Driver IC of printer is hot.\n</string>
+    <string name="handlingmsg_err_battery">Battery of printer is hot.\n</string>
+    <string name="handlingmsg_err_wrong_paper">Please set correct roll paper.\n</string>
+    <string name="handlingmsg_err_battery_real_end">Please connect AC adapter or change the battery.\nBattery of printer is almost empty.\n</string>
+    <string name="handlingmsg_err_offline">Printer is offline.\n</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_factura_fragment">Hello blank List Invoice</string>
+    <string name="item_factura">Documentos</string>
+    <string name="item_cliente">Clientes</string>
+    <string name="Item_producto">Items</string>
+    <string name="item_otros">Otros</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="texto_cerrar_sesion">¿Confirma cerrar la sesión?</string>
+
+    <!--mensajes-->
+
+    <string name="mensaje_error_timeout">Error por tiempo de espera en la aplicacion. Posibles causas: El internet esta lento, debido a la baja señal, El servidor tarda mucho en responder.</string>
+    <string name="mensaje_error_volley">Error al intentar comunicarse con el servidor. Comuniquese con el Administrador. Error: </string>
+    <string name="mensaje_error_volley_default">Error en la conexion. Comuniquese con el Administrador.</string>
+    <string name="title_activity_configuracion_app">Configuracion</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_tittulo_activar_gps">Activar GPS</string>
+    <string name="pref_description_activar_gps">
+        Si activa la opcion, se procedera a capturar la posicion geografica.
+    </string>
+
+    <string name="pref_titulo_tiempo_espera">Espera de GPS(segundos)</string>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <!--instruction-->
+    <string name="toast_1">Transacción de impresión, use el modo AIDL!</string>
+    <string name="toast_2">¡El servicio ha sido desconectado!</string>
+    <string name="toast_3">El dispositivo Bluetooth no está disponible</string>
+    <string name="toast_4">Dispositivo Bluetooth no detectado. ¡Por favor abra Bluetooth!</string>
+    <string name="toast_5">No encontrado InnterPrinter!</string>
+    <string name="toast_6">¡Conexión Bluetooth fallida!</string>
+    <string name="toast_7">Solo se imprime un único código Qr para el modo AIDL</string>
+    <string name="toast_8">¡Ahora el tamaño de QrCode debe ser inferior a 7!</string>
+    <string name="toast_9">¡Tipo de código de barras o error de conexión!</string>
+
+</resources>

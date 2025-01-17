@@ -1,0 +1,1 @@
+{"versionCode":603,"versionName":"1.5.87","downloadURL":"https://s3.amazonaws.com/elasticbeanstalk-us-east-1-860067475977/cdn/apk/unividapaxa920/UNIVIDAV1.5.87.apk"}

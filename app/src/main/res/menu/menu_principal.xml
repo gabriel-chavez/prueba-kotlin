@@ -1,0 +1,36 @@
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    >
+
+    <item
+        android:id="@+id/action_internet"
+        android:title="Verificar Internet"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_configuracion"
+        android:title="Configuración"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_obtener_parametricas"
+        android:title="Actualizar paramétricas"
+        app:showAsAction="never" />
+
+    <!--<item
+        android:id="@+id/action_actualizar"
+        android:title="Actualizar Aplicación"
+        app:showAsAction="never" />-->
+
+    <item
+        android:id="@+id/action_cambiar_clave"
+        android:title="Cambiar contraseña"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_salir"
+        android:title="Cerrar sesión"
+        app:showAsAction="never" />
+
+</menu>

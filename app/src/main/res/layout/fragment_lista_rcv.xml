@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragmento.ListaRcvFragment">
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/contorno_datos_sincorte_head"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:maxLines="1"
+                    android:text="FECHA"
+                    android:textColor="@color/blanco"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/contorno_datos_sincorte_head"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="IMPORTE"
+                    android:textColor="@color/blanco"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/contorno_datos_sincorte_head"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="REMITIDO"
+                    android:textColor="@color/blanco"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/contorno_datos_sincorte_head"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:maxLines="1"
+                    android:text="CANT. TOTAL"
+                    android:textColor="@color/blanco"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/contorno_datos_sincorte_head"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:maxLines="1"
+                    android:text="CANT. VALIDOS"
+                    android:textColor="@color/blanco"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/contorno_datos_sincorte_head"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:maxLines="1"
+                    android:text="CANT. ANULADOS"
+                    android:textColor="@color/blanco"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/contorno_datos_sincorte_head"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:maxLines="1"
+                    android:text="CANT. REVERTIDOS"
+                    android:textColor="@color/blanco"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/contorno_datos_sincorte_head"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:maxLines="1"
+                    android:text="ESTADO"
+                    android:textColor="@color/blanco"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvListaRcv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical" />
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+</android.support.constraint.ConstraintLayout>

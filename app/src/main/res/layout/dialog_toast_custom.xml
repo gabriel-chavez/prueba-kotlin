@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.beardedhen.androidbootstrap.BootstrapLabel
+        android:id="@+id/bslMensajeToast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="{fa_info_circle} Esto es una prueba"
+        app:bootstrapBrand="danger"
+        app:bootstrapHeading="h5"
+        app:fontAwesomeIcon="fa_adn"
+        app:materialIcon="md_ac_unit"
+        app:roundedCorners="false"
+        app:typicon="ty_arrow_minimise" />
+
+</LinearLayout>

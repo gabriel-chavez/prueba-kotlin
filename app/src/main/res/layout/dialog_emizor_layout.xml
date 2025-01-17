@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    android:scrollbars="vertical"
+    android:padding="5dp">
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/imageView3"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        app:srcCompat="@drawable/icon_login"
+        />
+
+    <com.beardedhen.androidbootstrap.BootstrapLabel
+        android:id="@+id/bslTituloDialogo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        app:bootstrapBrand="info"
+        app:bootstrapText="MENSAJE"
+        app:bootstrapHeading="h4"
+        android:layout_marginBottom="5dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorTexto"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        />
+
+    <LinearLayout
+        android:id="@+id/vistaCerrarSesion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@string/texto_cerrar_sesion"
+            android:textColor="@color/colorTexto"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/vistaMensaje"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <com.beardedhen.androidbootstrap.BootstrapWell
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvMensajeDialogo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorTexto"
+                android:textSize="18sp" />
+
+        </com.beardedhen.androidbootstrap.BootstrapWell>
+        <com.beardedhen.androidbootstrap.BootstrapWell
+            android:id="@+id/vistaMotivo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            >
+                <EditText
+                    android:id="@+id/etMotivo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text|textCapSentences|textMultiLine"
+                    android:imeOptions="actionDone"
+                    >
+
+                </EditText>
+
+        </com.beardedhen.androidbootstrap.BootstrapWell>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorTexto"
+        android:orientation="horizontal" />
+
+    <LinearLayout
+        android:id="@+id/vistaBotonDialogo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/bsbAceptarDialogo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="3dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal|center_vertical"
+            app:bootstrapText="{fa_check} ACEPTAR"
+            app:bootstrapBrand="success"
+            app:bootstrapSize="lg"
+            app:roundedCorners="true" />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/bsbCancelarDialogo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal|center_vertical"
+            app:bootstrapBrand="danger"
+            app:bootstrapSize="lg"
+            app:bootstrapText="{fa_close} CANCELAR"
+            app:roundedCorners="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.AMMedioPagoRCVActivity">
+    <LinearLayout
+        android:id="@+id/vista_progress_efectivizar_rcv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="..." />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/vista_full_efectivizar_rcv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_addmediopago"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:elevation="6dp"
+            app:title="PAGO RCV"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <fragment
+            android:name="com.emizor.univida.fragmento.DatosUsuarioFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/tvMontoRestantePrimaRcv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Prima Restante(Bs): 456"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Medio de Pago: " />
+
+                <Spinner
+                    android:id="@+id/spMedioPago"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                </Spinner>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Importe de Recaudo(Bs):"
+                    />
+
+                <EditText
+                    android:id="@+id/etMontoPagoRcv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Importe de Recaudo(Bs)"
+                    android:inputType="number"
+                    android:selectAllOnFocus="true"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/vistaBancoRcv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Banco: " />
+
+                    <Spinner
+                        android:id="@+id/spBancos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+                    </Spinner>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/vistaDatoPagoRcv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+                    <TextView
+                        android:id="@+id/tvDatoTituloPagoRcv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="[titulo pago dato]"
+                        />
+
+                    <EditText
+                        android:id="@+id/etReferenciaEfectivizarRcv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="[titulo dato pago]"
+                        android:inputType="text|textCapSentences"
+                        android:selectAllOnFocus="true"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/vistaFechaPagoRcv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Fecha Pago: "
+                        android:textColor="@color/colorTexto" />
+
+                    <Button
+                        android:id="@+id/btnFechaPagoEfectivizarRcv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="12/04/2018"
+                        android:layout_weight="1"
+                        />
+
+                </LinearLayout>
+
+
+
+                <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/btnAmMedioPagoNuevo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:bootstrapBrand="success"
+                    app:bootstrapSize="lg"
+                    app:buttonMode="regular"
+                    app:showOutline="false"
+                    app:roundedCorners="true"
+                    app:bootstrapText="ACEPTAR"
+                    android:onClick="validarMedioPagoNuevo"
+                    />
+
+            </LinearLayout>
+        </ScrollView>
+
+
+    </LinearLayout>
+</LinearLayout>

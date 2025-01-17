@@ -1,0 +1,10 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="line_width">1dp</dimen>
+    <dimen name="texto_titulo_size_form">17sp</dimen>
+    <dimen name="espacio_form">5dp</dimen>
+    <dimen name="dimen_ancho_item_venta">170dp</dimen>
+    <dimen name="dimen_ancho_item_venta_autorizacion">190dp</dimen>
+</resources>

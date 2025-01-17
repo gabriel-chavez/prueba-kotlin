@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3f51b5</color>
+    <color name="colorPrimaryDark">#303f9f</color>
+    <color name="colorAccent">#616161</color>
+    <color name="colorTexto">#333333</color>
+    <color name="colorFondoHeader">#029ede</color>
+    <color name="colorNavegacionVista">#877d7d</color>
+    <color name="blanco">#ffffff</color>
+    <color name="negro">#000000</color>
+    <color name="grey_shadow">#E5E3DA</color>
+    <color name="colorRojo">#fd6969</color>
+    <color name="colorVerde">#428bca</color>
+    <color name="custom_default_fill">#26bfac</color>
+    <color name="custom_default_edge">#119999</color>
+    <color name="custom_active_fill">#119999</color>
+    <color name="custom_active_edge">#008888</color>
+    <color name="custom_disabled_fill">#8833bbaa</color>
+    <color name="custom_disabled_edge">#bb33bbaa</color>
+</resources>

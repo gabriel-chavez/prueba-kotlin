@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="VENTAS">
+        <menu>
+            <item
+                android:id="@+id/menu_venta_nueva"
+                android:icon="@drawable/ic_action_factura"
+                android:title="Nueva venta"
+                android:enabled="true"
+                />
+            <item
+                android:id="@+id/menu_venta_lista"
+                android:icon="@drawable/ic_action_items2"
+                android:title="Ventas realizadas"
+                android:enabled="true"
+                />
+        </menu>
+    </item>
+
+    <item android:title="REPORTE DE CIERRE DE VENTAS">
+        <menu>
+            <item
+                android:id="@+id/menu_rcv_nuevo"
+                android:enabled="true"
+                android:icon="@drawable/ic_action_cliente"
+                android:title="RCV Nuevo" />
+            <item
+                android:id="@+id/menu_rcv_realizadas"
+                android:icon="@drawable/ic_action_otros"
+                android:title="RCV Realizadas"
+                android:enabled="true"
+                />
+        </menu>
+    </item>
+
+
+</menu>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="str_precio">Cobrar Bs 12345678923.00</string>
+    <string name="texto_nombre">Carlos</string>
+    <string name="texto_apellido">Perez</string>
+</resources>
