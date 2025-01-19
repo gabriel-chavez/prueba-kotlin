@@ -29,22 +29,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             app:bootstrapBrand="success"
             app:bootstrapSize="lg"
-            app:buttonMode="regular"
-            app:showOutline="false"
-            app:roundedCorners="true"
             app:bootstrapText="CANCELAR"
-            android:visibility="gone"
-            />
+            app:buttonMode="regular"
+            app:roundedCorners="true"
+            app:showOutline="false" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/vista_full_efectivizar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_efectivizar"
             android:layout_width="match_parent"
@@ -53,6 +52,7 @@
             android:elevation="6dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -66,39 +66,36 @@
                     android:id="@+id/fragmentDatosUsuario"
                     android:name="com.emizor.univida.fragmento.DatosUsuarioFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:id="@+id/tvMontoPrimaEfectivizar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="PRIMA Bs 120"
-                    android:textSize="25sp"
-                    />
+                    android:textSize="25sp" />
 
                 <LinearLayout
                     android:id="@+id/vistaForm1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:gravity="center_horizontal"
-                    android:visibility="gone"
-                    >
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Roseta"
-                        >
+                        android:hint="Roseta">
 
                         <EditText
                             android:id="@+id/etRosetaEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number"
                             android:digits="1234567890"
-                            android:selectAllOnFocus="true"
                             android:imeOptions="actionDone"
-                            />
+                            android:inputType="number"
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -110,53 +107,48 @@
                     <Spinner
                         android:id="@+id/spTipoDocumentoIdentidad"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                        android:layout_height="wrap_content">
 
                     </Spinner>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
+                        android:orientation="horizontal">
 
                         <android.support.design.widget.TextInputLayout
                             android:id="@+id/tilNitEfectivisar"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:hint="CI/NIT"
                             android:layout_weight="1"
-                            >
+                            android:hint="CI/NIT">
 
                             <EditText
                                 android:id="@+id/etNitEfectivizar"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="number"
                                 android:digits="1234567890"
-                                android:text="0"
-                                android:selectAllOnFocus="true"
                                 android:imeOptions="actionDone"
-                                />
+                                android:inputType="number"
+                                android:selectAllOnFocus="true"
+                                android:text="0" />
 
                         </android.support.design.widget.TextInputLayout>
 
                         <android.support.design.widget.TextInputLayout
+                            android:id="@+id/tiComplementoLayout"
                             android:layout_width="150dp"
                             android:layout_height="wrap_content"
-                            android:hint="Complemento"
-                            android:id="@+id/tiComplementoLayout"
-                            >
+                            android:hint="Complemento">
 
                             <EditText
                                 android:id="@+id/etComplementoEfectivizar"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="text"
-                                android:text=""
-                                android:selectAllOnFocus="true"
                                 android:imeOptions="actionDone"
-                                />
+                                android:inputType="text"
+                                android:selectAllOnFocus="true"
+                                android:text="" />
 
                         </android.support.design.widget.TextInputLayout>
 
@@ -165,18 +157,16 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Razón social"
-                        >
+                        android:hint="Razón social">
 
                         <EditText
                             android:id="@+id/etRazonSocialEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="text|textCapSentences"
-                            android:text="Sin nombre"
-                            android:selectAllOnFocus="true"
                             android:imeOptions="actionDone"
-                            />
+                            android:inputType="text|textCapSentences"
+                            android:selectAllOnFocus="true"
+                            android:text="Sin nombre" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -184,16 +174,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Correo electrónico"
-                        android:visibility="visible"
-                        >
+                        android:visibility="visible">
 
                         <EditText
                             android:id="@+id/etCorreoClienteEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textEmailAddress"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -201,19 +189,55 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Número de Celular"
-                        android:visibility="visible"
-                        >
+                        android:visibility="visible">
 
                         <EditText
                             android:id="@+id/etTelefonoClienteEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number"
                             android:digits="1234567890"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:inputType="number"
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <ToggleButton
+                            android:id="@+id/btnPagoQR"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_background"
+                            android:textColor="@color/toggle_button_text_color"
+                            android:drawableTop="@drawable/ic_qr_code"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:textOff="PAGO CON QR"
+                            android:textOn="PAGO CON QR" />
+
+                        <ToggleButton
+                            android:id="@+id/btnPagoEfectivo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_background"
+                            android:textColor="@color/toggle_button_text_color"
+                            android:drawableTop="@drawable/ic_cash"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:textOff="PAGO EN EFECTIVO"
+                            android:textOn="PAGO EN EFECTIVO" />
+                    </LinearLayout>
 
 
                     <com.beardedhen.androidbootstrap.BootstrapButton
@@ -223,11 +247,10 @@
                         android:layout_marginTop="10dp"
                         app:bootstrapBrand="success"
                         app:bootstrapSize="lg"
-                        app:buttonMode="regular"
-                        app:showOutline="false"
-                        app:roundedCorners="true"
                         app:bootstrapText="EFECTIVIZAR"
-                        />
+                        app:buttonMode="regular"
+                        app:roundedCorners="true"
+                        app:showOutline="false" />
 
                 </LinearLayout>
                 <!-- FORMULARIO DEL VEHICULO -->
@@ -235,136 +258,120 @@
                     android:id="@+id/vistaForm2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:gravity="center_horizontal"
-                    android:visibility="visible"
-                    >
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Año"
-                        >
+                        android:hint="Año">
 
                         <EditText
                             android:id="@+id/etVehiculoAnioEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number"
                             android:digits="1234567890"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:inputType="number"
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Marca"
-                        >
+                        android:hint="Marca">
 
                         <EditText
                             android:id="@+id/etVehiculoMarcaEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text|textCapWords"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Modelo"
-                        >
+                        android:hint="Modelo">
 
                         <EditText
                             android:id="@+id/etVehiculoModeloEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text|textCapWords"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Color"
-                        >
+                        android:hint="Color">
 
                         <EditText
                             android:id="@+id/etVehiculoColorEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text|textCapWords"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Cilindrada"
-                        >
+                        android:hint="Cilindrada">
 
                         <EditText
                             android:id="@+id/etVehiculoCilindradaEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Número de Motor"
-                        >
+                        android:hint="Número de Motor">
 
                         <EditText
                             android:id="@+id/etVehiculoNroMotorEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Capacidad de Carga"
-                        >
+                        android:hint="Capacidad de Carga">
 
                         <EditText
                             android:id="@+id/etVehiculoCapacidadCargaEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Número de Chasis"
-                        >
+                        android:hint="Número de Chasis">
 
                         <EditText
                             android:id="@+id/etVehiculoNroChasisEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -375,11 +382,10 @@
                         android:layout_marginTop="10dp"
                         app:bootstrapBrand="primary"
                         app:bootstrapSize="lg"
-                        app:buttonMode="regular"
-                        app:showOutline="false"
-                        app:roundedCorners="true"
                         app:bootstrapText="SIGUIENTE"
-                        />
+                        app:buttonMode="regular"
+                        app:roundedCorners="true"
+                        app:showOutline="false" />
 
                 </LinearLayout>
                 <!-- FORMULARIO DEL PROPIETARIO -->
@@ -387,107 +393,95 @@
                     android:id="@+id/vistaForm3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:gravity="center_horizontal"
-                    android:visibility="gone"
-                    >
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Tomador"
-                        >
+                        android:hint="Tomador">
 
                         <EditText
                             android:id="@+id/etPropTomadorEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Número de documento de identidad"
-                        >
+                        android:hint="Número de documento de identidad">
 
                         <EditText
                             android:id="@+id/etPropCiEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="NIT"
-                        >
+                        android:hint="NIT">
 
                         <EditText
                             android:id="@+id/etPropNitEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="text|textCapSentences"
-                            android:selectAllOnFocus="true"
                             android:imeOptions="actionNext"
-                            />
+                            android:inputType="text|textCapSentences"
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Dirección"
-                        >
+                        android:hint="Dirección">
 
                         <EditText
                             android:id="@+id/etPropDireccionEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text|textCapWords"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Teléfono"
-                        >
+                        android:hint="Teléfono">
 
                         <EditText
                             android:id="@+id/etPropTelefonoEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number"
                             android:digits="1234567890"
-                            android:selectAllOnFocus="true"
-                            />
+                            android:inputType="number"
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Celular"
-                        >
+                        android:hint="Celular">
 
                         <EditText
                             android:id="@+id/etPropCelularEfectivizar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number"
                             android:digits="1234567890"
-                            android:selectAllOnFocus="true"
                             android:imeOptions="actionDone"
-                            />
+                            android:inputType="number"
+                            android:selectAllOnFocus="true" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -498,11 +492,10 @@
                         android:layout_marginTop="10dp"
                         app:bootstrapBrand="primary"
                         app:bootstrapSize="lg"
-                        app:buttonMode="regular"
-                        app:showOutline="false"
-                        app:roundedCorners="true"
                         app:bootstrapText="SIGUIENTE"
-                        />
+                        app:buttonMode="regular"
+                        app:roundedCorners="true"
+                        app:showOutline="false" />
 
                 </LinearLayout>
 

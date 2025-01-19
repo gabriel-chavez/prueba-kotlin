@@ -76,6 +76,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.widget.ToggleButton;
+
+
 public class EfectivizarVentaActivity extends RootActivity implements DialogoEmizor.NotificaDialogEmizorListener, ImprimirAvisoListener {
 
     private final String TAG = "EFECTIVIZARVENTA";
@@ -109,12 +112,29 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
 
     private Spinner spTipoDocumentoIdentidad;
     private TipoDocumentoIdentidad tipoDocumentoIdentidad;
-    private TextInputLayout tilNitEfectivisar,tiComplementoLayout;
+    private TextInputLayout tilNitEfectivisar, tiComplementoLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_efectivizar_venta);
+        // Referencias a los botones QR efectivo
+        ToggleButton btnPagoQR = findViewById(R.id.btnPagoQR);
+        ToggleButton btnPagoEfectivo = findViewById(R.id.btnPagoEfectivo);
+
+        // Configuración de comportamiento exclusivo
+        btnPagoQR.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                btnPagoEfectivo.setChecked(false);
+            }
+        });
+
+        btnPagoEfectivo.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                btnPagoQR.setChecked(false);
+            }
+        });
+        // Fin referencias a los botones
 
         ControladorSqlite2 controladorSqlite2 = new ControladorSqlite2(this);
 
@@ -153,16 +173,16 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
 
         efectivizarAdicionalUnivida.setVersionApp(currentVersionName);
 
-        try{
-                ISys iSys = NeptuneLiteUser.getInstance().getDal(this).getSys();
+        try {
+            ISys iSys = NeptuneLiteUser.getInstance().getDal(this).getSys();
 
-                Map<ETermInfoKey, String> maps = iSys.getTermInfo();
+            Map<ETermInfoKey, String> maps = iSys.getTermInfo();
 
-                efectivizarAdicionalUnivida.setSerialNumberPax(maps.get(ETermInfoKey.SN));
-                efectivizarAdicionalUnivida.setModelPax(maps.get(ETermInfoKey.MODEL));
+            efectivizarAdicionalUnivida.setSerialNumberPax(maps.get(ETermInfoKey.SN));
+            efectivizarAdicionalUnivida.setModelPax(maps.get(ETermInfoKey.MODEL));
 
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -190,9 +210,9 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
         }
 
         // tipos de documento identidad
-        tilNitEfectivisar  = findViewById(R.id.tilNitEfectivisar);
-        tiComplementoLayout  = findViewById(R.id.tiComplementoLayout);
-        spTipoDocumentoIdentidad  = findViewById(R.id.spTipoDocumentoIdentidad);
+        tilNitEfectivisar = findViewById(R.id.tilNitEfectivisar);
+        tiComplementoLayout = findViewById(R.id.tiComplementoLayout);
+        spTipoDocumentoIdentidad = findViewById(R.id.spTipoDocumentoIdentidad);
         List<TipoDocumentoIdentidad> listaTiposDocs = controladorSqlite2.obtenerTipoDocumentosIdentidad();
         LogUtils.i(TAG, "DAtos de documentos " + new Gson().toJson(listaTiposDocs));
         ArrayAdapter<TipoDocumentoIdentidad> arrayAdapterTipoDocumentoIdentidad = new ArrayAdapter<TipoDocumentoIdentidad>(EfectivizarVentaActivity.this, android.R.layout.simple_spinner_dropdown_item, listaTiposDocs);
@@ -201,19 +221,19 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
         spTipoDocumentoIdentidad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                LogUtils.i(TAG,"on item select inicia spTipoDocumentoIdentidad" );
+                LogUtils.i(TAG, "on item select inicia spTipoDocumentoIdentidad");
 
                 tipoDocumentoIdentidad = (TipoDocumentoIdentidad) parent.getSelectedItem();
-                LogUtils.i(TAG,"on item select spTipoDocumentoIdentidad " + new Gson().toJson(tipoDocumentoIdentidad));
+                LogUtils.i(TAG, "on item select spTipoDocumentoIdentidad " + new Gson().toJson(tipoDocumentoIdentidad));
                 tiComplementoLayout.setVisibility(View.GONE);
 //                etComplementoEfectivizar.setEnabled(false);
                 tilNitEfectivisar.setHint("");
-                if (tipoDocumentoIdentidad.getSecuencial() <= 0){
+                if (tipoDocumentoIdentidad.getSecuencial() <= 0) {
                     tipoDocumentoIdentidad = null;
 
                 }
                 tilNitEfectivisar.setHint(tipoDocumentoIdentidad != null ? tipoDocumentoIdentidad.getDescripcion() : null);
-                if(tipoDocumentoIdentidad.getRequiereComplemento()){
+                if (tipoDocumentoIdentidad.getRequiereComplemento()) {
                     tiComplementoLayout.setVisibility(View.VISIBLE);
 //                    etComplementoEfectivizar.setEnabled(true);
 
@@ -237,7 +257,7 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
         btnEfectivizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (btnEfectivizar.isEnabled() && (! estadoAceptarDialogo)){
+                if (btnEfectivizar.isEnabled() && (!estadoAceptarDialogo)) {
 
                     btnEfectivizar.setEnabled(false);
 
@@ -272,7 +292,7 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
             ((EditText) findViewById(R.id.etVehiculoColorEfectivizar)).setText(efectivizarFacturaUnivida.getVehiculoColor());
             ((EditText) findViewById(R.id.etVehiculoNroChasisEfectivizar)).setText(efectivizarFacturaUnivida.getVehiculoChasis());
             // vehiculo nuevo agregado 20 noviembre 2021
-            ((EditText) findViewById(R.id.etVehiculoCilindradaEfectivizar)).setText(String.valueOf(efectivizarFacturaUnivida.getVehiculoCilindrada() == null ? "0" :efectivizarFacturaUnivida.getVehiculoCilindrada()));
+            ((EditText) findViewById(R.id.etVehiculoCilindradaEfectivizar)).setText(String.valueOf(efectivizarFacturaUnivida.getVehiculoCilindrada() == null ? "0" : efectivizarFacturaUnivida.getVehiculoCilindrada()));
             ((EditText) findViewById(R.id.etVehiculoCapacidadCargaEfectivizar)).setText(String.valueOf(efectivizarFacturaUnivida.getVehiculoCapacidadCarga() == null ? "0.0" : efectivizarFacturaUnivida.getVehiculoCapacidadCarga()));
 
             //propietario
@@ -451,7 +471,7 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
             }
 
             if (strTelefono.length() > 0) {
-                if (! (strTelefono.startsWith("7") || strTelefono.startsWith("6"))) {
+                if (!(strTelefono.startsWith("7") || strTelefono.startsWith("6"))) {
                     vistaForm = etTelefonoClienteEfectivizar;
                     estado = true;
                     etTelefonoClienteEfectivizar.setError("Teléfono incorrecto.");
@@ -476,6 +496,20 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
 //                toggleBestUpdates("parar");
                 btnEfectivizar.setEnabled(true);
             } else {
+                // obtener el estado de los botones
+                ToggleButton btnPagoQR = findViewById(R.id.btnPagoQR);
+                ToggleButton btnPagoEfectivo = findViewById(R.id.btnPagoEfectivo);
+
+                String medioPago = "";
+                if (btnPagoQR.isChecked()) {
+                    medioPago = "Pago con QR";
+                } else if (btnPagoEfectivo.isChecked()) {
+                    medioPago = "Pago en efectivo";
+                } else {
+                    medioPago = "No seleccionado";
+                }
+
+
                 String mensaje;
                 String titulo = "VERIFICAR";
 
@@ -499,6 +533,7 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
                 mensaje += "\nNúmero de Celular: " + etTelefonoClienteEfectivizar.getText().toString();
                 mensaje += "\nSUCURSAL: " + user.getDatosUsuario().getSucursalNombre();
                 mensaje += "\nUSUARIO: " + user.getDatosUsuario().getEmpleadoNombreCompleto();
+                mensaje += "\n\nMEDIO DE PAGO: " + medioPago;
 
                 controladorSqlite2.cerrarConexion();
 
@@ -530,14 +565,13 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
 
     public void efectivizarVentaSoatPlaca(final int proceso) {
         //view.setVisibility(View.GONE);
-        LogUtils.i(TAG,"efectivizarVentaSoatPlaca init estadoAceptarDialogo "+estadoAceptarDialogo + " btnEfectivizar.isEnabled() "+btnEfectivizar.isEnabled());
+        LogUtils.i(TAG, "efectivizarVentaSoatPlaca init estadoAceptarDialogo " + estadoAceptarDialogo + " btnEfectivizar.isEnabled() " + btnEfectivizar.isEnabled());
 
-        if ((! btnEfectivizar.isEnabled()) && estadoAceptarDialogo){
+        if ((!btnEfectivizar.isEnabled()) && estadoAceptarDialogo) {
             if (proceso == 1) {
                 verificarTiempo(1);
                 return;
             }
-
 
 
             EfectivizarVentaActivity.this.runOnUiThread(new Runnable() {
@@ -570,9 +604,9 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
 
                     //vehiculo
                     //cambiado(11-12-2018) validar si no tiene nada colocarlo 0
-                    if (! ((EditText) findViewById(R.id.etVehiculoAnioEfectivizar)).getText().toString().isEmpty()) {
+                    if (!((EditText) findViewById(R.id.etVehiculoAnioEfectivizar)).getText().toString().isEmpty()) {
                         efectivizarFacturaUnivida.setVehiculoAnio(Integer.valueOf(((EditText) findViewById(R.id.etVehiculoAnioEfectivizar)).getText().toString()));
-                    }else{
+                    } else {
                         efectivizarFacturaUnivida.setVehiculoAnio(0);
                     }
                     efectivizarFacturaUnivida.setVehiculoMotor(((EditText) findViewById(R.id.etVehiculoNroMotorEfectivizar)).getText().toString());
@@ -583,14 +617,14 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
                     // vehiculo nuevo agregado 20 noviembre 2021
                     String valorCilindrada = ((EditText) findViewById(R.id.etVehiculoCilindradaEfectivizar)).getText().toString();
 
-                    if (valorCilindrada.isEmpty()){
+                    if (valorCilindrada.isEmpty()) {
                         efectivizarFacturaUnivida.setVehiculoCilindrada(null);
                     } else {
                         efectivizarFacturaUnivida.setVehiculoCilindrada(Integer.valueOf(valorCilindrada));
                     }
                     String valorCapacidadCarga = ((EditText) findViewById(R.id.etVehiculoCapacidadCargaEfectivizar)).getText().toString();
 
-                    if (valorCapacidadCarga.isEmpty()){
+                    if (valorCapacidadCarga.isEmpty()) {
                         efectivizarFacturaUnivida.setVehiculoCapacidadCarga(null);
                     } else {
                         efectivizarFacturaUnivida.setVehiculoCapacidadCarga(Double.valueOf(valorCapacidadCarga));
@@ -642,7 +676,7 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
 
                                         imprimirFactura.prepararImpresionFactura(user, efectivizarRespUnivida);
 
-                                    }catch (Exception ex){
+                                    } catch (Exception ex) {
                                         ex.printStackTrace();
                                         mostrarMensaje("No se puede imprimir los datos por que algunos o todos son nulos.");
                                         return;
@@ -682,7 +716,7 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
                                     if (error != null) {
                                         if (error.getCause() instanceof TimeoutError) {
                                             mostrarMensaje(getString(R.string.mensaje_error_timeout));
-                                        }else {
+                                        } else {
 //                                        mostrarMensaje(getString(R.string.mensaje_error_volley) + error.getMessage());
                                             mostrarMensaje("No tiene Conexión a INTERNET");
                                         }
@@ -765,7 +799,7 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
     }
 
     private void mostrarMensaje(final String mensaje) {
-        try{
+        try {
             EfectivizarVentaActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -776,7 +810,7 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
                     dialogoEmizor.show(getSupportFragmentManager(), null);
                 }
             });
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -844,13 +878,13 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
 
     @Override
     public void onRealizaAccionDialogEmizor(DialogoEmizor dialogoEmizor, int accion, int tipodialogo) {
-        LogUtils.i(TAG,"efectivizarVentaSoatPlaca init estadoAceptarDialogo "+estadoAceptarDialogo + " btnEfectivizar.isEnabled() "+btnEfectivizar.isEnabled());
+        LogUtils.i(TAG, "efectivizarVentaSoatPlaca init estadoAceptarDialogo " + estadoAceptarDialogo + " btnEfectivizar.isEnabled() " + btnEfectivizar.isEnabled());
         dialogoEmizor.getDialog().cancel();
 
         if (tipodialogo == 3 && parametrosJson3 == null) {
 
             if (accion == ACCION_ACEPTAR) {
-                if ((!estadoAceptarDialogo) && (! btnEfectivizar.isEnabled())){
+                if ((!estadoAceptarDialogo) && (!btnEfectivizar.isEnabled())) {
                     estadoAceptarDialogo = true;
                     mostrarTexto("DATOS CORRECTOS");
                     mostrarTexto("Obteniendo coordenada GPS ...");
@@ -858,7 +892,7 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
 //
 //                        mostrarTexto("Coordenadas obtenidas.");
 //                        toggleBestUpdates("parar");
-                        efectivizarVentaSoatPlaca(1);
+                    efectivizarVentaSoatPlaca(1);
 
 //                    } else {
 //
