@@ -122,7 +122,7 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
         ToggleButton btnPagoQR = findViewById(R.id.btnPagoQR);
         ToggleButton btnPagoEfectivo = findViewById(R.id.btnPagoEfectivo);
 
-        // Configuración de comportamiento exclusivo
+        // Configuración de comportamiento
         btnPagoQR.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 btnPagoEfectivo.setChecked(false);
@@ -642,149 +642,161 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
                     LogUtils.i(TAG, "Enviando dataos " + parametrosJson3);
                     VolleySingleton.getInstance(getApplicationContext()).getRequestQueue().getCache().clear();
 
+                    // Identificar el medio de pago seleccionado
+                    ToggleButton btnPagoQR = findViewById(R.id.btnPagoQR);
+                    ToggleButton btnPagoEfectivo = findViewById(R.id.btnPagoEfectivo);
 
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_VENTAS_EFECTIVIZAR_FACTURA_CICLOS_INTER, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
+                    //QR
+                    if (btnPagoQR.isChecked()) {
+                        mostrarTexto("PENDIENTE.");
+                    }
+                    //EFECTIVO
+                    if (btnPagoEfectivo.isChecked()) {
+                        StringRequest stringRequest = new StringRequest(Request.Method.POST, DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_VENTAS_EFECTIVIZAR_FACTURA_CICLOS_INTER, new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
 
-                            //btnEfectivizar.setEnabled(true);
-                            //estadoAceptarDialogo = false;
+                                //btnEfectivizar.setEnabled(true);
+                                //estadoAceptarDialogo = false;
 
-                            LogUtils.i(TAG, "OK RESPONSE " + response);
+                                LogUtils.i(TAG, "OK RESPONSE " + response);
 
-                            efectivizarRespUnivida = null;
+                                efectivizarRespUnivida = null;
 
-                            try {
+                                try {
 
-                                efectivizarRespUnivida = new Gson().fromJson(response, EfectivizarRespUnivida.class);
+                                    efectivizarRespUnivida = new Gson().fromJson(response, EfectivizarRespUnivida.class);
 
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
 
-                            if (efectivizarRespUnivida != null) {
-                                mostrarTexto(efectivizarRespUnivida.getMensaje());
-                                if (efectivizarRespUnivida.getExito()) {
+                                if (efectivizarRespUnivida != null) {
+                                    mostrarTexto(efectivizarRespUnivida.getMensaje());
+                                    if (efectivizarRespUnivida.getExito()) {
 
-                                    cantDocsImprimir = 2;
-                                    contadorImprimir = 0;
+                                        cantDocsImprimir = 2;
+                                        contadorImprimir = 0;
 
-                                    //imprimimos
-                                    ((TextView) findViewById(R.id.tvTextoProgress)).setText("");
-                                    mostrarTexto("IMPRIMIR FACTURA Y COMPROBANTE ... ");
-                                    try {
+                                        //imprimimos
+                                        ((TextView) findViewById(R.id.tvTextoProgress)).setText("");
+                                        mostrarTexto("IMPRIMIR FACTURA Y COMPROBANTE ... ");
+                                        try {
 
-                                        imprimirFactura.prepararImpresionFactura(user, efectivizarRespUnivida);
+                                            imprimirFactura.prepararImpresionFactura(user, efectivizarRespUnivida);
 
-                                    } catch (Exception ex) {
-                                        ex.printStackTrace();
-                                        mostrarMensaje("No se puede imprimir los datos por que algunos o todos son nulos.");
-                                        return;
+                                        } catch (Exception ex) {
+                                            ex.printStackTrace();
+                                            mostrarMensaje("No se puede imprimir los datos por que algunos o todos son nulos.");
+                                            return;
+                                        }
+                                        fechaImpresion = Calendar.getInstance().getTime();
+                                        iniciarImprimir();
+
+                                    } else {
+                                        btnEfectivizar.setEnabled(true);
+                                        estadoAceptarDialogo = false;
+                                        parametrosJson3 = null;
+                                        showProgress(false);
+                                        mostrarMensaje(efectivizarRespUnivida.getMensaje());
                                     }
-                                    fechaImpresion = Calendar.getInstance().getTime();
-                                    iniciarImprimir();
-
                                 } else {
                                     btnEfectivizar.setEnabled(true);
                                     estadoAceptarDialogo = false;
                                     parametrosJson3 = null;
                                     showProgress(false);
-                                    mostrarMensaje(efectivizarRespUnivida.getMensaje());
+                                    mostrarMensaje("Los datos estan vacios, comuniquese con el administrador.");
                                 }
-                            } else {
-                                btnEfectivizar.setEnabled(true);
-                                estadoAceptarDialogo = false;
-                                parametrosJson3 = null;
-                                showProgress(false);
-                                mostrarMensaje("Los datos estan vacios, comuniquese con el administrador.");
-                            }
 
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(final VolleyError error) {
-                            LogUtils.i(TAG, "On error response: " + error);
-                            btnEfectivizar.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(final VolleyError error) {
+                                LogUtils.i(TAG, "On error response: " + error);
+                                btnEfectivizar.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
 //                                    btnEfectivizar.setEnabled(true);
 //                                    estadoAceptarDialogo = false;
 //                                    parametrosJson3 = null;
 
-                                    LogUtils.i(TAG, "FAIL RESPONSE " + error);
-                                    showProgress(false);
-                                    if (error != null) {
-                                        if (error.getCause() instanceof TimeoutError) {
-                                            mostrarMensaje(getString(R.string.mensaje_error_timeout));
-                                        } else {
+                                        LogUtils.i(TAG, "FAIL RESPONSE " + error);
+                                        showProgress(false);
+                                        if (error != null) {
+                                            if (error.getCause() instanceof TimeoutError) {
+                                                mostrarMensaje(getString(R.string.mensaje_error_timeout));
+                                            } else {
 //                                        mostrarMensaje(getString(R.string.mensaje_error_volley) + error.getMessage());
-                                            mostrarMensaje("No tiene Conexión a INTERNET");
-                                        }
+                                                mostrarMensaje("No tiene Conexión a INTERNET");
+                                            }
 
-                                    } else {
-                                        mostrarMensaje(getString(R.string.mensaje_error_volley_default));
+                                        } else {
+                                            mostrarMensaje(getString(R.string.mensaje_error_volley_default));
+                                        }
+                                    }
+                                }, ConfigEmizor.TIEMPO_ESPERA_INTENTO_MLS);
+
+                            }
+                        }) {
+
+                            @Override
+                            public byte[] getBody() throws AuthFailureError {
+                                if (parametrosJson3 != null) {
+
+                                    LogUtils.i(TAG, "getBody Enviando parametros :: " + parametrosJson3);
+                                    String enviarJson;
+
+                                    try {
+
+                                        enviarJson = parametrosJson3.trim();
+
+                                        LogUtils.i(TAG, "getBody Enviando parametros encryp :: " + enviarJson);
+
+                                        return enviarJson.getBytes("utf-8");
+
+                                    } catch (UnsupportedEncodingException e) {
+                                        e.printStackTrace();
                                     }
                                 }
-                            }, ConfigEmizor.TIEMPO_ESPERA_INTENTO_MLS);
+                                LogUtils.i(TAG, "||||||||||||||||||||||           ***************************");
+                                return new byte[0];
+                            }
 
-                        }
-                    }) {
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
 
-                        @Override
-                        public byte[] getBody() throws AuthFailureError {
-                            if (parametrosJson3 != null) {
+                                Map<String, String> params = new HashMap<>();
+                                LogUtils.i(TAG, "++++++++++++++++++++++++ ---------------------------");
+                                params.put("version-app-pax", ConfigEmizor.VERSION);
 
-                                LogUtils.i(TAG, "getBody Enviando parametros :: " + parametrosJson3);
-                                String enviarJson;
 
-                                try {
+                                if (user.getTokenAuth() != null) {
 
-                                    enviarJson = parametrosJson3.trim();
+                                    String xtoken = UtilRest.getInstance().procesarDatosInterno(user.getTokenAuth(), 1);
 
-                                    LogUtils.i(TAG, "getBody Enviando parametros encryp :: " + enviarJson);
-
-                                    return enviarJson.getBytes("utf-8");
-
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
+                                    LogUtils.i(TAG, "getHeaders Enviando autorization :: " + xtoken);
+                                    params.put("Authorization", xtoken);
                                 }
+                                LogUtils.i(TAG, "++++++++++++++++++++++++ ---------------------------");
+
+                                return params;
                             }
-                            LogUtils.i(TAG, "||||||||||||||||||||||           ***************************");
-                            return new byte[0];
-                        }
 
-                        @Override
-                        public Map<String, String> getHeaders() throws AuthFailureError {
-
-                            Map<String, String> params = new HashMap<>();
-                            LogUtils.i(TAG, "++++++++++++++++++++++++ ---------------------------");
-                            params.put("version-app-pax", ConfigEmizor.VERSION);
-
-
-                            if (user.getTokenAuth() != null) {
-
-                                String xtoken = UtilRest.getInstance().procesarDatosInterno(user.getTokenAuth(), 1);
-
-                                LogUtils.i(TAG, "getHeaders Enviando autorization :: " + xtoken);
-                                params.put("Authorization", xtoken);
+                            @Override
+                            public String getBodyContentType() {
+                                return "application/json; charset=utf-8";
                             }
-                            LogUtils.i(TAG, "++++++++++++++++++++++++ ---------------------------");
+                        };
 
-                            return params;
-                        }
+                        stringRequest.setShouldCache(false);
 
-                        @Override
-                        public String getBodyContentType() {
-                            return "application/json; charset=utf-8";
-                        }
-                    };
+                        stringRequest.setRetryPolicy(new DefaultRetryPolicy(ConfigEmizor.VOLLEY_TIME_MLS_IMG, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                        stringRequest.setTag("efectivizarVenta");
 
-                    stringRequest.setShouldCache(false);
+                        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+                    }
 
-                    stringRequest.setRetryPolicy(new DefaultRetryPolicy(ConfigEmizor.VOLLEY_TIME_MLS_IMG, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                    stringRequest.setTag("efectivizarVenta");
 
-                    VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
                 }
             });
         }
