@@ -568,231 +568,6 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
 
     }
 
-    public void recolectarDatos(){
-        mostrarTexto("Enviando datos.");
-
-        String strRoseta, strNit, strRazonSocial, strCiComplemento;
-
-        strRoseta = etRoseta.getText().toString();
-        strNit = etNit.getText().toString();
-        strRazonSocial = etRazonSocial.getText().toString();
-        strCiComplemento = etComplementoEfectivizar.getText().toString();
-
-        //EfectivizarAdicionalUnivida efectivizarAdicionalUnivida = new EfectivizarAdicionalUnivida();
-
-        efectivizarAdicionalUnivida.setLatitud(getLocationLatitud());
-        efectivizarAdicionalUnivida.setLongitud(getLocationLongitud());
-
-        efectivizarFacturaUnivida.setCorreoCliente(etCorreoClienteEfectivizar.getText().toString());
-        efectivizarFacturaUnivida.setVentaDatosAdicionales(new Gson().toJson(efectivizarAdicionalUnivida));
-        efectivizarFacturaUnivida.setNitCi(strNit);
-        efectivizarFacturaUnivida.setRazonSocial(strRazonSocial);
-        efectivizarFacturaUnivida.setRosetaNumero(Long.valueOf(strRoseta));
-
-        efectivizarFacturaUnivida.setCiComplemento(strCiComplemento);
-        efectivizarFacturaUnivida.setTipoDocIdentidadFk(tipoDocumentoIdentidad.getSecuencial());
-
-        efectivizarFacturaUnivida.setTelefonoCliente(etTelefonoClienteEfectivizar.getText().toString());
-
-        //vehiculo
-        //cambiado(11-12-2018) validar si no tiene nada colocarlo 0
-        if (!((EditText) findViewById(R.id.etVehiculoAnioEfectivizar)).getText().toString().isEmpty()) {
-            efectivizarFacturaUnivida.setVehiculoAnio(Integer.valueOf(((EditText) findViewById(R.id.etVehiculoAnioEfectivizar)).getText().toString()));
-        } else {
-            efectivizarFacturaUnivida.setVehiculoAnio(0);
-        }
-        efectivizarFacturaUnivida.setVehiculoMotor(((EditText) findViewById(R.id.etVehiculoNroMotorEfectivizar)).getText().toString());
-        efectivizarFacturaUnivida.setVehiculoModelo(((EditText) findViewById(R.id.etVehiculoModeloEfectivizar)).getText().toString());
-        efectivizarFacturaUnivida.setVehiculoMarca(((EditText) findViewById(R.id.etVehiculoMarcaEfectivizar)).getText().toString());
-        efectivizarFacturaUnivida.setVehiculoColor(((EditText) findViewById(R.id.etVehiculoColorEfectivizar)).getText().toString());
-        efectivizarFacturaUnivida.setVehiculoChasis(((EditText) findViewById(R.id.etVehiculoNroChasisEfectivizar)).getText().toString());
-        // vehiculo nuevo agregado 20 noviembre 2021
-        String valorCilindrada = ((EditText) findViewById(R.id.etVehiculoCilindradaEfectivizar)).getText().toString();
-
-        if (valorCilindrada.isEmpty()) {
-            efectivizarFacturaUnivida.setVehiculoCilindrada(null);
-        } else {
-            efectivizarFacturaUnivida.setVehiculoCilindrada(Integer.valueOf(valorCilindrada));
-        }
-        String valorCapacidadCarga = ((EditText) findViewById(R.id.etVehiculoCapacidadCargaEfectivizar)).getText().toString();
-
-        if (valorCapacidadCarga.isEmpty()) {
-            efectivizarFacturaUnivida.setVehiculoCapacidadCarga(null);
-        } else {
-            efectivizarFacturaUnivida.setVehiculoCapacidadCarga(Double.valueOf(valorCapacidadCarga));
-        }
-
-        //propietario
-        efectivizarFacturaUnivida.setPropTomador(((EditText) findViewById(R.id.etPropTomadorEfectivizar)).getText().toString());
-        efectivizarFacturaUnivida.setPropCelular(((EditText) findViewById(R.id.etPropCelularEfectivizar)).getText().toString());
-        efectivizarFacturaUnivida.setPropCi(((EditText) findViewById(R.id.etPropCiEfectivizar)).getText().toString());
-        efectivizarFacturaUnivida.setPropDireccion(((EditText) findViewById(R.id.etPropDireccionEfectivizar)).getText().toString());
-        efectivizarFacturaUnivida.setPropNit(((EditText) findViewById(R.id.etPropNitEfectivizar)).getText().toString());
-        efectivizarFacturaUnivida.setPropTelefono(((EditText) findViewById(R.id.etPropTelefonoEfectivizar)).getText().toString());
-
-        parametrosJson3 = efectivizarFacturaUnivida.toString();
-        LogUtils.i(TAG, "Enviando dataos " + parametrosJson3);
-    }
-    private void enviarDatos(){
-        // Identificar el medio de pago seleccionado
-        ToggleButton btnPagoQR = findViewById(R.id.btnPagoQR);
-        ToggleButton btnPagoEfectivo = findViewById(R.id.btnPagoEfectivo);
-
-        //QR
-        if (btnPagoQR.isChecked()) {
-            mostrarTexto("PENDIENTE.");
-
-        }
-        //EFECTIVO
-        if (btnPagoEfectivo.isChecked()) {
-            String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_VENTAS_EFECTIVIZAR_FACTURA_CICLOS_INTER;
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                    response -> manejarRespuesta(response),
-                    error -> manejarError(error)) {
-
-                @Override
-                public byte[] getBody() throws AuthFailureError {
-                    if (parametrosJson3 != null) {
-
-                        LogUtils.i(TAG, "getBody Enviando parametros :: " + parametrosJson3);
-                        String enviarJson;
-
-                        try {
-
-                            enviarJson = parametrosJson3.trim();
-
-                            LogUtils.i(TAG, "getBody Enviando parametros encryp :: " + enviarJson);
-
-                            return enviarJson.getBytes("utf-8");
-
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    LogUtils.i(TAG, "||||||||||||||||||||||           ***************************");
-                    return new byte[0];
-                }
-
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-
-                    Map<String, String> params = new HashMap<>();
-                    LogUtils.i(TAG, "++++++++++++++++++++++++ ---------------------------");
-                    params.put("version-app-pax", ConfigEmizor.VERSION);
-
-
-                    if (user.getTokenAuth() != null) {
-
-                        String xtoken = UtilRest.getInstance().procesarDatosInterno(user.getTokenAuth(), 1);
-
-                        LogUtils.i(TAG, "getHeaders Enviando autorization :: " + xtoken);
-                        params.put("Authorization", xtoken);
-                    }
-                    LogUtils.i(TAG, "++++++++++++++++++++++++ ---------------------------");
-
-                    return params;
-                }
-
-                @Override
-                public String getBodyContentType() {
-                    return "application/json; charset=utf-8";
-                }
-            };
-
-            stringRequest.setShouldCache(false);
-
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(ConfigEmizor.VOLLEY_TIME_MLS_IMG, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            stringRequest.setTag("efectivizarVenta");
-
-            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
-        }
-    }
-    /**
-     * Maneja la respuesta del servidor.
-     */
-    private void manejarRespuesta(String response) {
-        //btnEfectivizar.setEnabled(true);
-        //estadoAceptarDialogo = false;
-
-        LogUtils.i(TAG, "OK RESPONSE " + response);
-
-        efectivizarRespUnivida = null;
-
-        try {
-
-            efectivizarRespUnivida = new Gson().fromJson(response, EfectivizarRespUnivida.class);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        if (efectivizarRespUnivida != null) {
-            mostrarTexto(efectivizarRespUnivida.getMensaje());
-            if (efectivizarRespUnivida.getExito()) {
-
-                cantDocsImprimir = 2;
-                contadorImprimir = 0;
-
-                //imprimimos
-                ((TextView) findViewById(R.id.tvTextoProgress)).setText("");
-                mostrarTexto("IMPRIMIR FACTURA Y COMPROBANTE ... ");
-                try {
-
-                    imprimirFactura.prepararImpresionFactura(user, efectivizarRespUnivida);
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    mostrarMensaje("No se puede imprimir los datos por que algunos o todos son nulos.");
-                    return;
-                }
-                fechaImpresion = Calendar.getInstance().getTime();
-                iniciarImprimir();
-
-            } else {
-                btnEfectivizar.setEnabled(true);
-                estadoAceptarDialogo = false;
-                parametrosJson3 = null;
-                showProgress(false);
-                mostrarMensaje(efectivizarRespUnivida.getMensaje());
-            }
-        } else {
-            btnEfectivizar.setEnabled(true);
-            estadoAceptarDialogo = false;
-            parametrosJson3 = null;
-            showProgress(false);
-            mostrarMensaje("Los datos estan vacios, comuniquese con el administrador.");
-        }
-    }
-
-    /**
-     * Maneja los errores de la solicitud.
-     */
-    private void manejarError(VolleyError error) {
-        LogUtils.i(TAG, "On error response: " + error);
-        btnEfectivizar.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                                    btnEfectivizar.setEnabled(true);
-//                                    estadoAceptarDialogo = false;
-//                                    parametrosJson3 = null;
-
-                LogUtils.i(TAG, "FAIL RESPONSE " + error);
-                showProgress(false);
-                if (error != null) {
-                    if (error.getCause() instanceof TimeoutError) {
-                        mostrarMensaje(getString(R.string.mensaje_error_timeout));
-                    } else {
-//                                        mostrarMensaje(getString(R.string.mensaje_error_volley) + error.getMessage());
-                        mostrarMensaje("No tiene Conexión a INTERNET");
-                    }
-
-                } else {
-                    mostrarMensaje(getString(R.string.mensaje_error_volley_default));
-                }
-            }
-        }, ConfigEmizor.TIEMPO_ESPERA_INTENTO_MLS);
-    }
-
 
     public void efectivizarVentaSoatPlaca(final int proceso) {
         //view.setVisibility(View.GONE);
@@ -808,9 +583,226 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
             EfectivizarVentaActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recolectarDatos();
+                    mostrarTexto("Enviando datos.");
+
+                    String strRoseta, strNit, strRazonSocial, strCiComplemento;
+
+                    strRoseta = etRoseta.getText().toString();
+                    strNit = etNit.getText().toString();
+                    strRazonSocial = etRazonSocial.getText().toString();
+                    strCiComplemento = etComplementoEfectivizar.getText().toString();
+
+                    //EfectivizarAdicionalUnivida efectivizarAdicionalUnivida = new EfectivizarAdicionalUnivida();
+
+                    efectivizarAdicionalUnivida.setLatitud(getLocationLatitud());
+                    efectivizarAdicionalUnivida.setLongitud(getLocationLongitud());
+
+                    efectivizarFacturaUnivida.setCorreoCliente(etCorreoClienteEfectivizar.getText().toString());
+                    efectivizarFacturaUnivida.setVentaDatosAdicionales(new Gson().toJson(efectivizarAdicionalUnivida));
+                    efectivizarFacturaUnivida.setNitCi(strNit);
+                    efectivizarFacturaUnivida.setRazonSocial(strRazonSocial);
+                    efectivizarFacturaUnivida.setRosetaNumero(Long.valueOf(strRoseta));
+
+                    efectivizarFacturaUnivida.setCiComplemento(strCiComplemento);
+                    efectivizarFacturaUnivida.setTipoDocIdentidadFk(tipoDocumentoIdentidad.getSecuencial());
+
+                    efectivizarFacturaUnivida.setTelefonoCliente(etTelefonoClienteEfectivizar.getText().toString());
+
+                    //vehiculo
+                    //cambiado(11-12-2018) validar si no tiene nada colocarlo 0
+                    if (!((EditText) findViewById(R.id.etVehiculoAnioEfectivizar)).getText().toString().isEmpty()) {
+                        efectivizarFacturaUnivida.setVehiculoAnio(Integer.valueOf(((EditText) findViewById(R.id.etVehiculoAnioEfectivizar)).getText().toString()));
+                    } else {
+                        efectivizarFacturaUnivida.setVehiculoAnio(0);
+                    }
+                    efectivizarFacturaUnivida.setVehiculoMotor(((EditText) findViewById(R.id.etVehiculoNroMotorEfectivizar)).getText().toString());
+                    efectivizarFacturaUnivida.setVehiculoModelo(((EditText) findViewById(R.id.etVehiculoModeloEfectivizar)).getText().toString());
+                    efectivizarFacturaUnivida.setVehiculoMarca(((EditText) findViewById(R.id.etVehiculoMarcaEfectivizar)).getText().toString());
+                    efectivizarFacturaUnivida.setVehiculoColor(((EditText) findViewById(R.id.etVehiculoColorEfectivizar)).getText().toString());
+                    efectivizarFacturaUnivida.setVehiculoChasis(((EditText) findViewById(R.id.etVehiculoNroChasisEfectivizar)).getText().toString());
+                    // vehiculo nuevo agregado 20 noviembre 2021
+                    String valorCilindrada = ((EditText) findViewById(R.id.etVehiculoCilindradaEfectivizar)).getText().toString();
+
+                    if (valorCilindrada.isEmpty()) {
+                        efectivizarFacturaUnivida.setVehiculoCilindrada(null);
+                    } else {
+                        efectivizarFacturaUnivida.setVehiculoCilindrada(Integer.valueOf(valorCilindrada));
+                    }
+                    String valorCapacidadCarga = ((EditText) findViewById(R.id.etVehiculoCapacidadCargaEfectivizar)).getText().toString();
+
+                    if (valorCapacidadCarga.isEmpty()) {
+                        efectivizarFacturaUnivida.setVehiculoCapacidadCarga(null);
+                    } else {
+                        efectivizarFacturaUnivida.setVehiculoCapacidadCarga(Double.valueOf(valorCapacidadCarga));
+                    }
+
+                    //propietario
+                    efectivizarFacturaUnivida.setPropTomador(((EditText) findViewById(R.id.etPropTomadorEfectivizar)).getText().toString());
+                    efectivizarFacturaUnivida.setPropCelular(((EditText) findViewById(R.id.etPropCelularEfectivizar)).getText().toString());
+                    efectivizarFacturaUnivida.setPropCi(((EditText) findViewById(R.id.etPropCiEfectivizar)).getText().toString());
+                    efectivizarFacturaUnivida.setPropDireccion(((EditText) findViewById(R.id.etPropDireccionEfectivizar)).getText().toString());
+                    efectivizarFacturaUnivida.setPropNit(((EditText) findViewById(R.id.etPropNitEfectivizar)).getText().toString());
+                    efectivizarFacturaUnivida.setPropTelefono(((EditText) findViewById(R.id.etPropTelefonoEfectivizar)).getText().toString());
+
+                    parametrosJson3 = efectivizarFacturaUnivida.toString();
+                    LogUtils.i(TAG, "Enviando dataos " + parametrosJson3);
                     VolleySingleton.getInstance(getApplicationContext()).getRequestQueue().getCache().clear();
-                    enviarDatos();
+
+                    // Identificar el medio de pago seleccionado
+                    ToggleButton btnPagoQR = findViewById(R.id.btnPagoQR);
+                    ToggleButton btnPagoEfectivo = findViewById(R.id.btnPagoEfectivo);
+
+                    //QR
+                    if (btnPagoQR.isChecked()) {
+                        mostrarTexto("PENDIENTE.");
+
+                    }
+                    //EFECTIVO
+                    if (btnPagoEfectivo.isChecked()) {
+                        StringRequest stringRequest = new StringRequest(Request.Method.POST, DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_VENTAS_EFECTIVIZAR_FACTURA_CICLOS_INTER, new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+
+                                //btnEfectivizar.setEnabled(true);
+                                //estadoAceptarDialogo = false;
+
+                                LogUtils.i(TAG, "OK RESPONSE " + response);
+
+                                efectivizarRespUnivida = null;
+
+                                try {
+
+                                    efectivizarRespUnivida = new Gson().fromJson(response, EfectivizarRespUnivida.class);
+
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+
+                                if (efectivizarRespUnivida != null) {
+                                    mostrarTexto(efectivizarRespUnivida.getMensaje());
+                                    if (efectivizarRespUnivida.getExito()) {
+
+                                        cantDocsImprimir = 2;
+                                        contadorImprimir = 0;
+
+                                        //imprimimos
+                                        ((TextView) findViewById(R.id.tvTextoProgress)).setText("");
+                                        mostrarTexto("IMPRIMIR FACTURA Y COMPROBANTE ... ");
+                                        try {
+
+                                            imprimirFactura.prepararImpresionFactura(user, efectivizarRespUnivida);
+
+                                        } catch (Exception ex) {
+                                            ex.printStackTrace();
+                                            mostrarMensaje("No se puede imprimir los datos por que algunos o todos son nulos.");
+                                            return;
+                                        }
+                                        fechaImpresion = Calendar.getInstance().getTime();
+                                        iniciarImprimir();
+
+                                    } else {
+                                        btnEfectivizar.setEnabled(true);
+                                        estadoAceptarDialogo = false;
+                                        parametrosJson3 = null;
+                                        showProgress(false);
+                                        mostrarMensaje(efectivizarRespUnivida.getMensaje());
+                                    }
+                                } else {
+                                    btnEfectivizar.setEnabled(true);
+                                    estadoAceptarDialogo = false;
+                                    parametrosJson3 = null;
+                                    showProgress(false);
+                                    mostrarMensaje("Los datos estan vacios, comuniquese con el administrador.");
+                                }
+
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(final VolleyError error) {
+                                LogUtils.i(TAG, "On error response: " + error);
+                                btnEfectivizar.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+//                                    btnEfectivizar.setEnabled(true);
+//                                    estadoAceptarDialogo = false;
+//                                    parametrosJson3 = null;
+
+                                        LogUtils.i(TAG, "FAIL RESPONSE " + error);
+                                        showProgress(false);
+                                        if (error != null) {
+                                            if (error.getCause() instanceof TimeoutError) {
+                                                mostrarMensaje(getString(R.string.mensaje_error_timeout));
+                                            } else {
+//                                        mostrarMensaje(getString(R.string.mensaje_error_volley) + error.getMessage());
+                                                mostrarMensaje("No tiene Conexión a INTERNET");
+                                            }
+
+                                        } else {
+                                            mostrarMensaje(getString(R.string.mensaje_error_volley_default));
+                                        }
+                                    }
+                                }, ConfigEmizor.TIEMPO_ESPERA_INTENTO_MLS);
+
+                            }
+                        }) {
+
+                            @Override
+                            public byte[] getBody() throws AuthFailureError {
+                                if (parametrosJson3 != null) {
+
+                                    LogUtils.i(TAG, "getBody Enviando parametros :: " + parametrosJson3);
+                                    String enviarJson;
+
+                                    try {
+
+                                        enviarJson = parametrosJson3.trim();
+
+                                        LogUtils.i(TAG, "getBody Enviando parametros encryp :: " + enviarJson);
+
+                                        return enviarJson.getBytes("utf-8");
+
+                                    } catch (UnsupportedEncodingException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                LogUtils.i(TAG, "||||||||||||||||||||||           ***************************");
+                                return new byte[0];
+                            }
+
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                                Map<String, String> params = new HashMap<>();
+                                LogUtils.i(TAG, "++++++++++++++++++++++++ ---------------------------");
+                                params.put("version-app-pax", ConfigEmizor.VERSION);
+
+
+                                if (user.getTokenAuth() != null) {
+
+                                    String xtoken = UtilRest.getInstance().procesarDatosInterno(user.getTokenAuth(), 1);
+
+                                    LogUtils.i(TAG, "getHeaders Enviando autorization :: " + xtoken);
+                                    params.put("Authorization", xtoken);
+                                }
+                                LogUtils.i(TAG, "++++++++++++++++++++++++ ---------------------------");
+
+                                return params;
+                            }
+
+                            @Override
+                            public String getBodyContentType() {
+                                return "application/json; charset=utf-8";
+                            }
+                        };
+
+                        stringRequest.setShouldCache(false);
+
+                        stringRequest.setRetryPolicy(new DefaultRetryPolicy(ConfigEmizor.VOLLEY_TIME_MLS_IMG, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                        stringRequest.setTag("efectivizarVenta");
+
+                        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+                    }
+
 
                 }
             });
@@ -902,7 +894,6 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
             }
         }
     }
-
 
     @Override
     public void onRealizaAccionDialogEmizor(DialogoEmizor dialogoEmizor, int accion, int tipodialogo) {

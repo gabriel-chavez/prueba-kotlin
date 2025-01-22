@@ -15,7 +15,8 @@ public class DatosConexion {
 //// SERVIDOR PRUEBAS 2
 //    public static final String SERVIDORUNIVIDA = "https://ws8-pos-univida.univida.bo:8001";
 // SERVIDOR PRUEBAS 3
-    public static final String SERVIDORUNIVIDA = "https://ws8-pos-univida.univida.bo:7001";
+///////////=>>>    public static final String SERVIDORUNIVIDA = "https://ws8-pos-univida.univida.bo:7001";
+    public static final String SERVIDORUNIVIDA = "https://app-desarrollo.univida.bo:8001";
 // SERVIDOR PRUEBAS 3 QA
 //    public static final String SERVIDORUNIVIDA = "https://ws7-pos-univida.univida.bo:7001";
     //SERVIDOR PRODUCCION
