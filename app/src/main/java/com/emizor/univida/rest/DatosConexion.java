@@ -44,6 +44,11 @@ public class DatosConexion {
     public static final String URL_UNIVIDA_VENTAS_SOLICITAR_REVERTIR = "/ventas/solicitud-revertir";
     public static final String URL_UNIVIDA_VENTAS_VALIDARVENDIBLE_OBTENER_DATOS_INTER = "/ventas/validar-vendible-y-obtener-datos-inter";
     public static final String URL_UNIVIDA_VENTAS_EFECTIVIZAR_FACTURA_CICLOS_INTER = "/ventas/efectivizar-factura-ciclos-inter";
+    public static final String URL_UNIVIDA_VENTAS_QR_OBTENER = "/ventas/ven-qr-obtener";
+    public static final String URL_UNIVIDA_VENTAS_QR_ANULAR = "/ventas/ven-qr-anular";
+    public static final String URL_UNIVIDA_VENTAS_QR_CONSULTAR = "/ventas/ven-qr-consultar";
+    public static final String URL_UNIVIDA_VENTAS_QR_CONSULTAR_EFECTIVIZACION = "/ventas/ven-qr-consultar-efectivizacion";
+    public static final String URL_UNIVIDA_VENTAS_QR_VALIDAR_PARAMTEROS = "/ventas/ven-qr-factura-validar-parametros";
 
     //RCV
     public static final String URL_UNIVIDA_RCV_EFECTIVIZAR = "/reporte-cierre-ventas/efectivizar";

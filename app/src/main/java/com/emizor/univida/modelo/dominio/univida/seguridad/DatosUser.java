@@ -16,6 +16,9 @@ public class DatosUser implements Serializable, Parcelable
     @SerializedName("token")
     @Expose
     private String token;
+    @SerializedName("numero")
+    @Expose
+    private String numero;
     @SerializedName("datos_usuario")
     @Expose
     private DatosUsuario datosUsuario;
@@ -38,13 +41,19 @@ public class DatosUser implements Serializable, Parcelable
     private final static long serialVersionUID = 7063240599123634195L;
 
     protected DatosUser(Parcel in) {
+        this.numero = ((String) in.readValue((String.class.getClassLoader())));
         this.token = ((String) in.readValue((String.class.getClassLoader())));
         this.datosUsuario = ((DatosUsuario) in.readValue((DatosUsuario.class.getClassLoader())));
     }
 
     public DatosUser() {
     }
-
+    public String getNumero() {
+        return numero;
+    }
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
     public String getToken() {
         return token;
     }

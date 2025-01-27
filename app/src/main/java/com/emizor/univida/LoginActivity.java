@@ -546,6 +546,7 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
                         user.setId(loginRespUnivida.getDatosUser().getDatosUsuario().getEmpleadoSecuencial().toString());
                         // seteamos el webtoken en user, pero antes se lo encripta para que no puede ser utilizado si es que logran obtenerlo
                         user.setTokenAuth(UtilRest.getInstance().procesarDatosInterno(loginRespUnivida.getDatosUser().getToken(), 1000));
+
                         // setamos el usuario
                         user.setUsername(etUsuario.getText().toString());
                         //seteamos los datos del usuario de univida
@@ -554,7 +555,11 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
                         final User user2 = user;
                         //actualizamos en pantalla el estado en que nos encontramos
                         mostrarTexto(loginRespUnivida.getMensaje());
-
+                        //GUARDAR EL TOKEN
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("numero", loginRespUnivida.getDatosUser().getNumero().toString());
+                        editor.apply();
                         // un hilo de la actividad principal
                         runOnUiThread(new Runnable() {
                             @Override
