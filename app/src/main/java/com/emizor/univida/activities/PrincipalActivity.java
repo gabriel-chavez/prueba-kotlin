@@ -32,6 +32,7 @@ import com.emizor.univida.LoginActivity;
 import com.emizor.univida.R;
 import com.emizor.univida.dialogo.DialogoEmizor;
 import com.emizor.univida.fragmento.CambiarClaveFragment;
+import com.emizor.univida.fragmento.HistorialQrGeneradosFragment;
 import com.emizor.univida.fragmento.ListaRcvFragment;
 import com.emizor.univida.fragmento.ListaVentasFragment;
 import com.emizor.univida.fragmento.NuevaVentaFragment;
@@ -55,7 +56,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
     private final String TAG = "PRINCIPAL";
 
     //Fragmentos activos
-    private Fragment [] listaFragmentos;
+    private Fragment[] listaFragmentos;
     private View vistaPrincipal, vistaProgress;
     private static boolean estadoActivo = false;
 
@@ -90,7 +91,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
 
         controladorSqlite2.cerrarConexion();
 
-        if (user == null){
+        if (user == null) {
             controladorSqlite2.cerrarConexion();
             Intent intent = new Intent(this, LoginActivity.class);
 
@@ -98,7 +99,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
 
             PrincipalActivity.this.finish();
 
-            return ;
+            return;
         }
 
         logUser();
@@ -126,11 +127,11 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
         cambiarFragmento(new NuevaVentaFragment());
     }
 
-    private void verificarTiempo(){
+    private void verificarTiempo() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                SharedPreferences sharedPreferences = getSharedPreferences("pref_datos",Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getSharedPreferences("pref_datos", Context.MODE_PRIVATE);
 
                 long timeInicio = sharedPreferences.getLong("fecha_hora_inicio", 0);
 
@@ -140,7 +141,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
 
                 LogUtils.i(TAG, "time inicio " + timeInicio + " time fechaactual " + timeFechaActual + " tiem rest " + tiempomls);
 
-                if (tiempomls > ConfigEmizor.TIEMPO_ESPERA_CIERRE_SESION){
+                if (tiempomls > ConfigEmizor.TIEMPO_ESPERA_CIERRE_SESION) {
 
                     ControladorSqlite2 controladorSqlite2 = new ControladorSqlite2(PrincipalActivity.this);
 
@@ -153,7 +154,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
 
                     PrincipalActivity.this.finish();
 
-                }else{
+                } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
                     editor.putLong("fecha_hora_inicio", Calendar.getInstance().getTimeInMillis());
@@ -179,7 +180,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
         LogUtils.i(TAG, "item menu " + item);
         switch (item.getItemId()) {
             case R.id.action_internet:
-                if (PrincipalActivity.this != null && ! PrincipalActivity.this.isFinishing()) {
+                if (PrincipalActivity.this != null && !PrincipalActivity.this.isFinishing()) {
                     new CheckInternetAsyncTask(PrincipalActivity.this, PrincipalActivity.this).execute();
                 }
                 break;
@@ -232,10 +233,10 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
 
         verificarTiempo();
 
-        switch (menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
             case R.id.menu_venta_nueva:
                 // cambiamos a la vista de nueva venta
-                    cambiarFragmento(new NuevaVentaFragment());
+                cambiarFragmento(new NuevaVentaFragment());
                 //cambiamos el titulo del toolbar
                 getSupportActionBar().setTitle("NUEVA VENTA");
                 break;
@@ -245,23 +246,29 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
                 // cambiamos a la vista de lista de ventas
                 // verificamos si lista ventas es null
 
-                if (listaFragmentos[1] == null){
+                if (listaFragmentos[1] == null) {
                     // creamos el fragmento Lista venta y lo visualizamos en pantalla
                     cambiarFragmento(new ListaVentasFragment());
-                }else {
+                } else {
                     // enviamos el fragmento para visualizarlo en pantalla.
                     cambiarFragmento(listaFragmentos[1]);
                 }
+                break;
+            case R.id.menu_historial_qr_generados:
+                // cambiamos a la vista de nueva venta
+                cambiarFragmento(new HistorialQrGeneradosFragment());
+                //cambiamos el titulo del toolbar
+                getSupportActionBar().setTitle("HISTORIAL QR GENERADOS");
                 break;
             case R.id.menu_rcv_nuevo:
                 //cambiamos el titulo del toolbar
                 getSupportActionBar().setTitle("NUEVO RCV");
                 // cambiamos a la vista de rcv nuevo
                 // verificamos si nuevo rcv es null
-                if (listaFragmentos[2] == null){
+                if (listaFragmentos[2] == null) {
                     // creamos el fragmento nuevo rcv y lo visualizamos en pantalla
                     cambiarFragmento(new NuevoRcvFragment());
-                }else {
+                } else {
                     // enviamos el fragmento para visualizarlo en pantalla.
                     cambiarFragmento(listaFragmentos[2]);
                 }
@@ -271,10 +278,10 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
                 getSupportActionBar().setTitle("LISTAR RCV");
                 // cambiamos a la vista de lista de rcv realizadas
                 // verificamos si lista de rcv es null
-                if (listaFragmentos[3] == null){
+                if (listaFragmentos[3] == null) {
                     // creamos el fragmento lista rcv y lo visualizamos en pantalla
                     cambiarFragmento(new ListaRcvFragment());
-                }else {
+                } else {
                     // enviamos el fragmento para visualizarlo en pantalla.
                     cambiarFragmento(listaFragmentos[3]);
                 }
@@ -286,7 +293,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
         return true;
     }
 
-    private void cambiarFragmento(Fragment fragment){
+    private void cambiarFragmento(Fragment fragment) {
 
         try {
             // obtenemos el manejador de transacciones de fragmentos
@@ -299,7 +306,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
             // aplicamos los cambios con un commit en el manejador de las transacciondes de fragments.
             transaction.commit();
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -307,7 +314,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
     @Override
     public void onAccionFragment(View vista, int accion, Object parametros) {
         verificarTiempo();
-        switch (accion){
+        switch (accion) {
 
             case ACCION_MENSAJE:
 
@@ -318,7 +325,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
                 dialogoEmizor.show(getSupportFragmentManager(), null);
                 break;
             case ACCION_PROGRESS:
-                showProgress(((Boolean)parametros));
+                showProgress(((Boolean) parametros));
                 break;
             case ACCION_VISTA_EFECTIVIZAR:
                 Intent intent = new Intent(getApplicationContext(), EfectivizarVentaActivity.class);
@@ -413,7 +420,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
                 }
             });
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -423,7 +430,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
 
         verificarTiempo();
-        switch (requestCode){
+        switch (requestCode) {
             case 4562:
                 if (resultCode == RESULT_OK) {
                     listaFragmentos[0] = null;
@@ -431,21 +438,21 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
                 }
                 break;
             case 1258:
-                if (resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
 
-                    if (listaFragmentos[3] != null){
-                        try{
+                    if (listaFragmentos[3] != null) {
+                        try {
                             Bundle bundle = data.getExtras();
 
                             Integer secuencial = -1000;
 
-                            if (bundle != null){
-                                if (bundle.containsKey("secuencial")){
+                            if (bundle != null) {
+                                if (bundle.containsKey("secuencial")) {
                                     secuencial = bundle.getInt("secuencial");
                                 }
                             }
-                            ((ListaRcvFragment)listaFragmentos[3]).cambiar(secuencial);
-                        }catch (Exception ex){
+                            ((ListaRcvFragment) listaFragmentos[3]).cambiar(secuencial);
+                        } catch (Exception ex) {
                             ex.printStackTrace();
                         }
                     }
@@ -459,18 +466,18 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
     @Override
     public void onRealizaAccionDialogEmizor(DialogoEmizor dialogoEmizor, int accion, int tipodialogo) {
         verificarTiempo();
-        if (tipodialogo == 5){
-            if (accion == ACCION_ACEPTAR){
+        if (tipodialogo == 5) {
+            if (accion == ACCION_ACEPTAR) {
                 if (listaFragmentos[1] != null) {
                     ((ListaVentasFragment) listaFragmentos[1]).solicitarReversion(dialogoEmizor.getMotivo());
                 }
             }
-        } else if (tipodialogo == 6){
-            if (accion == ACCION_ACEPTAR){
+        } else if (tipodialogo == 6) {
+            if (accion == ACCION_ACEPTAR) {
                 if (listaFragmentos[1] != null) {
                     ((ListaVentasFragment) listaFragmentos[1]).imprimirColilla();
                 }
-            }else{
+            } else {
                 showProgress(false);
             }
         }
@@ -481,7 +488,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
         // TODO: Use the current user's information
         // You can call any combination of these three methods
 
-        try{
+        try {
             ControladorSqlite2 controladorSqlite2 = new ControladorSqlite2(this);
 
             User usuario = controladorSqlite2.obtenerUsuario();
@@ -505,7 +512,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
 
             // Sending the UserProfile instance.
             YandexMetrica.reportUserProfile(userProfile);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -515,16 +522,17 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
 
         private Context context;
         private ProgressDialog dialog;
+
         public CheckInternetAsyncTask(Context context, PrincipalActivity principalActivity) {
             this.context = context;
-            if (PrincipalActivity.this != null && ! PrincipalActivity.this.isFinishing()) {
+            if (PrincipalActivity.this != null && !PrincipalActivity.this.isFinishing()) {
                 dialog = new ProgressDialog(principalActivity);
             }
         }
 
         @Override
         protected void onPreExecute() {
-            if (PrincipalActivity.this != null && ! PrincipalActivity.this.isFinishing()) {
+            if (PrincipalActivity.this != null && !PrincipalActivity.this.isFinishing()) {
                 dialog.setMessage("Verificando Internet.");
                 dialog.setCancelable(false);
                 dialog.setIndeterminate(true);
@@ -543,7 +551,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
             }
 
             ConnectivityManager cm =
-                    (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                    (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
             assert cm != null;
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
@@ -555,11 +563,13 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
                 Runtime runtime = Runtime.getRuntime();
                 try {
                     Process ipProcess = runtime.exec("/system/bin/ping -c 1 127.0.0.1");
-                    int     exitValue = ipProcess.waitFor();
+                    int exitValue = ipProcess.waitFor();
                     return (exitValue == 0);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                catch (IOException e)          { e.printStackTrace(); }
-                catch (InterruptedException e) { e.printStackTrace(); }
 
                 return false;
 
@@ -573,7 +583,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             LogUtils.d("TAG", "result" + result);
-            if (PrincipalActivity.this != null && ! PrincipalActivity.this.isFinishing()) {
+            if (PrincipalActivity.this != null && !PrincipalActivity.this.isFinishing()) {
                 // do UI work here
                 if (dialog.isShowing()) {
                     dialog.dismiss();

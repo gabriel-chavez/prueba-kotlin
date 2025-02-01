@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@color/colorBackground"
+    android:elevation="4dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:backgroundTint="@color/colorBackground">
+
+    <!-- Información del movimiento -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="start"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewPlaca"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="3128UER"
+            style="@style/TextBase"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/gestionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2025"
+            style="@style/TextBase" />
+
+        <!-- Fecha alineada a la derecha con tooltip -->
+        <TextView
+            android:id="@+id/textViewFecha"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="30/01/2025 14:56:01"
+            style="@style/TextBase"
+            android:tooltipText="Fecha y hora de solicitud de QR" />
+    </LinearLayout>
+
+    <!-- Estado y fecha de estado -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="start"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Anulado"
+            style="@style/TextEstado" />
+
+        <!-- Fecha de estado alineada a la derecha con tooltip -->
+        <TextView
+            android:id="@+id/textViewFechaEstado"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="30/01/2025 14:56:15"
+            style="@style/TextEstado"
+            android:tooltipText="Fecha y hora del estado" />
+    </LinearLayout>
+
+    <!-- Texto "Efectivizado" -->
+    <TextView
+        android:id="@+id/textViewEfectivizado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="Efectivizado"
+        android:textColor="@color/colorEfectivizado"
+        android:textSize="12sp" />
+
+    <!-- Mensaje "SOAT EFECTIVIZADO CORRECTAMENTE" -->
+    <TextView
+        android:id="@+id/textViewMensaje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="SOAT EFECTIVIZADO CORRECTAMENTE"
+        android:textColor="@color/colorTextSecondary"
+        android:textSize="12sp" />
+
+    <!-- Botones de operación -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnConsultarEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ButtonBase"
+            android:visibility="gone"
+            android:backgroundTint="@color/colorVerde"
+            android:text="Consultar Estado" />
+
+        <Button
+            android:id="@+id/btnAnular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            style="@style/ButtonBase"
+            android:visibility="gone"
+            android:backgroundTint="@color/colorSecondary"
+            android:text="Anular" />
+
+        <Button
+            android:id="@+id/btnComprobante"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/colorEfectivizado"
+            style="@style/ButtonBase"
+            android:visibility="gone"
+            android:text="Comprobante" />
+    </LinearLayout>
+</LinearLayout>

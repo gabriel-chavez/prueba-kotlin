@@ -133,5 +133,15 @@
     <string name="toast_7">Solo se imprime un único código Qr para el modo AIDL</string>
     <string name="toast_8">¡Ahora el tamaño de QrCode debe ser inferior a 7!</string>
     <string name="toast_9">¡Tipo de código de barras o error de conexión!</string>
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="estado_options">
+        <item>Solicitado</item>
+        <item>Habilitado</item>
+        <item>Pagado</item>
+        <item>Anulado</item>
+        <item>Vencido</item>
+        <item>Rechazado</item>
+        <item>Error de imagen</item>
+    </string-array>
 </resources>

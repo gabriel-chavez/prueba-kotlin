@@ -49,6 +49,7 @@ public class DatosConexion {
     public static final String URL_UNIVIDA_VENTAS_QR_CONSULTAR = "/ventas/ven-qr-consultar";
     public static final String URL_UNIVIDA_VENTAS_QR_CONSULTAR_EFECTIVIZACION = "/ventas/ven-qr-consultar-efectivizacion";
     public static final String URL_UNIVIDA_VENTAS_QR_VALIDAR_PARAMTEROS = "/ventas/ven-qr-factura-validar-parametros";
+    public static final String URL_UNIVIDA_VENTAS_QR_LISTAR_GENERADOS = "/ventas/ven-qr-listar-generados";
 
     //RCV
     public static final String URL_UNIVIDA_RCV_EFECTIVIZAR = "/reporte-cierre-ventas/efectivizar";

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#F8F8F8">
+
+    <!-- Parámetros de búsqueda -->
+    <!-- Fila 1: EditText Identificador de vehículo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:layout_marginBottom="12dp">
+
+        <EditText
+            android:id="@+id/editTextIdentificador"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Identificador de vehículo"
+            android:padding="8dp"
+            android:background="@drawable/rounded_edittext"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:inputType="text"/>
+    </LinearLayout>
+
+    <!-- Fila 2: EditText Fecha y Spinner Estado -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:layout_marginBottom="12dp">
+
+        <!-- EditText Fecha -->
+
+
+        <Button
+            android:id="@+id/btnFechaListaVenta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="12/04/2018"
+            android:layout_weight="1"
+            />
+
+        <!-- Spinner Estado -->
+        <Spinner
+            android:id="@+id/spinnerEstado"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/estado_options"
+            android:background="@drawable/rounded_spinner"
+            android:textSize="14sp"
+            android:padding="8dp"/>
+    </LinearLayout>
+
+    <!-- Botón Buscar -->
+    <Button
+        android:id="@+id/btnBuscar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buscar"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Título de "Últimos Registros" -->
+    <TextView
+        android:id="@+id/tituloMovimientos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Últimos Registros"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp"/>
+    <TextView
+        android:id="@+id/textViewMensaje"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="asd"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginTop="12dp"/>
+    <!-- ListView de Movimientos -->
+    <ListView
+        android:id="@+id/listViewMovimientos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

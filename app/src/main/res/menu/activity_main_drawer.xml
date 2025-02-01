@@ -18,6 +18,12 @@
                 android:title="Ventas realizadas"
                 android:enabled="true"
                 />
+            <item
+                android:id="@+id/menu_historial_qr_generados"
+                android:icon="@drawable/ic_qr_code"
+                android:title="Historial QR Generados"
+                android:enabled="true"
+                />
         </menu>
     </item>
 

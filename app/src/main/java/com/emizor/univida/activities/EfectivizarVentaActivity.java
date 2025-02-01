@@ -37,6 +37,7 @@ import android.widget.TextView;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -48,6 +49,7 @@ import com.emizor.univida.excepcion.ErrorPapelException;
 import com.emizor.univida.excepcion.ImpresoraErrorException;
 import com.emizor.univida.excepcion.NoHayPapelException;
 import com.emizor.univida.excepcion.VoltageBajoException;
+import com.emizor.univida.fragmento.OnFragmentInteractionListener4;
 import com.emizor.univida.imprime.ImprimirAvisoListener;
 import com.emizor.univida.imprime.ImprimirFactura;
 import com.emizor.univida.modelo.dominio.univida.parametricas.TipoDocumentoIdentidad;
@@ -55,6 +57,7 @@ import com.emizor.univida.modelo.dominio.univida.seguridad.User;
 import com.emizor.univida.modelo.dominio.univida.ventas.EfectivizarAdicionalUnivida;
 import com.emizor.univida.modelo.dominio.univida.ventas.EfectivizarFacturaUnivida;
 import com.emizor.univida.modelo.dominio.univida.ventas.EfectivizarRespUnivida;
+import com.emizor.univida.modelo.dominio.univida.ventas.ObtenerVentaUnivida;
 import com.emizor.univida.modelo.manejador.ControladorSqlite2;
 import com.emizor.univida.modelo.manejador.UtilRest;
 import com.emizor.univida.rest.DatosConexion;
@@ -1300,7 +1303,7 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
             transaccionOrigen.put("tra_ori_sucursal", "Oficina Nacional");
             transaccionOrigen.put("tra_ori_agencia", "");
             transaccionOrigen.put("tra_ori_canal", 28);
-            transaccionOrigen.put("tra_ori_cajero", efectivizarFacturaUnivida.getCorreoCliente());
+            transaccionOrigen.put("tra_ori_cajero", user.getDatosUsuario().getEmpleadoUsuario());
 
             jsonRequest.put("transaccion_origen", transaccionOrigen);
         } catch (JSONException e) {
@@ -1784,7 +1787,7 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
                             if (tParSimpleEstadoEjecucionFk == 2) {
                                 isEfectivizado = true;
                                 handler.removeCallbacksAndMessages(null);
-
+                                imprimirComprobanteYFactura(tVehiSoatPropFk);
 
                             }
 
@@ -1826,6 +1829,53 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
 
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
         /**********Fin verificar efectivización*/
+    }
+
+    private void imprimirComprobanteYFactura(long nroComprobante) {
+        ObtenerVentaUnivida obtenerVentaUnivida = new ObtenerVentaUnivida();
+
+        obtenerVentaUnivida.setAutorizacionNumero("");
+        obtenerVentaUnivida.setGestionFk(-1);
+        obtenerVentaUnivida.setNumero(0);
+        obtenerVentaUnivida.setNumeroComprobante(nroComprobante);
+        obtenerVentaUnivida.setVehiculoPlaca("");
+        obtenerVentaUnivida.setVentaCajero("");
+        obtenerVentaUnivida.setVentaCanalFk(28);
+        obtenerVentaUnivida.setVentaVendedor(user.getUsername());
+
+
+
+        final String parametrosJson3 = obtenerVentaUnivida.toString();
+        VolleySingleton.getInstance(getApplicationContext()).getRequestQueue().getCache().clear();
+
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_VENTAS_OBTENER;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response -> manejarRespuesta(response),
+                error -> manejarError(error)) {
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                return obtenerCuerpoSolicitud(parametrosJson3.toString());
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return construirEncabezados();
+
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        stringRequest.setShouldCache(false);
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(ConfigEmizor.VOLLEY_TIME_MLS_IMG, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setTag("Efectivizacion");
+
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+
     }
 
     private void mostrarQRCode(View dialogView, String base64QR) {
