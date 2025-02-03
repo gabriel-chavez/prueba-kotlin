@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
@@ -67,32 +68,47 @@ public class HistorialQrGeneradosFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_historial_qr_generados, container, false);
 
         listView = rootView.findViewById(R.id.listViewMovimientos);
-        datePickerDialog = new DatePickerDialog(getContext(),
-                new DatePickerDialog.OnDateSetListener() {
 
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        fechaSeleccion = calendar.getTime();
-                        btnFechaListaVenta.setText(simpleDateFormat.format(fechaSeleccion));
-
-                    }
-
-                }, 1, 1, 1);
 
         fechaSeleccion = Calendar.getInstance().getTime();
 
         editTextIdentificador = rootView.findViewById(R.id.editTextIdentificador);
         spinnerEstado = rootView.findViewById(R.id.spinnerEstado);
         btnFechaListaVenta = rootView.findViewById(R.id.btnFechaListaVenta);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        btnFechaListaVenta.setText(simpleDateFormat.format(fechaSeleccion));
+
+        datePickerDialog = new DatePickerDialog(getContext(), (view, year, monthOfYear, dayOfMonth) -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, monthOfYear, dayOfMonth);
+            fechaSeleccion = calendar.getTime();
+
+            btnFechaListaVenta.setText(simpleDateFormat.format(fechaSeleccion));
+
+            // Llamar a obtenerHistorial() cuando se seleccione la fecha
+            obtenerHistorial();
+        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+
+        btnFechaListaVenta.setOnClickListener(v -> datePickerDialog.show());
+
         Button btnBuscar = rootView.findViewById(R.id.btnBuscar);
         textViewMensaje = rootView.findViewById(R.id.textViewMensaje);
 
         btnBuscar.setOnClickListener(v -> obtenerHistorial());
 
+        spinnerEstado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (parent.getItemAtPosition(position) != null) {
+                    obtenerHistorial();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No hacer nada si no hay selección
+            }
+        });
 
 
         qrGenerados = new ArrayList<>();
@@ -100,7 +116,7 @@ public class HistorialQrGeneradosFragment extends Fragment {
         user = controladorSqlite2.obtenerUsuario();
         controladorSqlite2.cerrarConexion();
 
-        btnFechaListaVenta.setOnClickListener(v -> abrirdatePicker());
+
 
         adapter = new MovimientoAdapter(getContext(), qrGenerados);
         listView.setAdapter(adapter);

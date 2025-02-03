@@ -7,12 +7,12 @@
     android:background="#F8F8F8">
 
     <!-- Parámetros de búsqueda -->
-    <!-- Fila 1: EditText Identificador de vehículo -->
+    <!-- Fila 1: EditText Identificador de vehículo con botón de búsqueda -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="start"
+        android:gravity="center_vertical"
         android:layout_marginBottom="12dp">
 
         <EditText
@@ -26,6 +26,16 @@
             android:textSize="14sp"
             android:maxLines="1"
             android:inputType="text"/>
+
+        <Button
+            android:id="@+id/btnBuscar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buscar"
+            android:backgroundTint="#4CAF50"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:layout_marginStart="8dp"/>
     </LinearLayout>
 
     <!-- Fila 2: EditText Fecha y Spinner Estado -->
@@ -36,17 +46,14 @@
         android:gravity="start"
         android:layout_marginBottom="12dp">
 
-        <!-- EditText Fecha -->
-
-
+        <!-- Botón Fecha -->
         <Button
             android:id="@+id/btnFechaListaVenta"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="12/04/2018"
-            android:layout_weight="1"
-            />
+            android:text=""
+            android:layout_weight="1"/>
 
         <!-- Spinner Estado -->
         <Spinner
@@ -60,18 +67,6 @@
             android:padding="8dp"/>
     </LinearLayout>
 
-    <!-- Botón Buscar -->
-    <Button
-        android:id="@+id/btnBuscar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Buscar"
-        android:backgroundTint="#4CAF50"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="12dp"/>
-
     <!-- Título de "Últimos Registros" -->
     <TextView
         android:id="@+id/tituloMovimientos"
@@ -81,14 +76,16 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_marginBottom="12dp"/>
+
     <TextView
         android:id="@+id/textViewMensaje"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="asd"
+        android:text=""
         android:textSize="14sp"
         android:gravity="center"
         android:layout_marginTop="12dp"/>
+
     <!-- ListView de Movimientos -->
     <ListView
         android:id="@+id/listViewMovimientos"

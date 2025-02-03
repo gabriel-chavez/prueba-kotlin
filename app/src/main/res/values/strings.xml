@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UNIVIDA</string>
+    <string name="app_name">UNIVidaPOS</string>
     <string name="title_activity_login">Iniciar Session</string>
 
     <!-- Strings related to login -->
