@@ -38,7 +38,18 @@
             android:textSize="18sp"
             android:background="@drawable/contorno_datos_sincorte"
             />
-
+        <TextView
+            android:id="@+id/tvMedioPagoVentaItem"
+            android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="medio de pago"
+            android:textColor="@color/colorTexto"
+            android:textSize="18sp"
+            android:visibility="visible"
+            android:background="@drawable/contorno_datos_sincorte"
+            />
         <TextView
             android:id="@+id/tvAutorizacionNumeroVentaItem"
             android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"

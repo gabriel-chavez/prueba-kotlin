@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.emizor.univida.BuildConfig;
+import com.emizor.univida.rest.DatosConexion;
 
 import org.json.*;
 
@@ -43,7 +44,8 @@ public class Autoupdater{
     //UNIVIDA
 //    private static final String INFO_FILE = "https://s3.amazonaws.com/elasticbeanstalk-us-east-1-860067475977/cdn/apk/unividapaxa920/version.txt";//url de desarrrollo sin firma
 //    private static final String INFO_FILE = "https://s3.amazonaws.com/elasticbeanstalk-us-east-1-860067475977/cdn/apk/unividapaxa920/versionfirma.txt";// url de desarrollo con firma
-    private static final String INFO_FILE = "https://s3.amazonaws.com/elasticbeanstalk-us-east-1-860067475977/cdn/apk/unividapaxa920/versionfirmaproduccion.txt";// url de produccion con firma.
+    private static final String INFO_FILE = DatosConexion.SERVIDORUNIVIDA+"/updates/unividapaxa920/versionfirmaproduccion.txt";
+            //"https://s3.amazonaws.com/elasticbeanstalk-us-east-1-860067475977/cdn/apk/unividapaxa920/versionfirmaproduccion.txt";// url de produccion con firma.
     /**
      * El código de versión establecido en el AndroidManifest.xml de la versión
      * instalada de la aplicación. Es el valor numérico que usa Android para

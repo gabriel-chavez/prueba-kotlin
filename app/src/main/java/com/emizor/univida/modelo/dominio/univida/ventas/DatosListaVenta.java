@@ -32,6 +32,7 @@ public class DatosListaVenta implements Serializable, Parcelable
     @SerializedName("soat_datos_venta")
     @Expose
     private List<SoatDatosVentum> soatDatosVenta = null;
+
     public final static Parcelable.Creator<DatosListaVenta> CREATOR = new Creator<DatosListaVenta>() {
 
 

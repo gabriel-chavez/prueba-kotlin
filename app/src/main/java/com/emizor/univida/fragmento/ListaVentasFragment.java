@@ -118,7 +118,8 @@ public class ListaVentasFragment extends Fragment implements ImprimirAvisoListen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View vistaListaVenta = inflater.inflate(R.layout.fragment_lista_ventas, container, false);;
+        View vistaListaVenta = inflater.inflate(R.layout.fragment_lista_ventas, container, false);
+        ;
 
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -136,9 +137,9 @@ public class ListaVentasFragment extends Fragment implements ImprimirAvisoListen
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(year, monthOfYear, dayOfMonth);
 
-                            fechaSeleccion = calendar.getTime();
+                        fechaSeleccion = calendar.getTime();
 
-                            btnFechaListaVenta.setText(simpleDateFormat.format(fechaSeleccion));
+                        btnFechaListaVenta.setText(simpleDateFormat.format(fechaSeleccion));
 
                     }
 
@@ -196,7 +197,7 @@ public class ListaVentasFragment extends Fragment implements ImprimirAvisoListen
 
         user = controladorSqlite2.obtenerUsuario();
 
-        if (user == null){
+        if (user == null) {
             controladorSqlite2.cerrarConexion();
             return vistaListaVenta;
         }
@@ -265,12 +266,10 @@ Instantiate and pass a callback
 */
 
         softKeyboard = new SoftKeyboard(mainLayout, im);
-        softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged()
-        {
+        softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged() {
 
             @Override
-            public void onSoftKeyboardHide()
-            {
+            public void onSoftKeyboardHide() {
 
                 LogUtils.i(TAG, "keyboard hide");
                 // Code here
@@ -285,8 +284,7 @@ Instantiate and pass a callback
             }
 
             @Override
-            public void onSoftKeyboardShow()
-            {
+            public void onSoftKeyboardShow() {
                 LogUtils.i(TAG, "keyboard show");
                 // Code here
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -308,7 +306,7 @@ Instantiate and pass a callback
         return vistaListaVenta;
     }
 
-    private void abrirdatePicker(){
+    private void abrirdatePicker() {
         Calendar c = Calendar.getInstance();
         c.setTime(fechaSeleccion);
         int mYear = c.get(Calendar.YEAR); // current year
@@ -327,7 +325,7 @@ Instantiate and pass a callback
             mListener = (OnFragmentInteractionListener4) context;
             try {
                 mListener.onRegisterFragment(this, OnFragmentInteractionListener4.VISTA_LISTA_VENTAS);
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         } else {
@@ -347,12 +345,12 @@ Instantiate and pass a callback
             if (softKeyboard != null) {
                 softKeyboard.unRegisterSoftKeyboardCallback();
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private void buscarListaVentas(){
+    private void buscarListaVentas() {
 
         if (getActivity() != null)
             getActivity().runOnUiThread(new Runnable() {
@@ -385,22 +383,22 @@ Instantiate and pass a callback
 
                             ListarVentaRespUnivida listarVentaRespUnivida = null;
 
-                            try{
+                            try {
 
                                 listarVentaRespUnivida = new Gson().fromJson(response, ListarVentaRespUnivida.class);
 
                                 LogUtils.i(TAG, "OK CONVERSION " + new Gson().toJson(listarVentaRespUnivida));
 
-                            }catch (Exception ex){
+                            } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
                             final ListarVentaRespUnivida listarVentaRespUnivida2 = listarVentaRespUnivida;
-                            if (listarVentaRespUnivida != null){
-                                if (listarVentaRespUnivida.getExito()){
+                            if (listarVentaRespUnivida != null) {
+                                if (listarVentaRespUnivida.getExito()) {
 
                                     final List<SoatDatosVentum> listaDatosVenta = listarVentaRespUnivida2.getDatos().getSoatDatosVenta();
 
-                                    for (int i = 0; i< listaDatosVenta.size(); i++){
+                                    for (int i = 0; i < listaDatosVenta.size(); i++) {
                                         listaDatosVenta.get(i).resetEstado();
                                     }
 
@@ -427,11 +425,11 @@ Instantiate and pass a callback
                                         }
                                     });
 
-                                }else{
+                                } else {
                                     mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_PROGRESS, Boolean.FALSE);
                                     mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, listarVentaRespUnivida.getMensaje());
                                 }
-                            }else{
+                            } else {
 
                                 mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_PROGRESS, Boolean.FALSE);
                                 mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "Los datos estan vacion, comuniquese con el administrador.");
@@ -444,14 +442,14 @@ Instantiate and pass a callback
 
                             LogUtils.i(TAG, "FAIL RESPONSE " + error);
                             mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_PROGRESS, Boolean.FALSE);
-                            if (error != null){
-                                if (error.getCause() instanceof TimeoutError){
+                            if (error != null) {
+                                if (error.getCause() instanceof TimeoutError) {
                                     mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, getString(R.string.mensaje_error_timeout));
                                 } else {
 //                        mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, getString(R.string.mensaje_error_volley) + error.getMessage());
                                     mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "No tiene Conexión a INTERNET");
                                 }
-                            }else{
+                            } else {
                                 mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, getString(R.string.mensaje_error_volley_default));
                             }
 
@@ -526,26 +524,29 @@ Instantiate and pass a callback
         VolleySingleton.getInstance(getContext()).getRequestQueue().cancelAll("solicitarrevertirventa");
     }
 
-    private void abrirMenuItems(){
+    private void abrirMenuItems() {
 
-        if (soatDatosVentumSeleccionado != null ) {
+        if (soatDatosVentumSeleccionado != null) {
             if (soatDatosVentumSeleccionado.getSoatGenericaEstadoFk() == 1) {
 
                 BottomSheetMenuDialog dialog = new BottomSheetBuilder(getContext(), R.style.AppTheme_BottomSheetDialog_Custom)
                         .setMode(BottomSheetBuilder.MODE_LIST)
-                        .addItem(502,"REIMPRIMIR", R.drawable.ic_action_printer)
+                        .addItem(502, "REIMPRIMIR", R.drawable.ic_action_printer)
                         .addItem(503, "SOLICITAR REVERSIÓN", R.drawable.ic_action_revertir)
                         .setItemClickListener(new BottomSheetItemClickListener() {
                             @Override
                             public void onBottomSheetItemClick(MenuItem item) {
-                                switch (item.getItemId()){
+                                switch (item.getItemId()) {
                                     case 502:
 
                                         obtenerDatosVenta();
                                         break;
                                     case 503:
-
-                                        obtenerMotivo();
+                                        String medioPago=soatDatosVentumSeleccionado.getSoatMediosDePago();
+                                        if ("$imple QR".equals(medioPago))
+                                            mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "No se permite la reversión del SOAT para el medio de pago QR");
+                                        else
+                                            obtenerMotivo();
                                         break;
                                 }
                             }
@@ -554,16 +555,16 @@ Instantiate and pass a callback
 
                 dialog.show();
 
-            }else{
+            } else {
                 soatDatosVentumSeleccionado = null;
             }
         }
 
     }
 
-    private void obtenerDatosVenta(){
+    private void obtenerDatosVenta() {
 
-        if (getActivity() != null){
+        if (getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -592,22 +593,22 @@ Instantiate and pass a callback
 
                             fechaImpresion = Calendar.getInstance().getTime();
 
-                            try{
+                            try {
 
                                 efectivizarRespUnivida = new Gson().fromJson(response, EfectivizarRespUnivida.class);
 
                                 LogUtils.i(TAG, "OK CONVERSION " + new Gson().toJson(efectivizarRespUnivida));
 
-                            }catch (Exception ex){
+                            } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
 
-                            if (efectivizarRespUnivida != null){
-                                if (efectivizarRespUnivida.getExito()){
+                            if (efectivizarRespUnivida != null) {
+                                if (efectivizarRespUnivida.getExito()) {
 
                                     try {
                                         imprimirFactura.prepararImpresionFactura(user, efectivizarRespUnivida);
-                                    }catch (Exception ex){
+                                    } catch (Exception ex) {
                                         ex.printStackTrace();
                                         mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "No se puede imprimir los datos por que algunos o todos son nulos.");
                                         mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_PROGRESS, Boolean.FALSE);
@@ -651,11 +652,11 @@ Instantiate and pass a callback
                                     });
 
 
-                                }else{
+                                } else {
                                     mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_PROGRESS, Boolean.FALSE);
                                     mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, efectivizarRespUnivida.getMensaje());
                                 }
-                            }else{
+                            } else {
 
                                 mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_PROGRESS, Boolean.FALSE);
                                 mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "Los datos estan vacion, comuniquese con el administrador.");
@@ -668,14 +669,14 @@ Instantiate and pass a callback
 
                             LogUtils.i(TAG, "FAIL RESPONSE " + error);
                             mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_PROGRESS, Boolean.FALSE);
-                            if (error != null){
-                                if (error.getCause() instanceof TimeoutError){
+                            if (error != null) {
+                                if (error.getCause() instanceof TimeoutError) {
                                     mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, getString(R.string.mensaje_error_timeout));
                                 } else {
 //                        mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, getString(R.string.mensaje_error_volley) + error.getMessage());
                                     mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "No tiene Conexión a INTERNET");
                                 }
-                            }else{
+                            } else {
                                 mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, getString(R.string.mensaje_error_volley_default));
                             }
 
@@ -743,7 +744,7 @@ Instantiate and pass a callback
 
     }
 
-    public void obtenerMotivo(){
+    public void obtenerMotivo() {
         DialogoEmizor dialogoEmizor = new DialogoEmizor();
         dialogoEmizor.setTipoDialogo(5);
         dialogoEmizor.setMensaje("Motivo: ");
@@ -751,7 +752,7 @@ Instantiate and pass a callback
         dialogoEmizor.show(getActivity().getSupportFragmentManager(), null);
     }
 
-    public void solicitarReversion(final String motivo){
+    public void solicitarReversion(final String motivo) {
 
         if (getActivity() != null)
             getActivity().runOnUiThread(new Runnable() {
@@ -778,26 +779,26 @@ Instantiate and pass a callback
 
                             RespUnivida respUnivida = null;
 
-                            try{
+                            try {
 
                                 respUnivida = new Gson().fromJson(response, RespUnivida.class);
 
                                 LogUtils.i(TAG, "OK CONVERSION " + new Gson().toJson(respUnivida));
 
-                            }catch (Exception ex){
+                            } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
                             mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_PROGRESS, Boolean.FALSE);
-                            if (respUnivida != null){
-                                if (respUnivida.getExito()){
+                            if (respUnivida != null) {
+                                if (respUnivida.getExito()) {
 
                                     mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, respUnivida.getMensaje());
 
-                                }else{
+                                } else {
 
                                     mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, respUnivida.getMensaje());
                                 }
-                            }else{
+                            } else {
 
                                 mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "Los datos estan vacion, comuniquese con el administrador.");
                             }
@@ -809,14 +810,14 @@ Instantiate and pass a callback
 
                             LogUtils.i(TAG, "FAIL RESPONSE " + error);
                             mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_PROGRESS, Boolean.FALSE);
-                            if (error != null){
-                                if (error.getCause() instanceof TimeoutError){
+                            if (error != null) {
+                                if (error.getCause() instanceof TimeoutError) {
                                     mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, getString(R.string.mensaje_error_timeout));
                                 } else {
 //                        mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, getString(R.string.mensaje_error_volley) + error.getMessage());
                                     mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "No tiene Conexión a INTERNET");
                                 }
-                            }else{
+                            } else {
                                 mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, getString(R.string.mensaje_error_volley_default));
                             }
 
@@ -884,51 +885,51 @@ Instantiate and pass a callback
 
     }
 
-    public void imprimirColilla(){
+    public void imprimirColilla() {
         efectivizarRespUnivida = null;
         fechaImpresion = null;
         impColilla = false;
         if (getActivity() != null)
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            imprimirFactura.imprimirFactura2();
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                imprimirFactura.imprimirFactura2();
 
-                        } catch (ImpresoraErrorException e) {
-                            e.printStackTrace();
-                            if (mListener != null)
-                                mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "Error en la impresora.");
-                        } catch (NoHayPapelException e) {
-                            e.printStackTrace();
-                            if (mListener != null)
-                                mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "No hay papel para imprimir.");
-                        } catch (VoltageBajoException e) {
-                            e.printStackTrace();
-                            if (mListener != null)
-                                mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "Error de Bateria baja. No podra imprimir con la bateria baja.");
-                        } catch (ErrorPapelException e) {
-                            e.printStackTrace();
-                            if (mListener != null)
-                                mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "Error en la impresora");
-                        }catch (Exception ex){
-                            ex.printStackTrace();
-                            if (mListener != null)
-                                mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "Error al imprimir los datos. Si esto persiste comuniquese con el encargado.");
+                            } catch (ImpresoraErrorException e) {
+                                e.printStackTrace();
+                                if (mListener != null)
+                                    mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "Error en la impresora.");
+                            } catch (NoHayPapelException e) {
+                                e.printStackTrace();
+                                if (mListener != null)
+                                    mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "No hay papel para imprimir.");
+                            } catch (VoltageBajoException e) {
+                                e.printStackTrace();
+                                if (mListener != null)
+                                    mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "Error de Bateria baja. No podra imprimir con la bateria baja.");
+                            } catch (ErrorPapelException e) {
+                                e.printStackTrace();
+                                if (mListener != null)
+                                    mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "Error en la impresora");
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                                if (mListener != null)
+                                    mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "Error al imprimir los datos. Si esto persiste comuniquese con el encargado.");
+                            }
                         }
-                    }
-                }).start();
-            }
-        });
+                    }).start();
+                }
+            });
     }
 
     @Override
     public void terminoDeImprimir() {
 
-        if (impColilla){
+        if (impColilla) {
             imprimirFactura.procesarColillaVentaSoat(user, efectivizarRespUnivida, fechaImpresion);
 
             DialogoEmizor dialogoEmizor = new DialogoEmizor();
@@ -936,7 +937,7 @@ Instantiate and pass a callback
             dialogoEmizor.setMensaje("Imprimir Colilla?");
             dialogoEmizor.setCancelable(false);
             dialogoEmizor.show(getActivity().getSupportFragmentManager(), null);
-        }else {
+        } else {
 
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -951,8 +952,8 @@ Instantiate and pass a callback
     @Override
     public void onRealizaAccionDialogEmizor(DialogoEmizor dialogoEmizor, int accion, int tipodialogo) {
 
-        if (tipodialogo == 5){
-            if (accion == ACCION_ACEPTAR){
+        if (tipodialogo == 5) {
+            if (accion == ACCION_ACEPTAR) {
                 solicitarReversion(dialogoEmizor.getMotivo());
             }
         }

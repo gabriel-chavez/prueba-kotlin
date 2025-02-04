@@ -34,6 +34,9 @@ public class RcvVenta implements Serializable, Parcelable
     @Expose
     private String vehiculoPlaca;
     private String estado;
+    @SerializedName("soat_medios_de_pago")
+    @Expose
+    private String soatMediosDePago;
     public final static Parcelable.Creator<RcvVenta> CREATOR = new Creator<RcvVenta>() {
 
 
@@ -60,6 +63,7 @@ public class RcvVenta implements Serializable, Parcelable
         this.soatNumeroComprobante = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.soatEstado = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.vehiculoPlaca = ((String) in.readValue((String.class.getClassLoader())));
+        this.soatMediosDePago = ((String) in.readValue((String.class.getClassLoader())));
     }
 
     public RcvVenta() {
@@ -129,6 +133,14 @@ public class RcvVenta implements Serializable, Parcelable
         this.estado = estado;
     }
 
+    public String getSoatMediosDePago() {
+        return soatMediosDePago;
+    }
+
+    public void setSoatMediosDePago(String estado) {
+        this.soatMediosDePago = soatMediosDePago;
+    }
+
     public void resetEstado(){
         switch (getSoatEstado()){
             case 1:
@@ -148,12 +160,12 @@ public class RcvVenta implements Serializable, Parcelable
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("facturaAurotizacionNumero", facturaAurotizacionNumero).append("facturaFecha", facturaFecha).append("facturaNumero", facturaNumero).append("facturaPrima", facturaPrima).append("soatNumeroComprobante", soatNumeroComprobante).append("soatEstado", soatEstado).append("vehiculoPlaca", vehiculoPlaca).toString();
+        return new ToStringBuilder(this).append("facturaAurotizacionNumero", facturaAurotizacionNumero).append("facturaFecha", facturaFecha).append("facturaNumero", facturaNumero).append("facturaPrima", facturaPrima).append("soatNumeroComprobante", soatNumeroComprobante).append("soatEstado", soatEstado).append("vehiculoPlaca", vehiculoPlaca).append("soatMediosDePago", soatMediosDePago).toString();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(soatEstado).append(soatNumeroComprobante).append(vehiculoPlaca).append(facturaFecha).append(facturaPrima).append(facturaNumero).append(facturaAurotizacionNumero).toHashCode();
+        return new HashCodeBuilder().append(soatEstado).append(soatNumeroComprobante).append(vehiculoPlaca).append(facturaFecha).append(facturaPrima).append(facturaNumero).append(facturaAurotizacionNumero).append(soatMediosDePago).toHashCode();
     }
 
     @Override
@@ -165,7 +177,7 @@ public class RcvVenta implements Serializable, Parcelable
             return false;
         }
         RcvVenta rhs = ((RcvVenta) other);
-        return new EqualsBuilder().append(soatEstado, rhs.soatEstado).append(soatNumeroComprobante, rhs.soatNumeroComprobante).append(vehiculoPlaca, rhs.vehiculoPlaca).append(facturaFecha, rhs.facturaFecha).append(facturaPrima, rhs.facturaPrima).append(facturaNumero, rhs.facturaNumero).append(facturaAurotizacionNumero, rhs.facturaAurotizacionNumero).isEquals();
+        return new EqualsBuilder().append(soatEstado, rhs.soatEstado).append(soatNumeroComprobante, rhs.soatNumeroComprobante).append(vehiculoPlaca, rhs.vehiculoPlaca).append(facturaFecha, rhs.facturaFecha).append(facturaPrima, rhs.facturaPrima).append(facturaNumero, rhs.facturaNumero).append(facturaAurotizacionNumero, rhs.facturaAurotizacionNumero).append(soatMediosDePago, rhs.soatMediosDePago).isEquals();
     }
 
     public void writeToParcel(Parcel dest, int flags) {
@@ -176,6 +188,7 @@ public class RcvVenta implements Serializable, Parcelable
         dest.writeValue(soatNumeroComprobante);
         dest.writeValue(soatEstado);
         dest.writeValue(vehiculoPlaca);
+        dest.writeValue(soatMediosDePago);
     }
 
     public int describeContents() {

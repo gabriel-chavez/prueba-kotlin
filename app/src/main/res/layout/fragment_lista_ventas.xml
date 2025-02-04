@@ -131,7 +131,15 @@
                     android:textColor="@color/blanco"
                     android:textSize="18sp"
                     android:textStyle="bold" />
-
+                <TextView
+                    android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/contorno_datos_sincorte_head"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="MEDIO DE PAGO"
+                    android:textColor="@color/blanco"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
                 <TextView
                     android:layout_width="@dimen/dimen_ancho_item_venta_autorizacion"
                     android:layout_height="wrap_content"

@@ -54,6 +54,8 @@ public class RcvListaVentaAdapter extends RecyclerView.Adapter<RcvListaVentaAdap
         holder.tvFechaFacturaVentaItem.setText(rcvVenta.getFacturaFecha());
         holder.tvPrimaFacturaVentaItem.setText(decimalFormat.format(rcvVenta.getFacturaPrima()));
         holder.tvEstadoVentaItem.setText(rcvVenta.getEstado());
+        holder.tvMedioPagoVentaItem.setText(rcvVenta.getSoatMediosDePago());
+
 
     }
 
@@ -94,7 +96,7 @@ public class RcvListaVentaAdapter extends RecyclerView.Adapter<RcvListaVentaAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView tvSoatNumeroComprobanteVentaItem, tvVehiculoPlacaVentaItem, tvAutorizacionNumeroVentaItem, tvNumeroFacturaVentaItem, tvFechaFacturaVentaItem, tvPrimaFacturaVentaItem, tvEstadoVentaItem;
+        private TextView tvSoatNumeroComprobanteVentaItem, tvVehiculoPlacaVentaItem, tvAutorizacionNumeroVentaItem, tvNumeroFacturaVentaItem, tvFechaFacturaVentaItem, tvPrimaFacturaVentaItem, tvEstadoVentaItem,tvMedioPagoVentaItem;
 
         public ViewHolder(View item){
             super(item);
@@ -105,6 +107,7 @@ public class RcvListaVentaAdapter extends RecyclerView.Adapter<RcvListaVentaAdap
             tvFechaFacturaVentaItem = item.findViewById(R.id.tvFechaFacturaVentaItem);
             tvPrimaFacturaVentaItem = item.findViewById(R.id.tvPrimaFacturaVentaItem);
             tvEstadoVentaItem = item.findViewById(R.id.tvEstadoVentaItem);
+            tvMedioPagoVentaItem=item.findViewById(R.id.tvMedioPagoVentaItem);
             item.setOnClickListener(this);
 
         }

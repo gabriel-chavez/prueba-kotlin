@@ -67,15 +67,16 @@
             android:padding="8dp"/>
     </LinearLayout>
 
-    <!-- Título de "Últimos Registros" -->
     <TextView
         android:id="@+id/tituloMovimientos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Últimos Registros"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="1dp"/>
+        android:text="Los Qr generados tendrán una vigencia de 20 minutos, transcurrido este tiempo serán anulados automaticamente."
+        android:textSize="11sp"
+        android:layout_marginBottom="1dp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"/>
+
 
     <TextView
         android:id="@+id/textViewMensaje"

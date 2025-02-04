@@ -219,6 +219,7 @@ public class HistorialQrGeneradosFragment extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     try {
+                        Log.i("response",response);
                         JSONObject jsonResponse = new JSONObject(response);
                         boolean exito = jsonResponse.getBoolean("exito");
                         if (exito) {
@@ -240,10 +241,11 @@ public class HistorialQrGeneradosFragment extends Fragment {
                                 int tVehiSoatPropFk = movimientoObj.getInt("TVehiSoatPropFk");
                                 int tParSimpleEstadoSolicitudFk = movimientoObj.getInt("TParSimpleEstadoSolicitudFk");
                                 int tramiteSecuencial = movimientoObj.getInt("TramiteSecuencial");
+                                double importe = movimientoObj.getDouble("Importe");
 
                                 QrGenerado qrGenerado = new QrGenerado(secuencial, identificadorVehiculo, gestion,
                                         fechaHoraSolicitud, estadoSolicitud, fechaHoraEstado,
-                                        efectivizado, mensajeEfectivizacion, tVehiSoatPropFk,tParSimpleEstadoSolicitudFk,tramiteSecuencial);
+                                        efectivizado, mensajeEfectivizacion, tVehiSoatPropFk,tParSimpleEstadoSolicitudFk,tramiteSecuencial,importe);
                                 qrGenerados.add(qrGenerado);
                             }
 
@@ -257,6 +259,7 @@ public class HistorialQrGeneradosFragment extends Fragment {
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        Log.e("historial", "excepción", e);
                         Toast.makeText(getContext(), "Error al procesar la respuesta.", Toast.LENGTH_SHORT).show();
                     }
                 },

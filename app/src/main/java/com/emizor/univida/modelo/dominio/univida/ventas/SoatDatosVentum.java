@@ -35,6 +35,9 @@ public class SoatDatosVentum implements Serializable, Parcelable
     @Expose
     private Integer soatGenericaEstadoFk;
     private String estado;
+    @SerializedName("soat_medios_de_pago")
+    @Expose
+    private String soatMediosDePago;
     public final static Parcelable.Creator<SoatDatosVentum> CREATOR = new Creator<SoatDatosVentum>() {
 
 
@@ -61,6 +64,7 @@ public class SoatDatosVentum implements Serializable, Parcelable
         this.facturaFecha = ((String) in.readValue((String.class.getClassLoader())));
         this.facturaPrima = ((Double) in.readValue((Double.class.getClassLoader())));
         this.soatGenericaEstadoFk = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.soatMediosDePago = ((String) in.readValue((String.class.getClassLoader())));
     }
 
     public SoatDatosVentum() {
@@ -126,6 +130,14 @@ public class SoatDatosVentum implements Serializable, Parcelable
         this.estado = estado;
     }
 
+    public void setSoatMediosDePago(String soatMediosDePago) {
+        this.soatMediosDePago = soatMediosDePago;
+    }
+
+    public String getSoatMediosDePago() {
+        return soatMediosDePago;
+    }
+
     public void resetEstado(){
         switch (soatGenericaEstadoFk){
             case 1:
@@ -149,7 +161,7 @@ public class SoatDatosVentum implements Serializable, Parcelable
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("soatNumeroComprobante", soatNumeroComprobante).append("vehiculoPlaca", vehiculoPlaca).append("facturaAutorizacionNumero", facturaAutorizacionNumero).append("facturaNumero", facturaNumero).append("facturaFecha", facturaFecha).append("facturaPrima", facturaPrima).append("soatGenericaEstadoFk", soatGenericaEstadoFk).toString();
+        return new ToStringBuilder(this).append("soatNumeroComprobante", soatNumeroComprobante).append("vehiculoPlaca", vehiculoPlaca).append("facturaAutorizacionNumero", facturaAutorizacionNumero).append("facturaNumero", facturaNumero).append("facturaFecha", facturaFecha).append("facturaPrima", facturaPrima).append("soatGenericaEstadoFk", soatGenericaEstadoFk).append("soatMediosDePago", soatMediosDePago).toString();
     }
 
     @Override
@@ -177,6 +189,7 @@ public class SoatDatosVentum implements Serializable, Parcelable
         dest.writeValue(facturaFecha);
         dest.writeValue(facturaPrima);
         dest.writeValue(soatGenericaEstadoFk);
+        dest.writeValue(soatMediosDePago);
     }
 
     public int describeContents() {

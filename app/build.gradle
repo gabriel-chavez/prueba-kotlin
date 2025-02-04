@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    def _versionCode = 603
+    def _versionCode = 1
     def _major = 1
-    def _minor = 5
-    def _patch = "87"
+    def _minor = 0
+    def _patch = "0"
 
     def _versionName = "${_major}.${_minor}.${_patch}"
 
@@ -12,15 +12,15 @@ android {
         config {
             keyAlias 'unipax'
             keyPassword 'MRc(Y/Jfn8C*X@3n'
-           // storeFile file('D:/Fuentes/vulcan/Aplicacion Android/unividapax.jks')
-            storeFile file('C:/Users/USUARIO/Documents/Proyectos/POS/unividapax.jks')
+            storeFile file('D:/Fuentes/vulcan/Aplicacion Android/unividapax.jks')
+           // storeFile file('C:/Users/USUARIO/Documents/Proyectos/POS/unividapax.jks')
             storePassword 'G/BP/wmBgUz9X+Y?'
         }
     }
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId "com.emizor.univida"
+        applicationId "com.univida.unividapos"
         minSdkVersion 17
         targetSdkVersion 28
         versionCode _versionCode

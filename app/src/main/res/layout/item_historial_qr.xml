@@ -26,12 +26,7 @@
             style="@style/TextBase"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/gestionTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2025"
-            style="@style/TextBase" />
+
 
         <!-- Fecha alineada a la derecha con tooltip -->
         <TextView
@@ -44,7 +39,32 @@
             style="@style/TextBase"
             android:tooltipText="Fecha y hora de solicitud de QR" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="start"
+        android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/gestionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="2025"
+            style="@style/TextBase" />
+
+
+        <TextView
+            android:id="@+id/importeTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="Bs.123"
+            style="@style/TextBase"
+           />
+    </LinearLayout>
     <!-- Estado y fecha de estado -->
     <LinearLayout
         android:layout_width="match_parent"

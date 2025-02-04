@@ -498,17 +498,18 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
                 } else if (!TextUtils.isDigitsOnly(strTelefono)) {
                     vistaForm = etTelefonoClienteEfectivizar;
                     estado = true;
-                    etTelefonoClienteEfectivizar.setError("Teléfono debe tener solo numeros.");
-                } else if (strTelefono.length() < 5) {
+                    etTelefonoClienteEfectivizar.setError("Teléfono debe tener solo números.");
+                } else if (strTelefono.length() != 8) {
                     vistaForm = etTelefonoClienteEfectivizar;
                     estado = true;
-                    etTelefonoClienteEfectivizar.setError("Teléfono incorrecto.");
+                    etTelefonoClienteEfectivizar.setError("El número de teléfono debe tener 8 dígitos.");
                 }
             } else {
                 vistaForm = etTelefonoClienteEfectivizar;
                 estado = true;
                 etTelefonoClienteEfectivizar.setError("Teléfono es requerido.");
             }
+
 
             if (estado) {
                 showProgress(false);

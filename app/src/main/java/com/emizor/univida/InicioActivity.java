@@ -217,7 +217,7 @@ public class InicioActivity extends RootActivity implements View.OnClickListener
             if (isConnected) {
                 Runtime runtime = Runtime.getRuntime();
                 try {
-                    Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+                    Process ipProcess = runtime.exec("/system/bin/ping -c 1 127.0.0.1");
                     int     exitValue = ipProcess.waitFor();
                     return (exitValue == 0);
                 }

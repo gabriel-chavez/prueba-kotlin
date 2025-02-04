@@ -79,6 +79,7 @@ public class HistorialQrAdapter extends ArrayAdapter<QrGenerado> {
         TextView fechaEstadoTextView = convertView.findViewById(R.id.textViewFechaEstado);
         TextView efectivizadoTextView = convertView.findViewById(R.id.textViewEfectivizado);
         TextView mensajeTextView = convertView.findViewById(R.id.textViewMensaje);
+        TextView importeTextView = convertView.findViewById(R.id.importeTextView);
 
         Button btnConsultarEstado = convertView.findViewById(R.id.btnConsultarEstado);
         Button btnAnular = convertView.findViewById(R.id.btnAnular);
@@ -86,7 +87,7 @@ public class HistorialQrAdapter extends ArrayAdapter<QrGenerado> {
 
 
         placaTextView.setText(qrGenerado.getIdentificadorVehiculo());
-        gestionTextView.setText(qrGenerado.getGestion());
+        gestionTextView.setText("Gestión: " +qrGenerado.getGestion());
         fechaTextView.setText(qrGenerado.getFechaHoraSolicitud());
         estadoTextView.setText(qrGenerado.getEstadoSolicitud());
         fechaEstadoTextView.setText(qrGenerado.getFechaHoraEstado());
@@ -99,7 +100,7 @@ public class HistorialQrAdapter extends ArrayAdapter<QrGenerado> {
             efectivizadoTextView.setTextColor(Color.GREEN);
             efectivizadoTextView.setText("Efectivizado");
         }
-
+        importeTextView.setText("Importe: Bs. "+String.valueOf(qrGenerado.getImporte()));
         mensajeTextView.setText(qrGenerado.getMensajeEfectivizacion());
         int estadoFk = qrGenerado.getTParSimpleEstadoSolicitudFk();
         btnConsultarEstado.setVisibility(View.GONE);
@@ -117,11 +118,15 @@ public class HistorialQrAdapter extends ArrayAdapter<QrGenerado> {
 //                btnComprobante.setVisibility(View.VISIBLE);
 //                break;
         }
-
+        int tramiteSecuencialQr = qrGenerado.getTramiteSecuencial();
         btnConsultarEstado.setOnClickListener(v -> {
-            int tramiteSecuencialQr = qrGenerado.getTramiteSecuencial();
+
             consultarEstadoQr(tramiteSecuencialQr);
         });
+        btnAnular.setOnClickListener(v -> {
+            anularQr(tramiteSecuencialQr);
+        });
+
 
         return convertView;
     }
@@ -233,6 +238,7 @@ public class HistorialQrAdapter extends ArrayAdapter<QrGenerado> {
     }
 
     private void manejarError(VolleyError error) {
+        loadingDialog.hideLoading();
         LogUtils.i("consultar", "On error response: " + error);
     }
 
@@ -292,7 +298,7 @@ public class HistorialQrAdapter extends ArrayAdapter<QrGenerado> {
     }
 
     private void VerificarEfectivizacion(int secuencialPago) {
-        /************verificar efectivización********************/
+        //verificar efectivización
         loadingDialog.showLoading(getContext(), "Verificando efectivización...");
 
         JSONObject jsonRequest = new JSONObject();
@@ -337,6 +343,8 @@ public class HistorialQrAdapter extends ArrayAdapter<QrGenerado> {
                             ((Activity) context).runOnUiThread(() -> {
                                 //mostrarTexto(mensajeEfectivizacion);
                                 View rootView = ((Activity) context).findViewById(android.R.id.content);
+                                Log.e("Efectivizacion", mensajeEfectivizacion.toString());
+                                loadingDialog.hideLoading();
                                 if (mensajeEfectivizacion.trim() != "")
                                     Snackbar.make(rootView, mensajeEfectivizacion, Snackbar.LENGTH_SHORT).show();
 
@@ -345,6 +353,8 @@ public class HistorialQrAdapter extends ArrayAdapter<QrGenerado> {
                                 isEfectivizado = true;
                                 handler.removeCallbacksAndMessages(null);
                                 fragment.obtenerHistorial();
+                                Log.e("Efectivizacion", mensajeEfectivizacion.toString());
+                                loadingDialog.hideLoading();
                                 //imprimirComprobanteYFactura(tVehiSoatPropFk);
                                 new AlertDialog.Builder(context)
                                         .setTitle("Aviso")
@@ -357,7 +367,9 @@ public class HistorialQrAdapter extends ArrayAdapter<QrGenerado> {
                         } else {
                             ((Activity) context).runOnUiThread(() -> {
                                 //mostrarTexto(mensaje);
+                                Log.e("Efectivizacion", mensaje.toString());
                                 View rootView = ((Activity) context).findViewById(android.R.id.content);
+                                loadingDialog.hideLoading();
                                 if (mensaje.trim() != "")
                                     Snackbar.make(rootView, mensaje, Snackbar.LENGTH_LONG).show();
                             });
@@ -393,33 +405,75 @@ public class HistorialQrAdapter extends ArrayAdapter<QrGenerado> {
         stringRequest.setTag("Efectivizacion");
 
         VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
-        loadingDialog.hideLoading();
+
         /**********Fin verificar efectivización*/
     }
+    private void anularQr(int tramiteSecuencialQr) {
+        /************anular Qr********************/
+        loadingDialog.showLoading(getContext(), "Anulando QR...");
 
-    private void imprimirComprobanteYFactura(long nroComprobante) {
-        ObtenerVentaUnivida obtenerVentaUnivida = new ObtenerVentaUnivida();
+        //mostrarMensaje("Anulando codigo QR");
 
-        obtenerVentaUnivida.setAutorizacionNumero("");
-        obtenerVentaUnivida.setGestionFk(-1);
-        obtenerVentaUnivida.setNumero(0);
-        obtenerVentaUnivida.setNumeroComprobante(nroComprobante);
-        obtenerVentaUnivida.setVehiculoPlaca("");
-        obtenerVentaUnivida.setVentaCajero("");
-        obtenerVentaUnivida.setVentaCanalFk(28);
-        obtenerVentaUnivida.setVentaVendedor(user.getUsername());
+        JSONObject jsonRequest = new JSONObject();
+        try {
+            jsonRequest.put("codigo_unico", tramiteSecuencialQr);
+            jsonRequest.put("tipo_tramite", 4);//POS
 
+            JSONObject seguridadExterna = new JSONObject();
+            seguridadExterna.put("seg_ext_usuario", "");
+            seguridadExterna.put("seg_ext_token", 0);
 
-        final String parametrosJson3 = obtenerVentaUnivida.toString();
-        VolleySingleton.getInstance(getContext()).getRequestQueue().getCache().clear();
+            jsonRequest.put("seguridad_externa", seguridadExterna);
 
-        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_VENTAS_OBTENER;
+            JSONObject transaccionOrigen = new JSONObject();
+            transaccionOrigen.put("tra_ori_intermediario", 0);
+            transaccionOrigen.put("tra_ori_entidad", "000");
+            transaccionOrigen.put("tra_ori_sucursal", "Oficina Nacional");
+            transaccionOrigen.put("tra_ori_agencia", "");
+            transaccionOrigen.put("tra_ori_canal", 28);
+            transaccionOrigen.put("tra_ori_cajero", user.getDatosUsuario().getEmpleadoUsuario());
+
+            jsonRequest.put("transaccion_origen", transaccionOrigen);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("AnularQR", e.toString());
+        }
+
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_VENTAS_QR_ANULAR;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                response -> manejarRespuesta(response),
+                response -> {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean exito = jsonResponse.getBoolean("exito");
+                        String mensaje = jsonResponse.optString("mensaje", "Operación completada.");
+
+                        if (exito) {
+                            ((Activity) context).runOnUiThread(() -> {
+                                Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
+                                fragment.obtenerHistorial();
+                                loadingDialog.hideLoading();
+
+                            });
+                        } else {
+
+                            loadingDialog.hideLoading();
+
+                            ((Activity) context).runOnUiThread(() -> Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show());
+
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        loadingDialog.hideLoading();
+
+                        Log.e("AnularQR", e.toString());
+                        ((Activity) context).runOnUiThread(() -> Toast.makeText(getContext(), "Error al procesar la respuesta.", Toast.LENGTH_LONG).show());
+                    }
+                },
                 error -> manejarError(error)) {
             @Override
             public byte[] getBody() throws AuthFailureError {
-                return obtenerCuerpoSolicitud(parametrosJson3.toString());
+                return obtenerCuerpoSolicitud(jsonRequest.toString());
             }
 
             @Override
@@ -437,14 +491,13 @@ public class HistorialQrAdapter extends ArrayAdapter<QrGenerado> {
         stringRequest.setShouldCache(false);
 
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(ConfigEmizor.VOLLEY_TIME_MLS_IMG, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        stringRequest.setTag("Efectivizacion");
+        stringRequest.setTag("efectivizarVenta");
 
         VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
-
+        /**********Fin anular QR*/
     }
 
-    private void manejarRespuesta(String response) {
-    }
+
 
     private Map<String, String> construirEncabezados() {
         Map<String, String> params = new HashMap<>();
