@@ -2,15 +2,18 @@ package com.emizor.univida.fragmento;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,25 +21,34 @@ import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.emizor.univida.R;
-import com.emizor.univida.adapter.MovimientoAdapter;
+import com.emizor.univida.activities.EfectivizarVentaActivity;
+import com.emizor.univida.adapter.HistorialQrAdapter;
 import com.emizor.univida.modelo.dominio.univida.seguridad.User;
+import com.emizor.univida.modelo.dominio.univida.ventas.ObtenerVentaUnivida;
 import com.emizor.univida.modelo.dominio.univida.ventas.QrGenerado;
 import com.emizor.univida.modelo.manejador.ControladorSqlite2;
 import com.emizor.univida.modelo.manejador.UtilRest;
 import com.emizor.univida.rest.DatosConexion;
+import com.emizor.univida.rest.VolleySingleton;
 import com.emizor.univida.util.ConfigEmizor;
+import com.emizor.univida.util.LoadingDialog;
+import com.emizor.univida.util.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +56,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 public class HistorialQrGeneradosFragment extends Fragment {
     private ListView listView;
-    private MovimientoAdapter adapter;
+    private HistorialQrAdapter adapter;
     private List<QrGenerado> qrGenerados;
     private User user;
 
@@ -54,6 +66,10 @@ public class HistorialQrGeneradosFragment extends Fragment {
     private Date fechaSeleccion;
     private DatePickerDialog datePickerDialog;
     TextView textViewMensaje;
+
+
+    private View rootView;
+
     public HistorialQrGeneradosFragment() {
         // Required empty public constructor
     }
@@ -65,7 +81,7 @@ public class HistorialQrGeneradosFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_historial_qr_generados, container, false);
+        rootView = inflater.inflate(R.layout.fragment_historial_qr_generados, container, false);
 
         listView = rootView.findViewById(R.id.listViewMovimientos);
 
@@ -88,6 +104,14 @@ public class HistorialQrGeneradosFragment extends Fragment {
             // Llamar a obtenerHistorial() cuando se seleccione la fecha
             obtenerHistorial();
         }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.setButton(DatePickerDialog.BUTTON_NEUTRAL, "Sin fecha", (dialog, which) -> {
+            // Configurar la fecha en 1900-01-01
+            fechaSeleccion = new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime();
+            btnFechaListaVenta.setText("1900-01-01");
+
+            // Llamar a obtenerHistorial() con la nueva fecha
+            obtenerHistorial();
+        });
 
         btnFechaListaVenta.setOnClickListener(v -> datePickerDialog.show());
 
@@ -118,7 +142,7 @@ public class HistorialQrGeneradosFragment extends Fragment {
 
 
 
-        adapter = new MovimientoAdapter(getContext(), qrGenerados);
+        adapter = new HistorialQrAdapter(getContext(), qrGenerados,this);
         listView.setAdapter(adapter);
 
         obtenerHistorial();
@@ -126,7 +150,7 @@ public class HistorialQrGeneradosFragment extends Fragment {
         return rootView;
     }
 
-    private void obtenerHistorial() {
+    public void obtenerHistorial() {
         String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_VENTAS_QR_LISTAR_GENERADOS;
 
         String identificadorVehi = editTextIdentificador.getText().toString();
@@ -136,6 +160,9 @@ public class HistorialQrGeneradosFragment extends Fragment {
 
 
         switch (estadoSeleccionado) {
+            case "Todos":
+                valorEstado = -1;
+                break;
             case "Solicitado":
                 valorEstado = 1;
                 break;
@@ -211,10 +238,12 @@ public class HistorialQrGeneradosFragment extends Fragment {
                                 String efectivizado = movimientoObj.getString("Efectivizado");
                                 String mensajeEfectivizacion = movimientoObj.getString("MensajeEfectivizacion");
                                 int tVehiSoatPropFk = movimientoObj.getInt("TVehiSoatPropFk");
+                                int tParSimpleEstadoSolicitudFk = movimientoObj.getInt("TParSimpleEstadoSolicitudFk");
+                                int tramiteSecuencial = movimientoObj.getInt("TramiteSecuencial");
 
                                 QrGenerado qrGenerado = new QrGenerado(secuencial, identificadorVehiculo, gestion,
                                         fechaHoraSolicitud, estadoSolicitud, fechaHoraEstado,
-                                        efectivizado, mensajeEfectivizacion, tVehiSoatPropFk);
+                                        efectivizado, mensajeEfectivizacion, tVehiSoatPropFk,tParSimpleEstadoSolicitudFk,tramiteSecuencial);
                                 qrGenerados.add(qrGenerado);
                             }
 
@@ -282,5 +311,6 @@ public class HistorialQrGeneradosFragment extends Fragment {
         datePickerDialog.updateDate(mYear, mMonth, mDay);
         datePickerDialog.show();
     }
+
 }
 

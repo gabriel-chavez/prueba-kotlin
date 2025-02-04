@@ -556,10 +556,11 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
                         //actualizamos en pantalla el estado en que nos encontramos
                         mostrarTexto(loginRespUnivida.getMensaje());
                         //GUARDAR EL TOKEN
-                        SharedPreferences sharedPreferences = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+                        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("numero", loginRespUnivida.getDatosUser().getNumero().toString());
                         editor.apply();
+
                         // un hilo de la actividad principal
                         runOnUiThread(new Runnable() {
                             @Override

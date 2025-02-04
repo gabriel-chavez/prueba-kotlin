@@ -1270,7 +1270,6 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
         }
 
 
-
         //fin crear parametros de ejecución
 
         JSONObject jsonRequest = new JSONObject();
@@ -1782,7 +1781,8 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
                         if (exito) {
 
                             runOnUiThread(() -> {
-                                mostrarTexto(mensajeEfectivizacion);
+                                if (mensajeEfectivizacion.trim() != "")
+                                    mostrarTexto(mensajeEfectivizacion);
                             });
                             if (tParSimpleEstadoEjecucionFk == 2) {
                                 isEfectivizado = true;
@@ -1794,7 +1794,8 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
 
                         } else {
                             runOnUiThread(() -> {
-                                mostrarTexto(mensaje);
+                                if (mensaje.trim() != "")
+                                    mostrarTexto(mensaje);
                             });
 
                         }
@@ -1842,7 +1843,6 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
         obtenerVentaUnivida.setVentaCajero("");
         obtenerVentaUnivida.setVentaCanalFk(28);
         obtenerVentaUnivida.setVentaVendedor(user.getUsername());
-
 
 
         final String parametrosJson3 = obtenerVentaUnivida.toString();

@@ -10,10 +10,12 @@ public class QrGenerado {
     private String efectivizado;
     private String mensajeEfectivizacion;
     private int tVehiSoatPropFk;
+    private int tParSimpleEstadoSolicitudFk;
 
+    private int tramiteSecuencial;
     public QrGenerado(String secuencial, String identificadorVehiculo, String gestion,
                       String fechaHoraSolicitud, String estadoSolicitud,
-                      String fechaHoraEstado, String efectivizado, String mensajeEfectivizacion, int tVehiSoatPropFk) {
+                      String fechaHoraEstado, String efectivizado, String mensajeEfectivizacion, int tVehiSoatPropFk, int tParSimpleEstadoSolicitudFk, int tramiteSecuencial) {
         this.secuencial = secuencial;
         this.identificadorVehiculo = identificadorVehiculo;
         this.gestion = gestion;
@@ -23,6 +25,8 @@ public class QrGenerado {
         this.efectivizado = efectivizado;
         this.mensajeEfectivizacion = mensajeEfectivizacion;
         this.tVehiSoatPropFk=tVehiSoatPropFk;
+        this.tParSimpleEstadoSolicitudFk=tParSimpleEstadoSolicitudFk;
+        this.tramiteSecuencial=tramiteSecuencial;
     }
 
     public String getSecuencial() { return secuencial; }
@@ -34,5 +38,7 @@ public class QrGenerado {
     public String getEfectivizado() { return efectivizado; }
     public String getMensajeEfectivizacion() { return mensajeEfectivizacion; }
     public int getTVehiSoatPropFk() { return tVehiSoatPropFk; }
+    public int getTParSimpleEstadoSolicitudFk() { return tParSimpleEstadoSolicitudFk; }
+    public int getTramiteSecuencial() { return tramiteSecuencial; }
 }
 
