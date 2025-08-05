@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,7 +63,7 @@ import java.util.Map;
  */
 public class LoginActivity extends RootActivity implements DialogoEmizor.NotificaDialogEmizorListener {
 
-    private static final String TAG = "LOGIN";
+    private static final String TAG = "LOGIN123";
     /**
      * Lleve un registro de la tarea de inicio de sesión para asegurarse de que podemos cancelarla si se solicita.
      */
@@ -261,7 +262,7 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
         if (Conexion.estaConectado(this)) {
             if (! AidlUtil.getInstance().isConnect()) {
                 // llamamos al metodo comenzarActualizar que verificara si existe una actualizacion de la aplicacion
-                comenzarActualizar();
+               // comenzarActualizar();
             }
         } else {
             // mostramos un mensaje de que no tiene internet
@@ -507,20 +508,24 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
 
         // imprimimos por la consola la url de autenticar. La impresion en el logcat de android dependera si esta habilitado o no en la clase LogUtils.
         LogUtils.i(TAG, "autenticar URL " + DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_SEGURIDAD_AUNTENTICACION);
-
+        Log.i("Login123","autenticar URL " + DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_SEGURIDAD_AUNTENTICACION);
         // vaciamos el cahce de volley
         VolleySingleton.getInstance(getApplicationContext()).getRequestQueue().getCache().clear();
 
         // Creamos una variable request y la seteamos con los datos necesarios para la conexion.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_SEGURIDAD_AUNTENTICACION, new Response.Listener<String>() {
+
             @Override
             public void onResponse(String response) {
                 // imprimimos por consola la respuesta
                 LogUtils.i(TAG, "OK RESPONSE" + response);
+
                 LoginRespUnivida loginRespUnivida = null;
+                Log.i("Login123","OK RESPONSE" + response);
                 try {
                     // convertimos el json en un objeto de la clase LoginRespUnivida
                     loginRespUnivida = new Gson().fromJson(response, LoginRespUnivida.class);
+
                 }catch (Exception ex){
                     ex.printStackTrace();
                 }
@@ -611,6 +616,7 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
                     @Override
                     public void run() {
                         LogUtils.i(TAG, "ERROR RESPONSE" + error);
+                        Log.i("Login123","ERROR RESPONSE" + error);
                         controladorSqlite2.eliminarTodoDatoTabla("usuario");
 
                         mostrarProgressBar(false);
@@ -636,9 +642,11 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
             public byte[] getBody() throws AuthFailureError {
                 LogUtils.i(TAG, "||||||||||||||||||||||           ***************************");
                 // verificamos que los parametrosJson no sean nulos
+                Log.i("Login123","||||||||||||||||||||||           ***************************");
                 if (parametrosJson != null) {
 
                     LogUtils.i(TAG, "getBody Enviando parametros :: " + parametrosJson);
+                    Log.i("Login123","getBody Enviando parametros :: " + parametrosJson);
                     String enviarJson;
 
                     try {
@@ -647,11 +655,12 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
                         enviarJson = parametrosJson.trim();
 
                         LogUtils.i(TAG, "getBody Enviando parametros encryp :: " + enviarJson);
-
+                        Log.i("Login123","getBody Enviando parametros encryp :: " + enviarJson);
                         // enviamos el json en formato UTF-8
                         return enviarJson.getBytes("utf-8");
 
                     } catch (UnsupportedEncodingException e) {
+                        Log.e("Login123","error: " + e);
                         e.printStackTrace();
                     }
                 }

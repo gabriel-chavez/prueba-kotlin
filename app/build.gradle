@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     def _versionCode = 1
     def _major = 1
-    def _minor = 0
+    def _minor = 2
     def _patch = "0"
 
     def _versionName = "${_major}.${_minor}.${_patch}"
@@ -12,8 +12,8 @@ android {
         config {
             keyAlias 'unipax'
             keyPassword 'MRc(Y/Jfn8C*X@3n'
-            storeFile file('D:/Fuentes/vulcan/Aplicacion Android/unividapax.jks')
-           // storeFile file('C:/Users/USUARIO/Documents/Proyectos/POS/unividapax.jks')
+           // storeFile file('D:/Fuentes/vulcan/Aplicacion Android/unividapax.jks')
+            storeFile file('C:/Users/USUARIO/Documents/Proyectos/POS/unividapax.jks')
             storePassword 'G/BP/wmBgUz9X+Y?'
         }
     }
@@ -25,6 +25,7 @@ android {
         targetSdkVersion 28
         versionCode _versionCode
         versionName _versionName
+        versionCode 2
         multiDexEnabled true //importantmultiDexEnabled true //important
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 //        vectorDrawables.useSupportLibrary = true
@@ -72,5 +73,11 @@ dependencies {
 
     implementation 'com.yandex.android:mobmetricalib:3.16.2'
     implementation 'org.json:json:20210307'
+    implementation 'com.google.guava:guava:30.1-android'
+    implementation 'org.osmdroid:osmdroid-android:6.1.18'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+
+
 
 }

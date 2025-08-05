@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#F8F8F8">
+
+    <!-- Parámetros de búsqueda -->
+    <!-- Fila 2: EditText Fecha y Spinner Estado -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:layout_marginBottom="1dp">
+
+        <!-- Botón Fecha -->
+        <Button
+            android:id="@+id/btnFechaListaVenta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text=""
+            android:layout_weight="1"/>
+
+
+    </LinearLayout>
+
+
+
+
+
+    <!-- ListView de Movimientos -->
+    <ListView
+        android:id="@+id/listViewMovimientos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

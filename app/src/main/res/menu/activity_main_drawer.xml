@@ -42,6 +42,20 @@
                 />
         </menu>
     </item>
-
+    <item android:title="TURNOS">
+        <menu>
+            <item
+                android:id="@+id/menu_turno_control"
+                android:enabled="true"
+                android:icon="@drawable/ic_action_cliente"
+                android:title="Control de Turno" />
+            <item
+                android:id="@+id/menu_turno_historia"
+                android:icon="@drawable/ic_action_otros"
+                android:title="Historia de Turno"
+                android:enabled="true"
+                />
+        </menu>
+    </item>
 
 </menu>

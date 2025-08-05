@@ -30,6 +30,7 @@ import android.view.View;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.emizor.univida.LoginActivity;
 import com.emizor.univida.R;
+import com.emizor.univida.fragmento.TurnoControlFragment;
 import com.emizor.univida.dialogo.DialogoEmizor;
 import com.emizor.univida.fragmento.CambiarClaveFragment;
 import com.emizor.univida.fragmento.HistorialQrGeneradosFragment;
@@ -38,6 +39,7 @@ import com.emizor.univida.fragmento.ListaVentasFragment;
 import com.emizor.univida.fragmento.NuevaVentaFragment;
 import com.emizor.univida.fragmento.NuevoRcvFragment;
 import com.emizor.univida.fragmento.OnFragmentInteractionListener4;
+import com.emizor.univida.fragmento.TurnoHistorialFragment;
 import com.emizor.univida.modelo.dominio.univida.seguridad.User;
 import com.emizor.univida.modelo.dominio.univida.ventas.EfectivizarFacturaUnivida;
 import com.emizor.univida.modelo.manejador.ControladorSqlite2;
@@ -285,6 +287,16 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
                     // enviamos el fragmento para visualizarlo en pantalla.
                     cambiarFragmento(listaFragmentos[3]);
                 }
+                break;
+            case R.id.menu_turno_control:
+                //cambiamos el titulo del toolbar
+                getSupportActionBar().setTitle("Control de Turno");
+                cambiarFragmento(new TurnoControlFragment());
+                break;
+            case R.id.menu_turno_historia:
+                //cambiamos el titulo del toolbar
+                getSupportActionBar().setTitle("Historial de registros");
+                cambiarFragmento(new TurnoHistorialFragment());
                 break;
         }
 

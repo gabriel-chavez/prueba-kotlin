@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@color/colorBackground"
+    android:backgroundTint="@color/colorBackground"
+    android:elevation="4dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:textAlignment="center">
+
+    <!-- Estado y fecha de estado -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="start"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewEstado"
+            style="@style/TextBase"
+            android:layout_width="98dp"
+            android:layout_height="wrap_content"
+            android:text="Fecha y hora"
+
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Fecha de estado alineada a la derecha con tooltip -->
+        <TextView
+            android:id="@+id/textViewFechaRegistro"
+            style="@style/TextEstado"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="30/01/2025 14:56:15"
+            android:tooltipText="Fecha y hora del estado" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewNombre"
+            style="@style/TextBase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Nombre"
+            android:textStyle="bold" />
+
+
+        <!-- Fecha alineada a la derecha con tooltip -->
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewCargo"
+        style="@style/TextBase"
+        android:layout_width="366dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Cargo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="start"
+        android:orientation="horizontal">
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:gravity="start"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewTipo"
+            style="@style/TextEstado"
+            android:layout_width="98dp"
+            android:layout_height="wrap_content"
+            android:text="Tipo registro"
+            android:textColorHighlight="#0B0505"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Fecha de estado alineada a la derecha con tooltip -->
+        <TextView
+            android:id="@+id/textViewTipoEvento"
+            style="@style/TextEstado"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Inicio"
+            android:tooltipText="" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="start"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewPunto"
+            style="@style/TextEstado"
+            android:layout_width="98dp"
+            android:layout_height="wrap_content"
+            android:text="Punto"
+            android:textColorHighlight="#0B0505"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Fecha de estado alineada a la derecha con tooltip -->
+        <TextView
+            android:id="@+id/textViewPuntoRegistro"
+            style="@style/TextEstado"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Inicio"
+            android:tooltipText="" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnVerDetalle"
+            style="@style/ButtonBase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:backgroundTint="@color/colorEfectivizado"
+            android:text="Ver detalle" />
+    </LinearLayout>
+</LinearLayout>
