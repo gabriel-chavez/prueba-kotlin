@@ -30,6 +30,7 @@ import android.view.View;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.emizor.univida.LoginActivity;
 import com.emizor.univida.R;
+import com.emizor.univida.TurnoControlFragment;
 import com.emizor.univida.dialogo.DialogoEmizor;
 import com.emizor.univida.fragmento.CambiarClaveFragment;
 import com.emizor.univida.fragmento.HistorialQrGeneradosFragment;
@@ -285,6 +286,11 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
                     // enviamos el fragmento para visualizarlo en pantalla.
                     cambiarFragmento(listaFragmentos[3]);
                 }
+                break;
+            case R.id.menu_turno_control:
+                //cambiamos el titulo del toolbar
+                getSupportActionBar().setTitle("Control de Turno");
+                cambiarFragmento(new TurnoControlFragment());
                 break;
         }
 

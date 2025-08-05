@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     def _versionCode = 1
     def _major = 1
-    def _minor = 0
+    def _minor = 1
     def _patch = "0"
 
     def _versionName = "${_major}.${_minor}.${_patch}"
@@ -25,6 +25,7 @@ android {
         targetSdkVersion 28
         versionCode _versionCode
         versionName _versionName
+        versionCode 2
         multiDexEnabled true //importantmultiDexEnabled true //important
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 //        vectorDrawables.useSupportLibrary = true
@@ -72,5 +73,6 @@ dependencies {
 
     implementation 'com.yandex.android:mobmetricalib:3.16.2'
     implementation 'org.json:json:20210307'
+
 
 }
