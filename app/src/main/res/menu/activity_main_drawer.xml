@@ -52,7 +52,7 @@
             <item
                 android:id="@+id/menu_turno_historia"
                 android:icon="@drawable/ic_action_otros"
-                android:title="Historia de Turno"
+                android:title="Historial de Turnos"
                 android:enabled="true"
                 />
         </menu>

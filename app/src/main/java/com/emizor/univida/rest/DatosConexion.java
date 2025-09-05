@@ -59,4 +59,13 @@ public class DatosConexion {
     public static final String URL_UNIVIDA_RCV_REMITIR = "/reporte-cierre-ventas/remitir";
     public static final String URL_UNIVIDA_RCV_LISTAR = "/reporte-cierre-ventas/listar";
     public static final String URL_UNIVIDA_RCV_REVERTIR = "/reporte-cierre-ventas/revertir";
+
+    // CONTROL TURNOS
+    public static final String URL_UNIVIDA_CONTROL_TURNOS_REGISTRAR = "/consultas/con-registro-control";
+    public static final String URL_UNIVIDA_CONTROL_TURNOS_LISTAR = "/consultas/con-historico-listar";
+    public static final String URL_UNIVIDA_CONTROL_TURNOS_OBTENER = "/consultas/con-historico-obtener";
+    public static final String URL_UNIVIDA_CONTROL_TURNOS_TIPO_EVENTO = "/consultas/con-tipo-evento";
+    public static final String URL_UNIVIDA_CONTROL_TURNOS_TIPO_PUNTO = "/consultas/con-tipo-punto";
+
 }
+

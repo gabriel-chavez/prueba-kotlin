@@ -616,7 +616,7 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
                     @Override
                     public void run() {
                         LogUtils.i(TAG, "ERROR RESPONSE" + error);
-                        Log.i("Login123","ERROR RESPONSE" + error);
+                        Log.i("loginInternet","ERROR RESPONSE" + error);
                         controladorSqlite2.eliminarTodoDatoTabla("usuario");
 
                         mostrarProgressBar(false);
@@ -627,7 +627,7 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
                                 mostrarMensaje(getString(R.string.mensaje_error_timeout));
                             }else {
 //                                mostrarMensaje(getString(R.string.mensaje_error_volley) + error.getMessage());
-                                mostrarMensaje("No tiene Conexión a INTERNET");
+                                mostrarMensaje("No tiene Conexión a INTERNET...");
                             }
                         }else{
                             mostrarMensaje(getString(R.string.mensaje_error_volley_default));

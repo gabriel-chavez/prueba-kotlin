@@ -1,34 +1,66 @@
 package com.emizor.univida.modelo.dominio.univida.turnos;
 
-public class Turnos {
-    private int secuencial;
-    private String nombre;
-    private String cargo;
-    private String fechaRegistro;
-    private String tipoEvento;
-    private String puntoRegistro;
-    private String imagen;
-    private String latitud;
-    private String longitud;
+import com.google.gson.annotations.SerializedName;
 
+public class Turnos {
+
+    @SerializedName("Secuencial")
+    private int secuencial;
+
+    @SerializedName("EmpleadoNombreCompleto")
+    private String nombre;
+
+    @SerializedName("EmpleadoCargo")
+    private String empleadoCargo;
+
+    @SerializedName("FechaHora")
+    private String fechaRegistro;
+
+    @SerializedName("TParControlTurnosTipoEventoDescripcion")
+    private String tipoEvento;
+
+    @SerializedName("TParControlTurnosTipoPuntoDescripcion")
+    private String puntoRegistro;
+
+    @SerializedName("ImageBase64")
+    private String imagen;
+
+    @SerializedName("Latitud")
+    private double latitud;
+
+    @SerializedName("Longitud")
+    private double longitud;
+
+    @SerializedName("DispositivoId")
+    private String dispositivoId;
+
+    @SerializedName("Usuario")
+    private String usuario;
+
+    // Constructor vacío requerido para la serialización/deserialización
     public Turnos() {
-        // Constructor vacío requerido para serialización/deserialización
+        // Constructor vacío
     }
 
-    public Turnos(int secuencial, String nombre, String cargo, String fechaRegistro,
-                  String tipoEvento, String puntoRegistro, String imagen,
-                  String latitud, String longitud) {
+    public Turnos(int secuencial, String nombre, String fechaRegistro, String tipoEvento,
+                  String puntoRegistro, String imagen, double latitud, double longitud,
+                  String dispositivoId, String usuario,String empleadoCargo) {
         this.secuencial = secuencial;
         this.nombre = nombre;
-        this.cargo = cargo;
         this.fechaRegistro = fechaRegistro;
         this.tipoEvento = tipoEvento;
         this.puntoRegistro = puntoRegistro;
         this.imagen = imagen;
         this.latitud = latitud;
         this.longitud = longitud;
+        this.dispositivoId = dispositivoId;
+        this.usuario = usuario;
+        this.empleadoCargo = empleadoCargo;
+
+
     }
 
+    // Getters y setters
     public int getSecuencial() {
         return secuencial;
     }
@@ -44,15 +76,13 @@ public class Turnos {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
-    public String getCargo() {
-        return cargo;
+    public String getEmpleadoCargo() {
+        return empleadoCargo;
     }
 
-    public void setCargo(String cargo) {
-        this.cargo = cargo;
+    public void setEmpleadoCargo(String empleadoCargo) {
+        this.empleadoCargo = empleadoCargo;
     }
-
     public String getFechaRegistro() {
         return fechaRegistro;
     }
@@ -85,20 +115,36 @@ public class Turnos {
         this.imagen = imagen;
     }
 
-    public String getLatitud() {
+    public double getLatitud() {
         return latitud;
     }
 
-    public void setLatitud(String latitud) {
+    public void setLatitud(double latitud) {
         this.latitud = latitud;
     }
 
-    public String getLongitud() {
+    public double getLongitud() {
         return longitud;
     }
 
-    public void setLongitud(String longitud) {
+    public void setLongitud(double longitud) {
         this.longitud = longitud;
+    }
+
+    public String getDispositivoId() {
+        return dispositivoId;
+    }
+
+    public void setDispositivoId(String dispositivoId) {
+        this.dispositivoId = dispositivoId;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     @Override
@@ -106,13 +152,14 @@ public class Turnos {
         return "Turnos{" +
                 "secuencial=" + secuencial +
                 ", nombre='" + nombre + '\'' +
-                ", cargo='" + cargo + '\'' +
                 ", fechaRegistro='" + fechaRegistro + '\'' +
                 ", tipoEvento='" + tipoEvento + '\'' +
                 ", puntoRegistro='" + puntoRegistro + '\'' +
                 ", imagen='" + imagen + '\'' +
-                ", latitud='" + latitud + '\'' +
-                ", longitud='" + longitud + '\'' +
+                ", latitud=" + latitud +
+                ", longitud=" + longitud +
+                ", dispositivoId='" + dispositivoId + '\'' +
+                ", usuario='" + usuario + '\'' +
                 '}';
     }
 }
