@@ -531,7 +531,8 @@ Instantiate and pass a callback
 
                 BottomSheetMenuDialog dialog = new BottomSheetBuilder(getContext(), R.style.AppTheme_BottomSheetDialog_Custom)
                         .setMode(BottomSheetBuilder.MODE_LIST)
-                        .addItem(502, "REIMPRIMIR", R.drawable.ic_action_printer)
+                        .addItem(502, "REIMPRIMIR RESUMIDO", R.drawable.ic_action_printer)
+                        .addItem(504, "REIMPRIMIR COMPLETO", R.drawable.ic_action_printer)
                         .addItem(503, "SOLICITAR REVERSIÓN", R.drawable.ic_action_revertir)
                         .setItemClickListener(new BottomSheetItemClickListener() {
                             @Override
@@ -548,6 +549,10 @@ Instantiate and pass a callback
                                         else
                                             obtenerMotivo();
                                         break;
+                                    case 504:
+
+                                        obtenerDatosVenta(2);
+                                        break;
                                 }
                             }
                         })
@@ -561,8 +566,12 @@ Instantiate and pass a callback
         }
 
     }
-
-    private void obtenerDatosVenta() {
+    private void obtenerDatosVenta(){
+        //1 Resumen
+        //2 Completo
+        obtenerDatosVenta(1);
+    }
+    private void obtenerDatosVenta(int tipo) {
 
         if (getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
@@ -607,7 +616,10 @@ Instantiate and pass a callback
                                 if (efectivizarRespUnivida.getExito()) {
 
                                     try {
+                                        if(tipo==1)
                                         imprimirFactura.prepararImpresionFactura(user, efectivizarRespUnivida);
+                                        if(tipo==2)
+                                        imprimirFactura.prepararImpresionFacturaCompleto(user, efectivizarRespUnivida);
                                     } catch (Exception ex) {
                                         ex.printStackTrace();
                                         mListener.onAccionFragment(null, OnFragmentInteractionListener4.ACCION_MENSAJE, "No se puede imprimir los datos por que algunos o todos son nulos.");

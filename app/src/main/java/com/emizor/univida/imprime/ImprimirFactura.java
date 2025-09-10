@@ -692,7 +692,9 @@ public class ImprimirFactura {
 
 
     }
-
+    public void prepararImpresionFacturaCompleto(User user, EfectivizarRespUnivida efectivizarRespUnivida) {
+        prepararImpresionFactura2022FontNormal(user, efectivizarRespUnivida);
+    }
     public void prepararImpresionFactura(User user, EfectivizarRespUnivida efectivizarRespUnivida) {
 
 //        if (efectivizarRespUnivida.getDatos().getSoatGestionFk() >= 2022) {
