@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     def _versionCode = 1
     def _major = 1
-    def _minor = 3
+    def _minor = 4
     def _patch = "0"
 
     def _versionName = "${_major}.${_minor}.${_patch}"

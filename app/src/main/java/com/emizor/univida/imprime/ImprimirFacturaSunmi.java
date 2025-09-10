@@ -387,304 +387,11 @@ public class ImprimirFacturaSunmi extends ImprimirFactura{
     }
 
     public void prepararImpresionFactura(User user, EfectivizarRespUnivida efectivizarRespUnivida) {
-
-//        LogUtils.i(TAG, "PREPARAMOS FACTURA getSoatGestionFk " + efectivizarRespUnivida.getDatos().getSoatGestionFk() + " validacion " + (efectivizarRespUnivida.getDatos().getSoatGestionFk() >= 2022));
-//        if (efectivizarRespUnivida.getDatos().getSoatGestionFk() >= 2022) {
-            prepararImpresionFactura2022(user, efectivizarRespUnivida);
-//            return;
-//        }
-//        LogUtils.i(TAG, "PREPARAMOS FACTURA < 2021");
-//
-//        if (pImp != null){
-//            pImp.clear();
-//        }
-//
-//        pImp = new Vector<>();
-//        Vector<Object> vectoDoc = new Vector<>();
-//
-//        Datos datos = efectivizarRespUnivida.getDatos();
-//
-//        List<String> strLey = formatearLineaCadena4(datos.getFacturaMaestro().getLeyenda());
-//        List<String> vector11 = formatearLineaCadena2(datos.getFacturaMaestro().getDireccionSucursal() + " Teléfono: " + datos.getFacturaMaestro().getTelefonoSucursal());
-//
-//        BigDecimal bigDecimalAmount = new BigDecimal(datos.getFacturaMaestro().getImporteNumeral());
-//
-//        bigDecimalAmount = bigDecimalAmount.setScale(2, RoundingMode.HALF_EVEN);
-//        StringBuilder stringBuilder = new StringBuilder("TOTAL: " + "Bs" + " " + bigDecimalAmount.toString());
-//
-//
-//        Vector<Object> nnotes = new Vector<>();
-//
-//        List<String> literal = formatearLineaCadena2("SON: " + datos.getFacturaMaestro().getImporteLiteral());
-//
-//        List<Detalle> detalles = datos.getFacturaMaestro().getDetalle();
-//
-//        for (Detalle detalle : detalles){
-//            String lineaDatos = construirFila(decimalFormat.format(detalle.getCantidad()), "", decimalFormat.format(detalle.getImporteUnitario()), decimalFormat.format(detalle.getImporteTotal()));
-//            nnotes.add(lineaDatos);
-//
-//            nnotes.add((detalle.getLineaDetalle()));
-//
-//        }
-//
-//        LogUtils.i("IMPRESION ", "TRY");
-//
-//        LogUtils.i("IMPRESION ", "logo");
-//
-//        vectoDoc.add(10);
-//        vectoDoc.add(String.valueOf(R.raw.logop));
-//
-//        vectoDoc.add(-2);
-//        vectoDoc.add("CASA MATRIZ");
-//
-//        List<String> vector111 = formatearLineaCadena2(datos.getFacturaMaestro().getDireccionEmpresa() + " Teléfono: " + datos.getFacturaMaestro().getTelefonosEmpresa());
-//        for (String strDire2 : vector111){
-//            vectoDoc.add(-2);
-//            vectoDoc.add(strDire2);
-//        }
-//        vectoDoc.add(-2);
-//        vectoDoc.add((datos.getFacturaMaestro().getLugar()));
-//        vectoDoc.add(" ");
-//
-//        if (datos.getFacturaMaestro().getNumeroSucursal() != 0) {
-//            vectoDoc.add(-2);
-//            vectoDoc.add("SUCURSAL: " + datos.getFacturaMaestro().getNumeroSucursal());
-//
-//            for (String strDire : vector11){
-//                vectoDoc.add(-2);
-//                vectoDoc.add(strDire);
-//
-//            }
-//            vectoDoc.add(-2);
-//            vectoDoc.add(datos.getFacturaMaestro().getMunicipioDepartamento());
-//        }
-//
-////        if (datos.getFacturaMaestro().getNumeroSucursal() != 0) {
-////            vectoDoc.add(-2);
-////            vectoDoc.add(("SUCURSAL No " + datos.getFacturaMaestro().getNumeroSucursal()));
-////
-////        }else{
-////            vectoDoc.add(-2);
-////            vectoDoc.add(("CASA MATRIZ"));
-////
-////        }
-//////        vectoDoc.add(vector11);
-////        for (String strDire : vector11){
-////            vectoDoc.add(-2);
-////            vectoDoc.add((strDire));
-////
-////        }
-////
-////        if (datos.getFacturaMaestro().getTelefonoSucursal() != null) {
-////            vectoDoc.add(-2);
-////            vectoDoc.add(("Teléfono " + datos.getFacturaMaestro().getTelefonoSucursal()));
-////
-////        }
-////        vectoDoc.add(-2);
-////        vectoDoc.add((datos.getFacturaMaestro().getLugar()));
-//        vectoDoc.add(-2);
-//        vectoDoc.add(("FACTURA"));
-//
-//        vectoDoc.add(3);
-//        vectoDoc.add(linea);
-//
-//        vectoDoc.add(101);
-//        vectoDoc.add("NIT             :");
-//        vectoDoc.add(110);
-//        vectoDoc.add(datos.getFacturaMaestro().getNitEmpresa());
-//        vectoDoc.add(101);
-//        vectoDoc.add("FACTURA No.     :");
-//        vectoDoc.add(110);
-//        vectoDoc.add(datos.getFacturaMaestro().getNumeroFactura().toString());
-//        vectoDoc.add(101);
-//        vectoDoc.add("AUTORIZACIÓN No.:");
-//        vectoDoc.add(110);
-//        vectoDoc.add(datos.getFacturaMaestro().getNumeroAutorizacion());
-//
-//        vectoDoc.add(3);
-//        vectoDoc.add(linea);
-//
-//        vectoDoc.add(datos.getFacturaMaestro().getActividadEconomica());
-////        List<String> activitys = (datos.getFacturaMaestro().getActividadEconomica(), 0);
-////
-////        for (String strActividad : activitys){
-////            vectoDoc.add((strActividad));
-////        }
-//
-//        String fecha1 = datos.getFacturaMaestro().getFechaEmision();
-//        fecha1 = fecha1.replace('-', '/');
-//
-//
-//        vectoDoc.add("FECHA       : " + fecha1);
-//        vectoDoc.add("NIT/CI      : " + datos.getFacturaMaestro().getNitCiCliente());
-//        vectoDoc.addAll(formatearLineaCadena2("RAZÓN SOCIAL: " + datos.getFacturaMaestro().getRazonSocialClient()));
-//
-//        vectoDoc.add(3);
-//        vectoDoc.add(linea);
-//
-//        vectoDoc.add(construirFila("Cant.", " ", "Precio", "Sub total"));
-//
-//        vectoDoc.add(3);
-//        vectoDoc.add(linea);
-//
-//        for (int i = 0; i < nnotes.size(); i += 2) {
-//
-//            String nnotes2 = (String) nnotes.get(i + 1);
-//
-//            vectoDoc.add(nnotes2);
-//
-//            vectoDoc.add(String.valueOf(nnotes.get(i)));
-//
-//        }
-//
-//        //vectoDoc.add(getApplicationContext().getResources().openRawResource(R.raw.linea));
-//        vectoDoc.add(3);
-//        vectoDoc.add(linea);
-//        // colocamos valor unao para imprimir cadenas al revez y con alineacion a la derecha
-//        vectoDoc.add(-102);
-//        vectoDoc.add(stringBuilder.toString());
-//
-//        vectoDoc.add("MONTO A PAGAR: Bs " + decimalFormat.format(bigDecimalAmount));
-//        for (String litre: literal) {
-//            vectoDoc.add(litre);
-//        }
-//        vectoDoc.add(3);
-//        vectoDoc.add(linea);
-//
-//        vectoDoc.add(101);
-//        vectoDoc.add("CÓDIGO DE CONTROL:");
-//        vectoDoc.add(110);
-//        vectoDoc.add(datos.getFacturaMaestro().getCodigoControl());
-//        vectoDoc.addAll(formatearLineaCadena2("FECHA LÍMITE DE EMISIÓN: " + datos.getFacturaMaestro().getFechaLimiteEmision()));
-//
-//
-//        vectoDoc.add("USUARIO: " + user.getDatosUsuario().getEmpleadoNombreCompleto());
-//
-//        String informacionQr = datos.getFacturaMaestro().getCodigoQr();
-//
-//        vectoDoc.add(200);
-//        vectoDoc.add((informacionQr));
-//
-////        vectoDoc.add(strLey);
-//        for (String strLe : strLey) {
-//            vectoDoc.add(-3);
-//            vectoDoc.add((strLe));
-//        }
-//
-//        List<String> listaLeyenda = formatearLineaCadena4("\"ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAIS, EL USO ILÍCITO DE ESTA SERÁ SANCIONADO DE ACUERDO A LEY\"");
-////        vectoDoc.add(listaLeyenda);
-//        for (String strLeyenda : listaLeyenda){
-//            vectoDoc.add(-3);
-//            vectoDoc.add((strLeyenda));
-//        }
-//
-//        vectoDoc.add(" ");
-//        String corteAqui = ">>>------- CORTE AQUI -------<<<";
-//        vectoDoc.add(corteAqui);
-//        vectoDoc.add(" ");
-//        vectoDoc.add(10);
-//        vectoDoc.add(String.valueOf(R.raw.logop));
-//
-//        if (datos.getSoatQrContenido() != null) {
-//            vectoDoc.add(200);
-//            vectoDoc.add((datos.getSoatQrContenido()));
-//        }
-//
-//        vectoDoc.add(-2);
-//        vectoDoc.add((("COMPROBANTE SOAT " + datos.getSoatGestionFk())));
-//
-//        //SOAT
-//        vectoDoc.add("Fecha emision    :" + datos.getFacturaMaestro().getFechaEmision());
-//        vectoDoc.add("Número de comprobante:" + decimalFormatLleno.format(datos.getSoatNumeroComprobante()));
-//        vectoDoc.add("Número de roseta :" + decimalFormatLleno.format(datos.getSoatRosetaNumero()));
-//        vectoDoc.add("Número de factura:" + decimalFormatLleno.format(datos.getFacturaMaestro().getNumeroFactura()));
-//        vectoDoc.add("Placa            :" +datos.getVehiculoPlaca());
-//        vectoDoc.add("Tipo de vehiculo :" + datos.getSoatVehiculoTipoDescripcion());
-//        vectoDoc.add("Tipo de uso      :" + datos.getSoatVehiculoUsoDescription());
-////        vectoDoc.add(210);
-////        vectoDoc.add(15);
-//        vectoDoc.add("Plaza circulacion:" + datos.getSoatDepartamentoPcDescription());
-//        //SOAT
-//
-//        vectoDoc.add(210);
-//        vectoDoc.add(5);
-//
-//        //VEHICULO
-//        vectoDoc.add("Marca            :" + datos.getVehiculoMarca());
-//        vectoDoc.add("Modelo           :" + datos.getVehiculoModelo());
-//        vectoDoc.add("Color            :" + datos.getVehiculoColor());
-//        vectoDoc.add("Año              :" + datos.getVehiculoAnio());
-//        vectoDoc.add("Nro de Motor     :" + datos.getVehiculoMotor());
-////        vectoDoc.add(210);
-////        vectoDoc.add(15);
-//        vectoDoc.add("Nro Chasis       :" + datos.getVehiculoChasis());
-//        //VEHICULO
-//
-//        vectoDoc.add(210);
-//        vectoDoc.add(5);
-//
-//        //TOMADOR
-//        vectoDoc.addAll(formatearLineaCadena3("Tomador          : " + datos.getPropTomador(), 10));
-//        vectoDoc.add("CI               : " + datos.getPropCi());
-//        vectoDoc.add("NIT              : " + datos.getPropNit());
-//        vectoDoc.addAll(formatearLineaCadena3("Dirección        : " + datos.getPropDireccion(), 10));
-//        vectoDoc.add("Teléfono         : " + datos.getPropTelefono());
-//        vectoDoc.add("Celular          : " + datos.getPropCelular());
-//        //TOMADOR
-//        vectoDoc.add(3);
-//        vectoDoc.add(linea);
-//        List<String> cadenaInfor = formatearLineaCadena4("Para actualizar la informacion del presente formulario apersonese a nuestras oficinas o ingresar a la página web www.univida.bo");
-////        vectoDoc.add(cadenaInfor);
-//        for (String strInfor : cadenaInfor){
-//            vectoDoc.add(-3);
-//            vectoDoc.add((strInfor));
-//        }
-//
-//        vectoDoc.add(3);
-//        vectoDoc.add(linea);
-//        vectoDoc.add(-3);
-//        vectoDoc.add("Linea gratuita: 800-10-8444");
-//        vectoDoc.add(-3);
-//        vectoDoc.add("Central teléfonica: " + datos.getFacturaMaestro().getTelefonosEmpresa());
-//        vectoDoc.add(-3);
-//        vectoDoc.add(("www.univida.bo"));
-//        vectoDoc.add(3);
-//        vectoDoc.add(linea);
-//
-//        if (datos.getSoatMensaje() != null) {
-////            vectoDoc.addAll(formatearLineaCadena2(String.valueOf(datos.getSoatMensaje())));
-//            List<String> listaMensaje = formatearLineaCadena4(String.valueOf(datos.getSoatMensaje()));
-//            for (String strMensaje : listaMensaje){
-//                vectoDoc.add(-3);
-//                vectoDoc.add((strMensaje));
-//            }
-//        }
-//        vectoDoc.add(" ");
-//        vectoDoc.add(-3);
-//        vectoDoc.add(("VIGENCIA DE LA COBERTURA SOAT " + datos.getSoatGestionFk()));
-//        vectoDoc.add(-3);
-//        vectoDoc.add(("Del " + datos.getSoatFechaCoberturaInicio() + " hasta el " + datos.getSoatFechaCoberturaFin()));
-//        vectoDoc.add(" ");
-//        vectoDoc.add(-3);
-//        vectoDoc.add(("VIGENCIA COBERTURA"));
-//
-//        String fechaIniSoat = "01/01/" + datos.getSoatGestionFk();
-//        if (datos.getSoatGestionFk() == 2021){
-//            fechaIniSoat = "01/05/" + datos.getSoatGestionFk();
-//        };
-//
-//        List<String> listaVigen = formatearLineaCadena4("El SOAT " + datos.getSoatGestionFk() + " adquirido a partir del " + fechaIniSoat + " entra en vigor desde las 00:00 horas del dia siguiente de la adquisicion.");
-//
-////        vectoDoc.add(listaVigen);
-//        for (String strVigen : listaVigen){
-//            vectoDoc.add(-3);
-//            vectoDoc.add((strVigen));
-//        }
-//
-//        pImp.addAll(vectoDoc);
-
+        prepararImpresionFacturaResumen(user, efectivizarRespUnivida);
     }
-
+    public void prepararImpresionFacturaCompleto(User user, EfectivizarRespUnivida efectivizarRespUnivida) {
+        prepararImpresionFactura2022(user, efectivizarRespUnivida);
+    }
     // 2022
     public void prepararImpresionFactura2022(User user, EfectivizarRespUnivida efectivizarRespUnivida) {
 
@@ -1022,7 +729,277 @@ public class ImprimirFacturaSunmi extends ImprimirFactura{
 
     }
     //2022
+    public void prepararImpresionFacturaResumen(User user, EfectivizarRespUnivida efectivizarRespUnivida) {
 
+        LogUtils.i(TAG, "PREPARAMOS FACTURA");
+
+        if (pImp != null){
+            pImp.clear();
+        }
+
+        pImp = new Vector<>();
+        Vector<Object> vectoDoc = new Vector<>();
+
+        Datos datos = efectivizarRespUnivida.getDatos();
+
+        List<String> strLey = formatearLineaCadena4(datos.getFacturaMaestro().getLeyenda());
+        List<String> strTipoEmisionLeyenda = formatearLineaCadena4(datos.getFacturaMaestro().getTipoEmisionLeyenda());
+        List<String> vector11 = formatearLineaCadena2(datos.getFacturaMaestro().getDireccionSucursal() + " Teléfono: " + datos.getFacturaMaestro().getTelefonoSucursal());
+
+//        BigDecimal bigDecimalAmount = new BigDecimal(datos.getFacturaMaestro().getImporteNumeral());
+//
+//        bigDecimalAmount = bigDecimalAmount.setScale(2, RoundingMode.HALF_EVEN);
+        StringBuilder sbSubTotal = new StringBuilder("Sub Total Bs" + " " + datos.getFacturaMaestro().getImporteSubtotalStr());
+        StringBuilder sbDescuento = new StringBuilder("Descuento Bs" + " " + datos.getFacturaMaestro().getImporteDescuentoStr());
+        StringBuilder sbTotal = new StringBuilder("Total Bs" + " " + datos.getFacturaMaestro().getImporteNumeralStr());
+        //
+        StringBuilder sbImporteBaseCreditoFiscal = new StringBuilder("Importe base crédito fiscal Bs" + " " + datos.getFacturaMaestro().getImporteBaseCreditoFiscalStr());
+
+
+        Vector<Object> nnotes = new Vector<>();
+
+        List<String> literal = formatearLineaCadena2("SON: " + datos.getFacturaMaestro().getImporteLiteral());
+
+        List<Detalle> detalles = datos.getFacturaMaestro().getDetalle();
+
+        for (Detalle detalle : detalles){
+            nnotes.add( detalle.getLineaDetalle());
+//            String lineaDatos = construirFila(decimalFormat.format(detalle.getCantidad()), "", decimalFormat.format(detalle.getImporteUnitario()), decimalFormat.format(detalle.getImporteTotal()));
+            String lineaDatos = (decimalFormat.format(detalle.getCantidad()) + "x " + decimalFormat.format(detalle.getImporteUnitario()) + " - " + decimalFormat.format(detalle.getDescuento()) + "   " + decimalFormat.format(detalle.getImporteTotal()));
+//            String lineaDatos = construirFila(decimalFormat.format(detalle.getCantidad()), "", (detalle.getImporteUnitario()), (detalle.getImporteTotal()));
+            nnotes.add(lineaDatos);
+
+        }
+
+        LogUtils.i("IMPRESION ", "TRY");
+
+        LogUtils.i("IMPRESION ", "logo");
+
+        vectoDoc.add(10);
+        vectoDoc.add(String.valueOf(R.raw.logop));
+
+//        vectoDoc.add(-2);
+//        vectoDoc.add(datos.getFacturaMaestro().getTitulo());
+//        LogUtils.i("IMPRIMRI_FACTURA_SUNMI", new Gson().toJson(datos));
+//        vectoDoc.add(-2);
+//        if(datos.getFacturaMaestro().getSubtitulo() != null && (! datos.getFacturaMaestro().getSubtitulo().isEmpty())){
+//            List<String> subtituloLista = formatearLineaCadena4(datos.getFacturaMaestro().getSubtitulo());
+//            for (String strSubtitulo : subtituloLista){
+//                vectoDoc.add(-2);
+//                vectoDoc.add(strSubtitulo);
+//            }
+//        }
+        if (datos.getFacturaMaestro().getNumeroSucursal() == 0) {
+            vectoDoc.add(-2);
+            vectoDoc.add("CASA MATRIZ");
+
+            List<String> vector111 = formatearLineaCadena2(datos.getFacturaMaestro().getDireccionEmpresa() + " Teléfono: " + datos.getFacturaMaestro().getTelefonosEmpresa());
+            for (String strDire2 : vector111) {
+                vectoDoc.add(-2);
+                vectoDoc.add(strDire2);
+            }
+            vectoDoc.add(-2);
+            vectoDoc.add((datos.getFacturaMaestro().getLugar()));
+            vectoDoc.add(" ");
+        }
+        if (datos.getFacturaMaestro().getNumeroSucursal() != 0) {
+            vectoDoc.add(-2);
+            //vectoDoc.add("SUCURSAL: " + datos.getFacturaMaestro().getNumeroSucursal());
+            vectoDoc.add("SUCURSAL: " + datos.getFacturaMaestro().getDireccionSucursal());
+
+            vectoDoc.add(-2);
+            vectoDoc.add(datos.getFacturaMaestro().getMunicipioDepartamento());
+        }
+
+        vectoDoc.add(3);
+        vectoDoc.add(linea);
+
+        String fecha1 = datos.getFacturaMaestro().getFechaEmision();
+        fecha1 = fecha1.replace('-', '/');
+//        vectoDoc.add("Nro. Factura       : " + datos.getFacturaMaestro().getNumeroFactura().toString());
+//        vectoDoc.add("Fecha       : " + fecha1);
+//        //vectoDoc.add("Código de Cliente: " + datos.getFacturaMaestro().getCodigoCliente());
+//        vectoDoc.addAll(formatearLineaCadena2("Nombre/Razón Social: " + datos.getFacturaMaestro().getRazonSocialClient()));
+//        vectoDoc.add("NIT/CI/CEX   : " + datos.getFacturaMaestro().getNitCiCliente());
+
+        vectoDoc.add("Nro. Factura       :" + datos.getFacturaMaestro().getNumeroFactura().toString());
+        vectoDoc.add("Fecha              :" + fecha1);
+        vectoDoc.add("Nombre/Razón Social:" + datos.getFacturaMaestro().getRazonSocialClient());
+        vectoDoc.add("NIT/CI/CEX         :" + datos.getFacturaMaestro().getNitCiCliente());
+
+        vectoDoc.add(3);
+        vectoDoc.add(linea);
+
+//        vectoDoc.add(construirFila("Cant.", " ", "Precio", "Sub total"));
+        vectoDoc.add(-2);
+        vectoDoc.add("DETALLE");
+//        vectoDoc.add(3);
+//        vectoDoc.add(linea);
+
+        for (int i = 0; i < nnotes.size(); i += 2) {
+
+            String nnotes2 = (String) nnotes.get(i);
+
+            vectoDoc.add(nnotes2);
+
+            vectoDoc.add(String.valueOf(nnotes.get(i + 1)));
+
+        }
+
+        //vectoDoc.add(getApplicationContext().getResources().openRawResource(R.raw.linea));
+        vectoDoc.add(3);
+        vectoDoc.add(linea);
+        // colocamos valor unao para imprimir cadenas al revez y con alineacion a la derecha
+        vectoDoc.add(-101);
+        vectoDoc.add(sbSubTotal.toString());
+        vectoDoc.add(-101);
+        vectoDoc.add(sbDescuento.toString());
+        vectoDoc.add(-101);
+        vectoDoc.add(sbTotal.toString());
+      //  vectoDoc.add(-101);
+       // vectoDoc.add(sbMontoPagar.toString());
+//        vectoDoc.add(-101);
+//        vectoDoc.add(formatearLineaCadena2(sbImporteBaseCreditoFiscal.toString()));
+        if (datos.getFacturaMaestro().getImporteBaseCreditoFiscal() != null && datos.getFacturaMaestro().getImporteBaseCreditoFiscal() > 0) {
+            List<String> listaImporte = formatearLineaCadena2(sbImporteBaseCreditoFiscal.toString());
+            for (String importeList : listaImporte) {
+                vectoDoc.add(-101);
+                vectoDoc.add(importeList);
+            }
+        }
+
+//        vectoDoc.add("MONTO A PAGAR: Bs " + decimalFormat.format(bigDecimalAmount));
+        for (String litre: literal) {
+            vectoDoc.add(litre);
+        }
+        vectoDoc.add(3);
+        vectoDoc.add(linea);
+
+        String informacionQr = datos.getFacturaMaestro().getCodigoQr();
+
+        vectoDoc.add(200);
+        vectoDoc.add(getQr(informacionQr));
+
+        vectoDoc.add(-2);
+
+        List<String> cadenaInfor1 = formatearLineaCadena4("Para la impresión de la factura ingresar a la página web: www.univida.bo");
+        for (String strInfor1 : cadenaInfor1){
+            vectoDoc.add(-3);
+            vectoDoc.add((strInfor1));
+        }
+
+        vectoDoc.add(" ");
+        String corteAqui = ">>>------- CORTE AQUI -------<<<";
+        vectoDoc.add(corteAqui);
+        vectoDoc.add(" ");
+        vectoDoc.add(10);
+        vectoDoc.add(String.valueOf(R.raw.logop));
+
+        vectoDoc.add(-2);
+        vectoDoc.add((("COMPROBANTE SOAT " + datos.getSoatGestionFk())));
+
+        List<String> cadenaInfor2 = formatearLineaCadena4("Para descargar tu comprobante SOAT "+datos.getSoatGestionFk()+", escanea desde tu dispositivo móvil el siguiente código QR");
+        for (String strInfor2 : cadenaInfor2){
+            vectoDoc.add(-3);
+            vectoDoc.add((strInfor2));
+        }
+
+        if (datos.getSoatQrContenido() != null) {
+            vectoDoc.add(200);
+            vectoDoc.add((datos.getSoatQrContenido().get(0)));
+        }
+
+        vectoDoc.add(3);
+        vectoDoc.add(linea);
+
+        //SOAT
+        vectoDoc.add("Fecha emisión    :" + datos.getFacturaMaestro().getFechaEmision());
+        vectoDoc.add("Nº de comprobante:" + decimalFormatLleno.format(datos.getSoatNumeroComprobante()));
+        vectoDoc.add("Nº de factura    :" + decimalFormatLleno.format(datos.getFacturaMaestro().getNumeroFactura()));
+        vectoDoc.add("Nº de roseta     :" + decimalFormatLleno.format(datos.getSoatRosetaNumero()));
+
+
+        vectoDoc.add(3);
+        vectoDoc.add(linea);
+        // MENSAJE
+//        if (datos.getSoatMensaje() != null) {
+////            vectoDoc.addAll(formatearLineaCadena2(String.valueOf(datos.getSoatMensaje())));
+//            List<String> listaMensaje = formatearLineaCadena4(String.valueOf(datos.getSoatMensaje()));
+//            for (String strMensaje : listaMensaje){
+//                vectoDoc.add(-3);
+//                vectoDoc.add((strMensaje));
+//            }
+//            vectoDoc.add(3);
+//            vectoDoc.add(linea);
+//        }
+        //MENSAJE
+        vectoDoc.add(-2);
+        vectoDoc.add("DETALLE");
+//        vectoDoc.add(3);
+//        vectoDoc.add(linea);
+
+
+            String nnotes2 = (String) nnotes.get(0);
+            vectoDoc.add(nnotes2);
+
+        vectoDoc.add(" ");
+        vectoDoc.add(-3);
+        vectoDoc.add(("VIGENCIA DE LA COBERTURA SOAT " + datos.getSoatGestionFk()));
+        vectoDoc.add(-3);
+        vectoDoc.add(("Del " + datos.getSoatFechaCoberturaInicio() + " hasta el " + datos.getSoatFechaCoberturaFin()));
+        vectoDoc.add(" ");
+        vectoDoc.add(-3);
+//        vectoDoc.add(("VIGENCIA COBERTURA"));
+//
+//        String fechaIniSoat = "01/01/" + datos.getSoatGestionFk();
+//        if (datos.getSoatGestionFk() == 2021){
+//            fechaIniSoat = "01/05/" + datos.getSoatGestionFk();
+//        };
+//
+//        List<String> listaVigen = formatearLineaCadena4("El SOAT " + datos.getSoatGestionFk() + " adquirido a partir del " + fechaIniSoat + " entra en vigor desde las 00:00 horas del dia siguiente de la adquisicion.");
+
+//        vectoDoc.add(listaVigen);
+//        for (String strVigen : listaVigen){
+//            vectoDoc.add(-3);
+//            vectoDoc.add((strVigen));
+//        }
+        vectoDoc.add(3);
+        vectoDoc.add(linea);
+        List<String> cadenaInfor = formatearLineaCadena4("Para actualizar la información del presente formulario apersonarse a nuestras oficinas o ingresar a la página web: www.univida.bo");
+//        vectoDoc.add(cadenaInfor);
+        for (String strInfor : cadenaInfor){
+            vectoDoc.add(-3);
+            vectoDoc.add((strInfor));
+        }
+
+
+
+        if (datos.getSoatQrContenido().size() > 1) {
+            // extra 2022
+            vectoDoc.add(" ");
+            vectoDoc.add(corteAqui);
+            vectoDoc.add(" ");
+            vectoDoc.add(10);
+            vectoDoc.add(String.valueOf(R.raw.logop));
+
+            vectoDoc.add(-3);
+            vectoDoc.add(("Para descargar tu Roseta Digital, escanea desde tu dispositivo móvil el siguiente código QR"));
+            if (datos.getSoatQrContenido() != null) {
+                vectoDoc.add(200);
+                vectoDoc.add((datos.getSoatQrContenido().get(1)));
+            }
+
+            vectoDoc.add(-3);
+            vectoDoc.add(("Aclaraciones:"));
+
+            vectoDoc.add(("-La Roseta Dígital puede ser descargada en cualquier momento, sin afectar la vigencia de la cobertura del SOAT " + datos.getSoatGestionFk()));
+            vectoDoc.add(("-No es necesario que la Roseta Digital sea impresa ni adherida al motorizado."));
+
+        }
+
+        pImp.addAll(vectoDoc);
+
+    }
     public void procesarColillaVentaSoat(User user, EfectivizarRespUnivida efectivizarRespUnivida, Date fecha){
         if (pImp != null){
             pImp.clear();
