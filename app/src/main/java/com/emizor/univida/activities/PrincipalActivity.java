@@ -298,6 +298,12 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
                 getSupportActionBar().setTitle("Historial de registros");
                 cambiarFragmento(new TurnoHistorialFragment());
                 break;
+                //SOATC
+//            case R.id.menu_venta_nueva_soatc:
+//                //cambiamos el titulo del toolbar
+//                getSupportActionBar().setTitle("Historial de registros");
+//                cambiarFragmento(new TurnoHistorialFragment());
+//                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.container_principal);

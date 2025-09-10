@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    tools:context=".fragmento.SoatcTomadorBuscarFragment">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buscar Tomador"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Subtítulo -->
+    <TextView
+        android:id="@+id/tvSubtitulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ingrese los datos del tomador"
+        android:textSize="16sp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"/>
+
+    <!-- Tipo de documento -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tipo de documento:"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_radio_option"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+
+        <Spinner
+            android:id="@+id/spinnerTipoDocumento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:spinnerMode="dropdown"/>
+
+    </LinearLayout>
+
+    <!-- Número de documento -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Número de documento:"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_radio_option"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/numeroDocumento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese número de documento"
+            android:inputType="number"
+            android:background="@android:color/transparent"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <!-- Complemento -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Complemento:"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_radio_option"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/complemento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Opcional"
+            android:inputType="text"
+            android:background="@android:color/transparent"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <!-- Departamento de expedición -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Departamento de expedición:"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_radio_option"
+        android:padding="16dp"
+        android:layout_marginBottom="32dp">
+
+        <Spinner
+            android:id="@+id/spinnerDepartamento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:spinnerMode="dropdown"/>
+
+    </LinearLayout>
+
+    <!-- Espacio flexible -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Botón de búsqueda centrado -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnBuscar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buscar Tomador"
+            android:background="@color/colorPrimary"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

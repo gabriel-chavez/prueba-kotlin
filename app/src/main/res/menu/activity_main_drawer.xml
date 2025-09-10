@@ -42,34 +42,34 @@
                 />
         </menu>
     </item>
-    <item android:title="SOATC">
-        <menu>
-            <item
-                android:id="@+id/menu_venta_nueva1"
-                android:icon="@drawable/ic_action_factura"
-                android:title="Nueva venta"
-                android:enabled="true"
-                />
-            <item
-                android:id="@+id/menu_venta_lista2"
-                android:icon="@drawable/ic_action_items2"
-                android:title="Ventas realizadas"
-                android:enabled="true"
-                />
-            <item
-                android:id="@+id/menu_venta_lista3"
-                android:icon="@drawable/ic_action_factura"
-                android:title="RCC Nuevo"
-                android:enabled="true"
-                />
-            <item
-                android:id="@+id/menu_venta_lista4"
-                android:icon="@drawable/ic_action_otros"
-                android:title="RCC Realizados"
-                android:enabled="true"
-                />
-        </menu>
-    </item>
+<!--    <item android:title="VENTA SOATC">-->
+<!--        <menu>-->
+<!--            <item-->
+<!--                android:id="@+id/menu_venta_nueva_soatc"-->
+<!--                android:icon="@drawable/ic_action_factura"-->
+<!--                android:title="Nueva venta"-->
+<!--                android:enabled="true"-->
+<!--                />-->
+<!--            <item-->
+<!--                android:id="@+id/menu_venta_lista_soatc"-->
+<!--                android:icon="@drawable/ic_action_items2"-->
+<!--                android:title="Ventas realizadas"-->
+<!--                android:enabled="true"-->
+<!--                />-->
+<!--            <item-->
+<!--                android:id="@+id/menu_rcc_nuevo_soatc"-->
+<!--                android:icon="@drawable/ic_action_factura"-->
+<!--                android:title="RCC Nuevo"-->
+<!--                android:enabled="true"-->
+<!--                />-->
+<!--            <item-->
+<!--                android:id="@+id/menu_rcc_lista_soatc"-->
+<!--                android:icon="@drawable/ic_action_otros"-->
+<!--                android:title="RCC Realizados"-->
+<!--                android:enabled="true"-->
+<!--                />-->
+<!--        </menu>-->
+<!--    </item>-->
 
 
     <item android:title="TURNOS">

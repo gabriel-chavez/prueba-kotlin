@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    tools:context=".fragmento.SoatcBeneficiariosFragment">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BENEFICIARIOS"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Información -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Para la cobertura por muerte, será(n) los herederos legales del asegurado"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"/>
+
+    <!-- Nota -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nota: No es obligatorio registrar beneficiario(s)."
+        android:textSize="12sp"
+        android:textColor="#999999"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:textStyle="italic"/>
+
+    <!-- Línea divisoria -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Botón Agregar Beneficiario -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="24dp">
+
+        <Button
+            android:id="@+id/btnAgregarBeneficiario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AGREGAR BENEFICIARIO"
+            android:background="@color/colorPrimary"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"/>
+
+    </LinearLayout>
+
+    <!-- Contenedor para beneficiarios agregados -->
+    <LinearLayout
+        android:id="@+id/containerBeneficiarios"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+        <!-- Texto cuando no hay beneficiarios -->
+        <TextView
+            android:id="@+id/tvListaVacia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No se han agregado beneficiarios"
+            android:textSize="14sp"
+            android:textColor="#999999"
+            android:gravity="center"
+            android:padding="20dp"
+            android:visibility="visible"/>
+
+    </LinearLayout>
+
+    <!-- Botones de navegación -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <!-- Botón Atrás -->
+        <Button
+            android:id="@+id/btnAtras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Atrás"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/btn_border"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"/>
+
+        <!-- Botón Siguiente -->
+        <Button
+            android:id="@+id/btnSiguiente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Siguiente"
+            android:background="@color/colorPrimary"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:enabled="true"/>
+
+    </LinearLayout>
+
+</LinearLayout>

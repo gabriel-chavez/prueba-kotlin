@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Título del diálogo -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Agregar Beneficiario"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Nombre Completo -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombre Completo:"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_radio_option"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/etNombreCompleto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese nombre completo"
+            android:inputType="textCapWords"
+            android:background="@android:color/transparent"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <!-- Parentesco -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Parentesco:"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_radio_option"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+
+        <Spinner
+            android:id="@+id/spinnerParentesco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:spinnerMode="dropdown"/>
+
+    </LinearLayout>
+
+    <!-- Porcentaje -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Porcentaje (%):"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_radio_option"
+        android:padding="8dp"
+        android:layout_marginBottom="24dp">
+
+        <EditText
+            android:id="@+id/etPorcentaje"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese porcentaje (1-100)"
+            android:inputType="number"
+            android:background="@android:color/transparent"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <!-- Botones del diálogo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/btn_border"
+            android:textColor="@color/colorPrimary"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"/>
+
+        <Button
+            android:id="@+id/btnGuardar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Guardar"
+            android:background="@color/colorPrimary"
+            android:textColor="#FFFFFF"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

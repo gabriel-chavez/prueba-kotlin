@@ -53,10 +53,10 @@ import java.util.Vector;
 public class ImprimirFacturaSunmi extends ImprimirFactura{
 
     private final String TAG = "PRINTFACTURASUNMI";
-    private final int TAMANIO_NORMAL_3 = 22;
-    private final int TAMANIO_NORMAL_2 = 22;
-    private final int TAMANIO_NORMAL = 24;
-    private final int TAMANIO_GRANDE = 32;
+    private final int TAMANIO_NORMAL_3 = 21;
+    private final int TAMANIO_NORMAL_2 = 21;
+    private final int TAMANIO_NORMAL = 23;
+    private final int TAMANIO_GRANDE = 31;
 
     protected final String linea = "--------------------------------";
 
@@ -811,7 +811,7 @@ public class ImprimirFacturaSunmi extends ImprimirFactura{
             vectoDoc.add(datos.getFacturaMaestro().getMunicipioDepartamento());
         }
 
-        vectoDoc.add(3);
+
         vectoDoc.add(linea);
 
         String fecha1 = datos.getFacturaMaestro().getFechaEmision();
@@ -882,7 +882,7 @@ public class ImprimirFacturaSunmi extends ImprimirFactura{
 
         vectoDoc.add(-2);
 
-        List<String> cadenaInfor1 = formatearLineaCadena4("Para la impresión de la factura ingresar a la página web: www.univida.bo");
+        List<String> cadenaInfor1 = formatearLineaCadena4("Para la impresión de la factura ingresar a la página web: www.univida.bo/facturacion/");
         for (String strInfor1 : cadenaInfor1){
             vectoDoc.add(-3);
             vectoDoc.add((strInfor1));
@@ -898,8 +898,8 @@ public class ImprimirFacturaSunmi extends ImprimirFactura{
         vectoDoc.add(-2);
         vectoDoc.add((("COMPROBANTE SOAT " + datos.getSoatGestionFk())));
 
-        List<String> cadenaInfor2 = formatearLineaCadena4("Para descargar tu comprobante SOAT "+datos.getSoatGestionFk()+", escanea desde tu dispositivo móvil el siguiente código QR");
-        for (String strInfor2 : cadenaInfor2){
+        List<String> cadenaComprobante = formatearLineaCadena4("Para descargar tu comprobante SOAT "+datos.getSoatGestionFk()+", escanea desde tu dispositivo móvil el siguiente código QR");
+        for (String strInfor2 : cadenaComprobante){
             vectoDoc.add(-3);
             vectoDoc.add((strInfor2));
         }
@@ -909,7 +909,7 @@ public class ImprimirFacturaSunmi extends ImprimirFactura{
             vectoDoc.add((datos.getSoatQrContenido().get(0)));
         }
 
-        vectoDoc.add(3);
+        vectoDoc.add(-3);
         vectoDoc.add(linea);
 
         //SOAT
@@ -918,7 +918,7 @@ public class ImprimirFacturaSunmi extends ImprimirFactura{
         vectoDoc.add("Nº de factura    :" + decimalFormatLleno.format(datos.getFacturaMaestro().getNumeroFactura()));
         vectoDoc.add("Nº de roseta     :" + decimalFormatLleno.format(datos.getSoatRosetaNumero()));
 
-
+//
         vectoDoc.add(3);
         vectoDoc.add(linea);
         // MENSAJE
@@ -934,13 +934,13 @@ public class ImprimirFacturaSunmi extends ImprimirFactura{
 //        }
         //MENSAJE
         vectoDoc.add(-2);
-        vectoDoc.add("DETALLE");
+//        vectoDoc.add("DETALLE");
 //        vectoDoc.add(3);
 //        vectoDoc.add(linea);
 
 
-            String nnotes2 = (String) nnotes.get(0);
-            vectoDoc.add(nnotes2);
+        String nnotes2 = "DETALLE: " + (String) nnotes.get(0);
+        vectoDoc.add(nnotes2);
 
         vectoDoc.add(" ");
         vectoDoc.add(-3);
@@ -963,9 +963,9 @@ public class ImprimirFacturaSunmi extends ImprimirFactura{
 //            vectoDoc.add(-3);
 //            vectoDoc.add((strVigen));
 //        }
-        vectoDoc.add(3);
+        vectoDoc.add(-3);
         vectoDoc.add(linea);
-        List<String> cadenaInfor = formatearLineaCadena4("Para actualizar la información del presente formulario apersonarse a nuestras oficinas o ingresar a la página web: www.univida.bo");
+        List<String> cadenaInfor = formatearLineaCadena4("Para actualizar la información apersonarse a nuestras oficinas o ingresar a la página web: www.univida.bo");
 //        vectoDoc.add(cadenaInfor);
         for (String strInfor : cadenaInfor){
             vectoDoc.add(-3);
@@ -992,8 +992,16 @@ public class ImprimirFacturaSunmi extends ImprimirFactura{
             vectoDoc.add(-3);
             vectoDoc.add(("Aclaraciones:"));
 
-            vectoDoc.add(("-La Roseta Dígital puede ser descargada en cualquier momento, sin afectar la vigencia de la cobertura del SOAT " + datos.getSoatGestionFk()));
-            vectoDoc.add(("-No es necesario que la Roseta Digital sea impresa ni adherida al motorizado."));
+            List<String> cadenaInfor4 = formatearLineaCadena4("-La Roseta Dígital puede ser descargada en cualquier momento, sin afectar la vigencia de la cobertura del SOAT " + datos.getSoatGestionFk());
+            for (String strInfor2 : cadenaInfor4){
+                vectoDoc.add(-3);
+                vectoDoc.add((strInfor2));
+            }
+            List<String> cadenaInfor5 = formatearLineaCadena4("-No es necesario que la Roseta Digital sea impresa ni adherida al motorizado.");
+            for (String strInfor2 : cadenaInfor5){
+                vectoDoc.add(-3);
+                vectoDoc.add((strInfor2));
+            }
 
         }
 

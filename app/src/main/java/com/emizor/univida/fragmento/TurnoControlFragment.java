@@ -2,6 +2,7 @@ package com.emizor.univida.fragmento;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,6 +35,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.app.Fragment;  // AndroidX
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -79,7 +81,7 @@ public class TurnoControlFragment extends Fragment {
     private SurfaceView surfaceView;
     private ImageView ivIamgenDeposito;
     private android.hardware.Camera camera;
-    private Button btnRegistrar;
+    private LinearLayout btnRegistrar;
     private Spinner spinnerPunto, spinnerEvento;
     private List<String> puntosList = new ArrayList<>();
     private List<String> eventosList = new ArrayList<>();
@@ -96,14 +98,20 @@ public class TurnoControlFragment extends Fragment {
         surfaceView = view.findViewById(R.id.surfaceView);
         btnRegistrar = view.findViewById(R.id.btnRegistrar);
 
+        // Configurar el SurfaceHolder callback PRIMERO
+        SurfaceHolder surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(surfaceCallback);
+
         btnRegistrar.setOnClickListener(v -> takePictureAndSend());
         spinnerPunto = view.findViewById(R.id.spinnerPunto);
         spinnerEvento = view.findViewById(R.id.spinnerEvento);
+
         ControladorSqlite2 controladorSqlite2 = new ControladorSqlite2(getContext());
         user = controladorSqlite2.obtenerUsuario();
         controladorSqlite2.cerrarConexion();
+
         if (checkPermissions()) {
-            startCamera();
+            // No iniciar la cámara aquí todavía - esperar a surfaceCreated
             startGPS();
             cargarParametricas();
         } else {
@@ -117,7 +125,7 @@ public class TurnoControlFragment extends Fragment {
 
         String urlPuntos = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_CONTROL_TURNOS_TIPO_PUNTO;
         String urlEventos = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_CONTROL_TURNOS_TIPO_EVENTO;
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         // Cargar puntos
         JsonObjectRequest requestPuntos = new JsonObjectRequest( // Cambiado a JsonObjectRequest
                 Request.Method.GET,
@@ -142,9 +150,23 @@ public class TurnoControlFragment extends Fragment {
                                 }
                                 setupSpinnerPuntos(puntos);
                             } else {
-                                // Manejar error del servidor
                                 String mensaje = response.getString("mensaje");
-                                Toast.makeText(getContext(), mensaje, Toast.LENGTH_SHORT).show();
+                                // Manejar error del servidor
+                                builder.setTitle("Error")
+                                        .setIcon(android.R.drawable.ic_dialog_info);
+                                builder.setMessage(mensaje)
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", null);
+
+                                AlertDialog alert = builder.create();
+                                alert.show();
+
+
+                                //Toast.makeText(getContext(), mensaje, Toast.LENGTH_SHORT).show();
+
+
+
+
                                 Log.e("ServiceError", "Error del servidor (puntos): " + mensaje);
 
                             }
@@ -309,15 +331,12 @@ public class TurnoControlFragment extends Fragment {
 
 
     private void startGPS() {
+        if (getActivity() == null) return;
+
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(getActivity(), new String[] {
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-            }, 100);
             return;
         }
 
@@ -331,6 +350,12 @@ public class TurnoControlFragment extends Fragment {
 
                     // Remover updates una vez que tenemos una ubicación válida
                     locationManager.removeUpdates(this);
+
+                    // Opcional: Notificar que ya tenemos ubicación
+                    if (isTakingPicture) {
+                        // Si estábamos esperando para tomar foto, continuar
+                        new Handler().postDelayed(() -> takePictureAndSend(), 500);
+                    }
                 }
             }
 
@@ -338,15 +363,24 @@ public class TurnoControlFragment extends Fragment {
             public void onStatusChanged(String provider, int status, Bundle extras) {}
 
             @Override
-            public void onProviderEnabled(String provider) {}
+            public void onProviderEnabled(String provider) {
+                Log.d("GPS", "Proveedor habilitado: " + provider);
+            }
 
             @Override
-            public void onProviderDisabled(String provider) {}
+            public void onProviderDisabled(String provider) {
+                Log.d("GPS", "Proveedor deshabilitado: " + provider);
+            }
         };
 
         // Verificar qué proveedores están disponibles
         boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (!gpsEnabled && !networkEnabled) {
+            Log.w("GPS", "Todos los proveedores de ubicación están desactivados");
+            return;
+        }
 
         if (gpsEnabled) {
             locationManager.requestLocationUpdates(
@@ -382,14 +416,18 @@ public class TurnoControlFragment extends Fragment {
             Log.d("Location", "Última ubicación conocida - Latitud: " + latitud + ", Longitud: " + longitud);
         }
 
-        // Timeout: Si después de 10 segundos no tenemos ubicación, usar valores por defecto o mostrar error
+        // Timeout: Si después de 15 segundos no tenemos ubicación, mostrar mensaje
         new Handler().postDelayed(() -> {
             locationManager.removeUpdates(locationListener);
             if (latitud == 0.0 && longitud == 0.0) {
                 Log.w("Location", "Timeout: No se pudo obtener ubicación");
-                // Aquí puedes mostrar un mensaje al usuario o usar ubicación por defecto
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "No se pudo obtener la ubicación. Verifique su conexión GPS.", Toast.LENGTH_LONG).show();
+                    });
+                }
             }
-        }, 10000); // 10 segundos de timeout
+        }, 15000); // 15 segundos de timeout
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -399,24 +437,60 @@ public class TurnoControlFragment extends Fragment {
                     grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
-                startCamera();
-                startGPS();
+                // Pequeño delay para asegurar que los permisos estén aplicados
+                new Handler().postDelayed(() -> {
+                    if (surfaceView.getHolder().getSurface().isValid()) {
+                        startCamera();
+                    }
+                    // Si la superficie no está lista, surfaceCreated se encargará de iniciar la cámara
+                    startGPS();
+                    cargarParametricas();
+                }, 300);
             } else {
                 Toast.makeText(getContext(), "Permisos denegados", Toast.LENGTH_SHORT).show();
             }
         }
     }
+    private boolean isGPSEnabled() {
+        if (getActivity() == null) return false;
 
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        boolean isGPSEnabled = false;
+        boolean isNetworkEnabled = false;
+
+        try {
+            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception e) {
+            Log.e("GPS", "Error verificando estado del GPS", e);
+        }
+
+        Log.d("GPS", "GPS enabled: " + isGPSEnabled + ", Network enabled: " + isNetworkEnabled);
+        return isGPSEnabled || isNetworkEnabled;
+    }
     private void startCamera() {
         try {
+            if (isCameraReady) {
+                Log.d("Camera", "Camera already ready");
+                return;
+            }
+
+            Log.d("Camera", "Attempting to start camera");
             releaseCamera(); // Asegurarse de liberar primero
 
             camera = Camera.open(0);
+
+            if (camera == null) {
+                Log.e("Camera", "Failed to open camera");
+                Toast.makeText(getContext(), "No se pudo abrir la cámara", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             setCameraDisplayOrientation();
 
             Camera.Parameters params = camera.getParameters();
 
-            // Configurar parámetros más robustos
+            // Configurar parámetros
             List<String> focusModes = params.getSupportedFocusModes();
             if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
                 params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
@@ -433,12 +507,28 @@ public class TurnoControlFragment extends Fragment {
 
             camera.setParameters(params);
 
-            SurfaceHolder surfaceHolder = surfaceView.getHolder();
-            surfaceHolder.addCallback(surfaceCallback);
+            // Configurar el preview display
+            SurfaceHolder holder = surfaceView.getHolder();
+            if (holder.getSurface().isValid()) {
+                camera.setPreviewDisplay(holder);
+                camera.startPreview();
+                isCameraReady = true;
+                Log.d("Camera", "Camera started successfully");
+
+                // Pequeño delay antes del autoenfoque
+                new Handler().postDelayed(() -> {
+                    if (camera != null && isCameraReady) {
+                        autoFocus();
+                    }
+                }, 300);
+            } else {
+                Log.d("Camera", "Surface not valid in startCamera");
+            }
 
         } catch (Exception e) {
             Log.e("Camera", "Error startCamera", e);
             Toast.makeText(getContext(), "Error al abrir cámara", Toast.LENGTH_SHORT).show();
+            isCameraReady = false;
         }
     }
     private void releaseCamera() {
@@ -497,6 +587,19 @@ public class TurnoControlFragment extends Fragment {
 
     // Método para tomar una foto
     private void takePictureAndSend() {
+        // Verificar si el GPS está activado
+        if (!isGPSEnabled()) {
+            showGPSDisabledAlert();
+            return;
+        }
+
+        // Verificar si tenemos ubicación válida
+        if (latitud == 0.0 && longitud == 0.0) {
+            Toast.makeText(getContext(), "Obteniendo ubicación, espere por favor...", Toast.LENGTH_SHORT).show();
+            startGPS(); // Reiniciar la obtención de ubicación
+            return;
+        }
+
         if (!isCameraReady || camera == null || isTakingPicture) {
             Toast.makeText(getContext(), "Cámara no disponible", Toast.LENGTH_SHORT).show();
             return;
@@ -528,6 +631,24 @@ public class TurnoControlFragment extends Fragment {
             Log.e("Camera", "Error en autoFocus", e);
             restartPreview();
         }
+    }
+    private void showGPSDisabledAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("GPS Desactivado");
+        builder.setMessage("Para registrar un control de turno es necesario activar el GPS. ¿Desea activarlo ahora?");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("Activar GPS", (dialog, which) -> {
+            // Abrir configuración de ubicación
+            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            dialog.dismiss();
+        });
+
+        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        builder.show();
     }
     private void processImageData(byte[] data, Camera camera) {
         try {
@@ -563,6 +684,13 @@ public class TurnoControlFragment extends Fragment {
     }
 
     private void showConfirmationDialog(String encodedImage) {
+        // Verificar nuevamente que tenemos ubicación válida
+        if (latitud == 0.0 || longitud == 0.0) {
+            Toast.makeText(getContext(), "Error: No se pudo obtener la ubicación GPS", Toast.LENGTH_LONG).show();
+            restartPreview();
+            return;
+        }
+
         String punto = spinnerPunto.getSelectedItem().toString();
         String evento = spinnerEvento.getSelectedItem().toString();
 
@@ -570,8 +698,8 @@ public class TurnoControlFragment extends Fragment {
                 .setTitle("Confirmar Registro")
                 .setMessage("¿Confirmar registro con los siguientes datos?\n\n" +
                         "Punto: " + punto + "\n" +
-                        "Evento: " + evento + "\n" +
-                        "Coordenadas: " + latitud + ", " + longitud)
+                        "Evento: " + evento + "\n"
+                        )
                 .setCancelable(false)
                 .setPositiveButton("Sí", (dialog, which) -> {
                     remitir(encodedImage);
@@ -599,30 +727,41 @@ public class TurnoControlFragment extends Fragment {
     private SurfaceHolder.Callback surfaceCallback = new SurfaceHolder.Callback() {
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
-            try {
-                if (camera != null) {
-                    camera.setPreviewDisplay(holder);
-                    camera.startPreview();
-                    isCameraReady = true;
-                    // Pequeño delay antes del autoenfoque inicial
-                    new Handler().postDelayed(() -> autoFocus(), 500);
-                }
-            } catch (IOException e) {
-                Log.e("Camera", "Error surfaceCreated", e);
-                isCameraReady = false;
+            Log.d("Camera", "Surface created");
+            if (checkPermissions() && !isCameraReady) {
+                startCamera();
             }
         }
 
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            if (isCameraReady) {
-                restartPreview();
+            Log.d("Camera", "Surface changed: " + width + "x" + height);
+            if (camera != null && isCameraReady) {
+                try {
+                    camera.stopPreview();
+                    setCameraDisplayOrientation();
+                    camera.setPreviewDisplay(holder);
+                    camera.startPreview();
+                    Log.d("Camera", "Preview restarted after surface change");
+                } catch (Exception e) {
+                    Log.e("Camera", "Error en surfaceChanged", e);
+                    restartCamera();
+                }
             }
         }
 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
-            releaseCamera();
+            Log.d("Camera", "Surface destroyed");
+            if (camera != null) {
+                try {
+                    camera.stopPreview();
+                    Log.d("Camera", "Preview stopped in surfaceDestroyed");
+                } catch (Exception e) {
+                    Log.e("Camera", "Error stopping preview", e);
+                }
+            }
+            isCameraReady = false;
         }
     };
     private int getCameraRotation() {
@@ -648,14 +787,42 @@ public class TurnoControlFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        Log.d("Camera", "onPause called");
+
+        // Solo detener el preview, no liberar la cámara completamente
+        if (camera != null) {
+            try {
+                camera.stopPreview();
+                Log.d("Camera", "Preview stopped in onPause");
+            } catch (Exception e) {
+                Log.e("Camera", "Error stopping preview in onPause", e);
+            }
+        }
+        isCameraReady = false;
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("Camera", "onDestroyView called");
+
+        // Liberar completamente la cámara cuando el fragmento se destruye
         releaseCamera();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (checkPermissions() && surfaceView.getHolder().getSurface().isValid()) {
-            startCamera();
+        Log.d("Camera", "onResume called");
+
+        if (checkPermissions()) {
+            // Verificar si la superficie está lista y la cámara no está iniciada
+            if (surfaceView.getHolder().getSurface().isValid() && !isCameraReady) {
+                Log.d("Camera", "Surface is valid, starting camera");
+                startCamera();
+            }
+            // Si la superficie no está lista, surfaceCreated se encargará de iniciar la cámara
+        } else {
+            requestPermissions();
         }
     }
     private void restartCamera() {
@@ -730,6 +897,7 @@ public class TurnoControlFragment extends Fragment {
             restartPreview();
             return;
         }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
 
         String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_CONTROL_TURNOS_REGISTRAR;
@@ -751,9 +919,12 @@ public class TurnoControlFragment extends Fragment {
                             int codigoRetorno = response.getInt("codigo_retorno");
                             String mensaje = response.getString("mensaje");
 
+                            builder.setMessage(mensaje)
+                                    .setCancelable(false)
+                                    .setPositiveButton("OK", null);
                             if (exito) {
-                                // Éxito - mostrar mensaje positivo
-                                Toast.makeText(getContext(), mensaje, Toast.LENGTH_SHORT).show();
+                                builder.setTitle("Registro exitoso")
+                                        .setIcon(android.R.drawable.ic_dialog_info);
 
                                 // Opcional: obtener el ID del registro creado si lo necesitas
                                 if (response.has("datos")) {
@@ -770,9 +941,12 @@ public class TurnoControlFragment extends Fragment {
                             } else {
                                 // Error del servidor - mostrar mensaje de error
 
-                                Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
+                                builder.setTitle("Error")
+                                        .setIcon(android.R.drawable.ic_dialog_alert);
                                 Log.e("ServerResponse", mensaje);
                             }
+                            AlertDialog alert = builder.create();
+                            alert.show();
                             mostrarLoading(false);
 
                         } catch (JSONException e) {

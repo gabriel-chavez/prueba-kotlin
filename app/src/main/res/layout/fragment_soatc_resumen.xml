@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    tools:context=".fragmento.SoatcResumenFragment">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvTituloResumen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RESUMEN DE DATOS"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Información -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Revise los datos antes de continuar"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"/>
+
+    <!-- ScrollView para el resumen -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Sección: Datos del Asegurado -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DATOS DEL ASEGURADO"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginBottom="12dp"
+                android:paddingBottom="4dp"
+                android:background="@drawable/divider_bottom"/>
+
+            <!-- Nombre del Asegurado -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Nombres y apellidos:"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvResumenNombreAsegurado"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <!-- Dirección -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Dirección:"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvResumenDireccion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <!-- Ciudad -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ciudad o población:"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvResumenCiudad"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <!-- Teléfono/Celular -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Teléfono/Celular:"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvResumenTelefono"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <!-- Correo Electrónico -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Correo electrónico:"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvResumenEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <!-- Vigencia -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Vigencia de cobertura:"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvResumenVigencia"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <!-- Sección: Datos de Facturación -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DATOS DE FACTURACIÓN"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginBottom="12dp"
+                android:paddingBottom="4dp"
+                android:background="@drawable/divider_bottom"/>
+
+            <!-- Nombre/Razón Social -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Nombre/Razón Social:"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvResumenNombreFacturacion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <!-- Tipo y Número de Documento -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Documento:"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvResumenDocumento"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <!-- Extensión Documento -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Extensión:"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvResumenExtension"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <!-- Correo Facturación -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Correo facturación:"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvResumenEmailFacturacion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <!-- Celular Facturación -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Celular facturación:"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvResumenCelularFacturacion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Botones de navegación -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <!-- Botón Atrás -->
+        <Button
+            android:id="@+id/btnAtrasResumen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Atrás"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/btn_border"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"/>
+
+        <!-- Botón Confirmar -->
+        <Button
+            android:id="@+id/btnConfirmar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirmar"
+            android:background="@color/colorPrimary"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

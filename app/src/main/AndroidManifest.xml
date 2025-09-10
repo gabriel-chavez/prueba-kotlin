@@ -55,13 +55,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".RootActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+<!--        <activity-->
+<!--            android:name=".SoatcActivity"-->
+<!--            android:exported="false"-->
+<!--            android:label="@string/title_activity_soatc" />-->
+<!--        <activity-->
+<!--            android:name=".RootActivity"-->
+<!--            android:exported="false">-->
+<!--            <meta-data-->
+<!--                android:name="android.app.lib_name"-->
+<!--                android:value="" />-->
+<!--        </activity>-->
         <activity android:name=".InicioActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -121,9 +125,10 @@
             android:label="@string/title_activity_configuracion_app"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeDos" />
+
         <meta-data
             android:name="org.osmdroid.config"
-            android:value="CACHE_PATH"/>
+            android:value="CACHE_PATH" />
     </application>
 
 </manifest>

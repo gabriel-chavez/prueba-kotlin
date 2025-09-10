@@ -64,17 +64,47 @@
     </LinearLayout>
 
     <!-- Botón Registrar -->
-    <Button
-        android:id="@+id/btnRegistrar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/btnRegistrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="12dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:background="@drawable/button_background"
+            android:elevation="6dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="32dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="REGISTRAR"
-        android:textColor="@android:color/white" />
-    <ProgressBar
+        android:layout_marginBottom="24dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/baseline_add_a_photo_24"
+            android:tint="@android:color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REGISTRAR"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:textAllCaps="true"
+            android:layout_marginTop="6dp"/>
+    </LinearLayout>
+
+</RelativeLayout>
+
+
+<ProgressBar
         android:id="@+id/progressBar2"
         android:layout_width="60dp"
         android:layout_height="60dp"

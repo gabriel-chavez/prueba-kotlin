@@ -145,4 +145,8 @@
         <item>Rechazado</item>
         <item>Error de imagen</item>
     </string-array>
+    <string name="title_activity_soatc">SoatcActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

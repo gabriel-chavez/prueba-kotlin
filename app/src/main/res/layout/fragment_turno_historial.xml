@@ -7,34 +7,48 @@
     android:background="#F8F8F8">
 
     <!-- Parámetros de búsqueda -->
-    <!-- Fila 2: EditText Fecha y Spinner Estado -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="start"
-        android:layout_marginBottom="1dp">
+        android:orientation="vertical"
+        android:layout_marginBottom="8dp">
+
+        <!-- Título del botón Fecha -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fecha de registro:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
 
         <!-- Botón Fecha -->
         <Button
             android:id="@+id/btnFechaListaVenta"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text=""
-            android:layout_weight="1"/>
-
-
+            android:text="Seleccionar fecha"/>
     </LinearLayout>
 
+    <!-- Título antes de la lista -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lista de control de registros"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="2dp"/>
 
-
-
+    <!-- Línea divisoria debajo del título -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_marginBottom="4dp"/>
 
     <!-- ListView de Movimientos -->
     <ListView
         android:id="@+id/listViewMovimientos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
 </LinearLayout>

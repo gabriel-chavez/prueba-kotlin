@@ -2,6 +2,7 @@ package com.emizor.univida.fragmento;
 
 import static com.emizor.univida.rest.DatosConexion.URL_UNIVIDA_CONTROL_TURNOS_LISTAR;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -98,14 +99,14 @@ public class TurnoHistorialFragment  extends Fragment {
             // Llamar a obtenerHistorial() cuando se seleccione la fecha
             obtenerHistorial();
         }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.setButton(DatePickerDialog.BUTTON_NEUTRAL, "Sin fecha", (dialog, which) -> {
-            // Configurar la fecha en 1900-01-01
-            fechaSeleccion = new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime();
-            btnFechaListaVenta.setText("1900-01-01");
-
-            // Llamar a obtenerHistorial() con la nueva fecha
-            obtenerHistorial();
-        });
+//        datePickerDialog.setButton(DatePickerDialog.BUTTON_NEUTRAL, "Sin fecha", (dialog, which) -> {
+//            // Configurar la fecha en 1900-01-01
+//            fechaSeleccion = new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime();
+//            btnFechaListaVenta.setText("1900-01-01");
+//
+//            // Llamar a obtenerHistorial() con la nueva fecha
+//            obtenerHistorial();
+//        });
         btnFechaListaVenta.setOnClickListener(v -> datePickerDialog.show());
 
         turnosRegistrados = new ArrayList<>();
@@ -168,7 +169,20 @@ public class TurnoHistorialFragment  extends Fragment {
                             } else {
                                 turnosRegistrados.clear();
                                 adapter.notifyDataSetChanged();
-                                Toast.makeText(getContext(), respuesta.mensaje, Toast.LENGTH_LONG).show();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                                builder.setMessage(respuesta.mensaje)
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", null);
+
+
+                                builder.setTitle("Aviso")
+                                        .setIcon(android.R.drawable.ic_dialog_info);
+
+                                AlertDialog alert = builder.create();
+                                alert.show();
+
+                               // Toast.makeText(getContext(), respuesta.mensaje, Toast.LENGTH_LONG).show();
                             }
 
                         } catch (Exception e) {
