@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -20,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.emizor.univida.R;
 import com.emizor.univida.dialogo.DialogoEmizor;
+import com.emizor.univida.modelo.dominio.univida.ApiResponse;
 import com.emizor.univida.modelo.dominio.univida.parametricas.Banco;
 import com.emizor.univida.modelo.dominio.univida.parametricas.BancosRespUnivida;
 import com.emizor.univida.modelo.dominio.univida.parametricas.Departamento;
@@ -28,6 +30,7 @@ import com.emizor.univida.modelo.dominio.univida.parametricas.Gestion;
 import com.emizor.univida.modelo.dominio.univida.parametricas.GestionRespUnivida;
 import com.emizor.univida.modelo.dominio.univida.parametricas.MedioPago;
 import com.emizor.univida.modelo.dominio.univida.parametricas.MedioPagoRespUnivida;
+import com.emizor.univida.modelo.dominio.univida.parametricas.ParametricaGenerica;
 import com.emizor.univida.modelo.dominio.univida.parametricas.TipoDocumentoIdentidad;
 import com.emizor.univida.modelo.dominio.univida.parametricas.TipoDocumentosIdentidadRespUnivida;
 import com.emizor.univida.modelo.dominio.univida.parametricas.TipoPlaca;
@@ -40,13 +43,19 @@ import com.emizor.univida.modelo.dominio.univida.seguridad.User;
 import com.emizor.univida.modelo.manejador.ControladorSqlite2;
 import com.emizor.univida.modelo.manejador.ControladorTablas;
 import com.emizor.univida.modelo.manejador.UtilRest;
+import com.emizor.univida.rest.ApiService;
 import com.emizor.univida.rest.DatosConexion;
 import com.emizor.univida.rest.VolleySingleton;
 import com.emizor.univida.util.ConfigEmizor;
 import com.emizor.univida.util.LogUtils;
+import com.emizor.univida.utils.ParametricasCache;
+import com.emizor.univida.utils.VersionUtils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ObtenerParametricasActivity extends AppCompatActivity implements DialogoEmizor.NotificaDialogEmizorListener {
@@ -100,9 +109,10 @@ public class ObtenerParametricasActivity extends AppCompatActivity implements Di
 
         xLlave = UtilRest.getInstance().procesarDatosInterno(user.getTokenAuth(), 1);
 
-
+        if (VersionUtils.isVersionGreaterOrEqual(this, "1.5")) {
+            cargarParametricasSOATCGlobales();
+        }
         obtenerTiposVehiculos();
-
     }
 
     @Override
@@ -1091,6 +1101,114 @@ public class ObtenerParametricasActivity extends AppCompatActivity implements Di
         stringRequest.setTag("tipodocumentoidentidad");
 
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+    }
+
+    private void cargarParametricasSOATCGlobales() {
+        obtenerDocumentosIdentidadSOATC();
+        obtenerDepartamentosSOATC();
+        obtenerEstadoCivilSOATC();
+        obtenerGeneroSOATC();
+        obtenerPaisSOATC();
+        obtenerParentescoSOATC();
+        obtenerDocumentosIdentidadFacturacion();
+    }
+    private void obtenerDocumentosIdentidadSOATC(){
+        ApiService apiService = new ApiService(this);
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("par_identificador_parametrica_fk", 1);
+
+        apiService.solicitudPost(url, parametros, response -> {
+            Type responseType = new TypeToken<ApiResponse<List<ParametricaGenerica>>>(){}.getType();
+            ApiResponse<List<ParametricaGenerica>> apiResponse = new Gson().fromJson(response, responseType);
+            if (apiResponse.exito) {
+                ParametricasCache.getInstance().setDocumentosIdentidad(apiResponse.datos);
+            }
+        }, error -> {});
+    }
+    private void obtenerDepartamentosSOATC(){
+        ApiService apiService = new ApiService(this);
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("par_identificador_parametrica_fk", 9);
+
+        apiService.solicitudPost(url, parametros, response -> {
+            Type responseType = new TypeToken<ApiResponse<List<ParametricaGenerica>>>(){}.getType();
+            ApiResponse<List<ParametricaGenerica>> apiResponse = new Gson().fromJson(response, responseType);
+            if (apiResponse.exito) {
+                ParametricasCache.getInstance().setDepartamentos(apiResponse.datos);
+            }
+        }, error -> {});
+    }
+    private void obtenerEstadoCivilSOATC(){
+        ApiService apiService = new ApiService(this);
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("par_identificador_parametrica_fk", 2);
+
+        apiService.solicitudPost(url, parametros, response -> {
+            Type responseType = new TypeToken<ApiResponse<List<ParametricaGenerica>>>(){}.getType();
+            ApiResponse<List<ParametricaGenerica>> apiResponse = new Gson().fromJson(response, responseType);
+            if (apiResponse.exito) {
+                ParametricasCache.getInstance().setEstadoCivil(apiResponse.datos);
+            }
+        }, error -> {});
+    }
+    private void obtenerGeneroSOATC(){
+        ApiService apiService = new ApiService(this);
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("par_identificador_parametrica_fk", 3);
+
+        apiService.solicitudPost(url, parametros, response -> {
+            Type responseType = new TypeToken<ApiResponse<List<ParametricaGenerica>>>(){}.getType();
+            ApiResponse<List<ParametricaGenerica>> apiResponse = new Gson().fromJson(response, responseType);
+            if (apiResponse.exito) {
+                ParametricasCache.getInstance().setGenero(apiResponse.datos);
+            }
+        }, error -> {});
+    }
+    private void obtenerPaisSOATC(){
+        ApiService apiService = new ApiService(this);
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("par_identificador_parametrica_fk", 13);
+
+        apiService.solicitudPost(url, parametros, response -> {
+            Type responseType = new TypeToken<ApiResponse<List<ParametricaGenerica>>>(){}.getType();
+            ApiResponse<List<ParametricaGenerica>> apiResponse = new Gson().fromJson(response, responseType);
+            if (apiResponse.exito) {
+                ParametricasCache.getInstance().setNacionalidad(apiResponse.datos);
+            }
+        }, error -> {});
+    }
+    private void obtenerParentescoSOATC(){
+        ApiService apiService = new ApiService(this);
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("par_identificador_parametrica_fk", 6);
+
+        apiService.solicitudPost(url, parametros, response -> {
+            Type responseType = new TypeToken<ApiResponse<List<ParametricaGenerica>>>(){}.getType();
+            ApiResponse<List<ParametricaGenerica>> apiResponse = new Gson().fromJson(response, responseType);
+            if (apiResponse.exito) {
+                ParametricasCache.getInstance().setParentesco(apiResponse.datos);
+            }
+        }, error -> {});
+    }
+    private void obtenerDocumentosIdentidadFacturacion(){
+        ApiService apiService = new ApiService(this);
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("par_identificador_parametrica_fk", 18);
+
+        apiService.solicitudPost(url, parametros, response -> {
+            Type responseType = new TypeToken<ApiResponse<List<ParametricaGenerica>>>(){}.getType();
+            ApiResponse<List<ParametricaGenerica>> apiResponse = new Gson().fromJson(response, responseType);
+            if (apiResponse.exito) {
+                ParametricasCache.getInstance().setDocumentosIdentidadFacturacionFacturacion(apiResponse.datos);
+            }
+        }, error -> {});
     }
 
     @Override

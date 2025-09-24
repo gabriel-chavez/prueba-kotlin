@@ -69,28 +69,35 @@
 
     </LinearLayout>
 
-    <!-- Contenedor para beneficiarios agregados -->
-    <LinearLayout
-        android:id="@+id/containerBeneficiarios"
+    <!-- ScrollView SOLO para la lista de beneficiarios -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
         android:layout_marginBottom="16dp">
 
-        <!-- Texto cuando no hay beneficiarios -->
-        <TextView
-            android:id="@+id/tvListaVacia"
+        <!-- Contenedor para beneficiarios agregados -->
+        <LinearLayout
+            android:id="@+id/containerBeneficiarios"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No se han agregado beneficiarios"
-            android:textSize="14sp"
-            android:textColor="#999999"
-            android:gravity="center"
-            android:padding="20dp"
-            android:visibility="visible"/>
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <!-- Texto cuando no hay beneficiarios -->
+            <TextView
+                android:id="@+id/tvListaVacia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No se han agregado beneficiarios"
+                android:textSize="14sp"
+                android:textColor="#999999"
+                android:gravity="center"
+                android:padding="20dp"
+                android:visibility="visible"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <!-- Botones de navegación -->
     <LinearLayout

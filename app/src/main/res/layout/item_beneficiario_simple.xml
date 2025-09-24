@@ -3,11 +3,12 @@
     android:id="@+id/itemBeneficiario"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="12dp"
     android:background="@drawable/bg_radio_option"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="20dp">
 
+    <!-- Header con nombre y botón eliminar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,36 +21,92 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Nombre del Beneficiario"
+            android:textColor="#333333"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
         <Button
             android:id="@+id/btnEliminar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_border"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:text="Eliminar"
-            android:textColor="#FF0000"
-            android:textSize="12sp" />
+            android:layout_height="32dp"
+            android:background="@drawable/btn_border_red"
+            android:text="ELIMINAR"
+            android:textAllCaps="true"
+            android:textColor="#D32F2F"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginStart="12dp" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvParentesco"
+    <!-- Información del beneficiario en fila -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Parentesco: Hijo"
-        android:textSize="14sp" />
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/tvPorcentaje"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Porcentaje: 50%"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        <!-- Parentesco -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Parentesco:"
+                android:textColor="#666666"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvParentesco"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Hijo"
+                android:textColor="#333333"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <!-- Porcentaje -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_percentage_chip"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Porcentaje:"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvPorcentaje"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="50%"
+                android:textColor="#2E7D32"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

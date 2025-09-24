@@ -566,6 +566,7 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
                         editor.putString("numero", loginRespUnivida.getDatosUser().getNumero().toString());
                         editor.apply();
 
+
                         // un hilo de la actividad principal
                         runOnUiThread(new Runnable() {
                             @Override

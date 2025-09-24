@@ -15,7 +15,7 @@
         android:text="DATOS DE FACTURACIÓN"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp" />
 
     <!-- Información -->
     <TextView
@@ -25,7 +25,7 @@
         android:textSize="14sp"
         android:textColor="#666666"
         android:layout_marginBottom="24dp"
-        android:gravity="center"/>
+        android:gravity="center" />
 
     <!-- ScrollView para formulario -->
     <ScrollView
@@ -39,30 +39,27 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Nombre o Razón Social -->
+            <!-- Tipo de Documento de Identidad -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nombre o Razón Social:"
+                android:text="Tipo de Documento de Identidad:"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/bg_radio_option"
-                android:padding="8dp"
+                android:padding="6dp"
                 android:layout_marginBottom="16dp">
 
-                <EditText
-                    android:id="@+id/etNombreRazonSocial"
+                <Spinner
+                    android:id="@+id/spinnerTipoDocumento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ingrese nombre o razón social"
-                    android:inputType="textCapWords"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
+                    android:spinnerMode="dropdown" />
 
             </LinearLayout>
 
@@ -72,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:text="Número de Documento:"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -88,43 +85,57 @@
                     android:layout_height="wrap_content"
                     android:hint="Ingrese número de documento"
                     android:inputType="number"
+                    android:maxLength="15"
+                    android:digits="0123456789"
+
+                    android:singleLine="true"
                     android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
-
-            <!-- Tipo de Documento de Identidad -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Tipo de Documento de Identidad:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_radio_option"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
-
-                <Spinner
-                    android:id="@+id/spinnerTipoDocumento"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:spinnerMode="dropdown"/>
-
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <!-- Extensión Documento de Identidad -->
+            <LinearLayout
+                android:id="@+id/layoutExtensionDocumento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Extensión Documento de Identidad:"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/bg_radio_option"
+                    android:padding="8dp"
+                    android:layout_marginBottom="16dp">
+
+                    <EditText
+                        android:id="@+id/etExtensionDocumento"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Opcional"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="3"
+
+                        android:singleLine="true"
+                        android:background="@android:color/transparent"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Nombre o Razón Social -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Extensión Documento de Identidad:"
+                android:text="Nombre o Razón Social:"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -135,14 +146,15 @@
                 android:layout_marginBottom="16dp">
 
                 <EditText
-                    android:id="@+id/etExtensionDocumento"
+                    android:id="@+id/etNombreRazonSocial"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Opcional"
-                    android:inputType="text"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
+                    android:hint="Ingrese nombre o razón social"
+                    android:inputType="textCapWords|textPersonName"
+                    android:maxLength="100"
 
+                    android:background="@android:color/transparent"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <!-- Correo Electrónico -->
@@ -151,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:text="Correo Electrónico:"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -165,11 +177,13 @@
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Opcional - Para envío de factura electrónica"
+                    android:hint="Para envío de factura electrónica"
                     android:inputType="textEmailAddress"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
+                    android:maxLength="100"
 
+                    android:singleLine="true"
+                    android:background="@android:color/transparent"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <!-- Número de Celular -->
@@ -178,7 +192,7 @@
                 android:layout_height="wrap_content"
                 android:text="Número de Celular:"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -194,9 +208,11 @@
                     android:layout_height="wrap_content"
                     android:hint="Ingrese número de celular"
                     android:inputType="phone"
+                    android:maxLength="8"
+                    android:digits="0123456789"
+                    android:singleLine="true"
                     android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
-
+                    android:textSize="16sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -220,7 +236,7 @@
             android:textColor="@color/colorPrimary"
             android:textSize="16sp"
             android:paddingStart="24dp"
-            android:paddingEnd="24dp"/>
+            android:paddingEnd="24dp" />
 
         <!-- Botón Siguiente -->
         <Button
@@ -233,8 +249,6 @@
             android:textSize="16sp"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
-            android:enabled="false"/>
-
+            android:enabled="false" />
     </LinearLayout>
-
 </LinearLayout>

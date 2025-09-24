@@ -32,61 +32,33 @@
         android:id="@+id/radioGroupTomador"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginBottom="32dp">
 
-        <!-- Contenedor para opción Sí -->
-        <LinearLayout
+        <RadioButton
+            android:id="@+id/radioSi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@drawable/bg_radio_option"
             android:padding="16dp"
-            android:layout_marginBottom="8dp">
+            android:text="Sí - El tomador es una persona diferente al asegurado"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:layout_marginBottom="12dp" />
 
-            <RadioButton
-                android:id="@+id/radioSi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="12dp"
-                android:text="Sí - El tomador es una persona diferente al asegurado"
-                android:textSize="14sp"
-                android:textColor="@android:color/black" />
-
-        </LinearLayout>
-
-        <!-- Contenedor para opción No -->
-        <LinearLayout
+        <RadioButton
+            android:id="@+id/radioNo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@drawable/bg_radio_option"
-            android:padding="16dp">
-
-            <RadioButton
-                android:id="@+id/radioNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="12dp"
-                android:text="No - El tomador es la misma persona que el asegurado"
-                android:textSize="14sp"
-                android:textColor="@android:color/black" />
-
-        </LinearLayout>
-
+            android:padding="16dp"
+            android:text="No - El tomador es la misma persona que el asegurado"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:layout_marginBottom="12dp" />
     </RadioGroup>
+
+
 
     <!-- Espacio flexible -->
     <View

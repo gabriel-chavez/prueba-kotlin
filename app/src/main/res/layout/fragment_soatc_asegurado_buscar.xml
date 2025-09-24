@@ -22,7 +22,7 @@
         android:id="@+id/tvSubtitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ingrese los datos del asegurado para verificar SOATC"
+        android:text="Ingrese los datos del asegurado"
         android:textSize="16sp"
         android:layout_marginBottom="24dp"
         android:gravity="center"/>
@@ -40,15 +40,17 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/bg_radio_option"
-        android:padding="16dp"
+        android:padding="4dp"
         android:layout_marginBottom="16dp">
 
         <Spinner
             android:id="@+id/spinnerTipoDocumento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
+
             android:spinnerMode="dropdown"/>
+
+
 
     </LinearLayout>
 
@@ -119,14 +121,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/bg_radio_option"
-        android:padding="16dp"
+        android:padding="4dp"
         android:layout_marginBottom="32dp">
 
         <Spinner
             android:id="@+id/spinnerDepartamento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
+
             android:spinnerMode="dropdown"/>
 
     </LinearLayout>

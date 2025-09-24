@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="VENTA SOAT">
+    <item android:title="VENTA SOAT" android:id="@+id/menu_soat">
         <menu>
             <item
                 android:id="@+id/menu_venta_nueva"
@@ -24,11 +24,6 @@
                 android:title="Historial QR Generados"
                 android:enabled="true"
                 />
-        </menu>
-    </item>
-
-    <item android:title="REPORTE DE CIERRE DE VENTAS">
-        <menu>
             <item
                 android:id="@+id/menu_rcv_nuevo"
                 android:enabled="true"
@@ -42,34 +37,50 @@
                 />
         </menu>
     </item>
-<!--    <item android:title="VENTA SOATC">-->
+
+<!--    <item android:title="REPORTE DE CIERRE DE VENTAS">-->
 <!--        <menu>-->
 <!--            <item-->
-<!--                android:id="@+id/menu_venta_nueva_soatc"-->
-<!--                android:icon="@drawable/ic_action_factura"-->
-<!--                android:title="Nueva venta"-->
+<!--                android:id="@+id/menu_rcv_nuevo"-->
 <!--                android:enabled="true"-->
-<!--                />-->
+<!--                android:icon="@drawable/ic_action_cliente"-->
+<!--                android:title="RCV Nuevo" />-->
 <!--            <item-->
-<!--                android:id="@+id/menu_venta_lista_soatc"-->
-<!--                android:icon="@drawable/ic_action_items2"-->
-<!--                android:title="Ventas realizadas"-->
-<!--                android:enabled="true"-->
-<!--                />-->
-<!--            <item-->
-<!--                android:id="@+id/menu_rcc_nuevo_soatc"-->
-<!--                android:icon="@drawable/ic_action_factura"-->
-<!--                android:title="RCC Nuevo"-->
-<!--                android:enabled="true"-->
-<!--                />-->
-<!--            <item-->
-<!--                android:id="@+id/menu_rcc_lista_soatc"-->
+<!--                android:id="@+id/menu_rcv_realizadas"-->
 <!--                android:icon="@drawable/ic_action_otros"-->
-<!--                android:title="RCC Realizados"-->
+<!--                android:title="RCV Realizadas"-->
 <!--                android:enabled="true"-->
 <!--                />-->
 <!--        </menu>-->
 <!--    </item>-->
+    <item android:title="VENTA SOATC" android:id="@+id/menu_soatc">
+        <menu>
+            <item
+                android:id="@+id/menu_venta_nueva_soatc"
+                android:icon="@drawable/ic_action_factura"
+                android:title="Nueva venta"
+                android:enabled="true"
+                />
+            <item
+                android:id="@+id/menu_venta_lista_soatc"
+                android:icon="@drawable/ic_action_items2"
+                android:title="Ventas realizadas"
+                android:enabled="true"
+                />
+            <item
+                android:id="@+id/menu_rcc_nuevo_soatc"
+                android:icon="@drawable/ic_action_factura"
+                android:title="RCC Nuevo"
+                android:enabled="true"
+                />
+            <item
+                android:id="@+id/menu_rcc_lista_soatc"
+                android:icon="@drawable/ic_action_otros"
+                android:title="RCC Realizados"
+                android:enabled="true"
+                />
+        </menu>
+    </item>
 
 
     <item android:title="TURNOS">

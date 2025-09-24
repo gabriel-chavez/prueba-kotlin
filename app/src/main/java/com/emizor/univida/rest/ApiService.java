@@ -3,6 +3,7 @@ package com.emizor.univida.rest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -16,7 +17,9 @@ import com.emizor.univida.modelo.dominio.univida.seguridad.User;
 import com.emizor.univida.modelo.manejador.ControladorSqlite2;
 import com.emizor.univida.modelo.manejador.UtilRest;
 import com.emizor.univida.util.ConfigEmizor;
+import com.google.gson.Gson;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,11 +35,31 @@ public class ApiService {
         controladorSqlite2.cerrarConexion();
     }
 
-
-    public void solicitudPost(String url, final Map<String, String> parametros,
-                                     final Response.Listener<String> onSuccess,
-                                     final Response.ErrorListener onError) {
+    private Map<String, Object> crearTransaccionOrigen() {
+        Map<String, Object> transaccionOrigen = new HashMap<>();
+        transaccionOrigen.put("tra_ori_intermediario", 0);
+        transaccionOrigen.put("tra_ori_entidad", "Univida");
+        transaccionOrigen.put("tra_ori_sucursal", user.getDatosUsuario().getSucursalCodigo());
+        transaccionOrigen.put("tra_ori_agencia", "");
+        transaccionOrigen.put("tra_ori_canal", 28);
+        transaccionOrigen.put("tra_ori_cajero", user.getDatosUsuario().getEmpleadoUsuario());
+        return transaccionOrigen;
+    }
+    public void solicitudPost(String url, final Map<String, Object> parametros,
+                              final Response.Listener<String> onSuccess,
+                              final Response.ErrorListener onError) {
         mostrarProgressBar(true);
+
+        // Crear el cuerpo de la solicitud con estructura anidada
+        Map<String, Object> requestBody = new HashMap<>();
+
+        // Agregar los parámetros principales
+        if (parametros != null) {
+            requestBody.putAll(parametros);
+        }
+
+        // Agregar transaccion_origen como objeto anidado
+        requestBody.put("transaccion_origen", crearTransaccionOrigen());
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -58,18 +81,25 @@ public class ApiService {
                 }) {
 
             @Override
-            public Map<String, String> getParams() throws AuthFailureError {
-                return parametros;
+            public byte[] getBody() throws AuthFailureError {
+                // Convertir el Map completo a JSON
+                String jsonBody = new Gson().toJson(requestBody);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    return jsonBody.getBytes(StandardCharsets.UTF_8);
+                }
+                return  null;
             }
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                return obtenerHeaders();
+                Map<String, String> headers = obtenerHeaders();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
             }
 
             @Override
             public String getBodyContentType() {
-                return "application/x-www-form-urlencoded; charset=utf-8";
+                return "application/json; charset=utf-8";
             }
         };
 
@@ -79,6 +109,7 @@ public class ApiService {
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
+
     public void solicitudGet(String url, final Response.Listener<String> onSuccess, final Response.ErrorListener onError) {
         mostrarProgressBar(true);
 
@@ -113,14 +144,17 @@ public class ApiService {
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
+
     private Map<String, String> obtenerHeaders() {
         Map<String, String> headers = new HashMap<>();
+        headers.put("version-app-pax", ConfigEmizor.VERSION);
         if (user.getTokenAuth() != null) {
             String xtoken = UtilRest.getInstance().procesarDatosInterno(user.getTokenAuth(), 1);
             headers.put("Authorization", xtoken);
         }
         return headers;
     }
+
     // Manejo genérico de errores
     private void manejarErrorGenerico(VolleyError error) {
         if (error != null) {
@@ -148,7 +182,7 @@ public class ApiService {
 
     // Método para mostrar la barra de progreso
     private void mostrarProgressBar(boolean show) {
-
+        // Aquí va el código para manejar la barra de progreso
     }
 
     // Método para mostrar mensajes

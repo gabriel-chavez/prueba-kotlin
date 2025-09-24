@@ -40,14 +40,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/bg_radio_option"
-        android:padding="16dp"
+        android:padding="4dp"
         android:layout_marginBottom="16dp">
 
         <Spinner
             android:id="@+id/spinnerTipoDocumento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:spinnerMode="dropdown"/>
 
     </LinearLayout>
@@ -119,14 +118,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/bg_radio_option"
-        android:padding="16dp"
+        android:padding="4dp"
         android:layout_marginBottom="32dp">
 
         <Spinner
             android:id="@+id/spinnerDepartamento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:spinnerMode="dropdown"/>
 
     </LinearLayout>
@@ -137,23 +135,36 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Botón de búsqueda centrado -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="end">
 
+        <!-- Botón Atrás -->
         <Button
-            android:id="@+id/btnBuscar"
+            android:id="@+id/btnAtras"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Buscar Tomador"
+            android:text="Atrás"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/btn_border"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"/>
+
+        <!-- Botón Siguiente -->
+        <Button
+            android:id="@+id/btnSiguienteBuscaTomador"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Siguiente"
             android:background="@color/colorPrimary"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:paddingStart="24dp"
-            android:paddingEnd="24dp"/>
+            android:paddingEnd="24dp" />
 
     </LinearLayout>
 

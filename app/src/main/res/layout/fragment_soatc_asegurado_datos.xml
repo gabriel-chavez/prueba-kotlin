@@ -27,7 +27,6 @@
         android:layout_marginBottom="24dp"
         android:gravity="center"/>
 
-    <!-- ScrollView para formulario largo -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -39,217 +38,33 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Apellido Paterno -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Apellido Paterno:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_radio_option"
-                android:padding="8dp"
-                android:layout_marginBottom="16dp">
-
-                <EditText
-                    android:id="@+id/etApellidoPaterno"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Ingrese apellido paterno"
-                    android:inputType="textCapWords"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
-
-            <!-- Apellido Materno -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Apellido Materno:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_radio_option"
-                android:padding="8dp"
-                android:layout_marginBottom="16dp">
-
-                <EditText
-                    android:id="@+id/etApellidoMaterno"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Ingrese apellido materno"
-                    android:inputType="textCapWords"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
-
-            <!-- Apellido Casada/Viuda -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Apellido Casada/Viuda (si corresponde):"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_radio_option"
-                android:padding="8dp"
-                android:layout_marginBottom="16dp">
-
-                <EditText
-                    android:id="@+id/etApellidoCasada"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Opcional"
-                    android:inputType="textCapWords"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
-
-            <!-- Primer Nombre -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Primer Nombre:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_radio_option"
-                android:padding="8dp"
-                android:layout_marginBottom="16dp">
-
-                <EditText
-                    android:id="@+id/etPrimerNombre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Ingrese primer nombre"
-                    android:inputType="textCapWords"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
-
-            <!-- Segundo Nombre -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Segundo Nombre:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_radio_option"
-                android:padding="8dp"
-                android:layout_marginBottom="16dp">
-
-                <EditText
-                    android:id="@+id/etSegundoNombre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Opcional"
-                    android:inputType="textCapWords"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
-
-            <!-- Fecha de Nacimiento -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Fecha de Nacimiento:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_radio_option"
-                android:padding="8dp"
-                android:layout_marginBottom="16dp">
-
-                <EditText
-                    android:id="@+id/etFechaNacimiento"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="DD/MM/AAAA"
-                    android:inputType="date"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"
-                    android:focusable="false"
-                    android:clickable="true"/>
-
-            </LinearLayout>
-
-            <!-- Departamento de Residencia -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Departamento de Residencia:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_radio_option"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
-
-                <Spinner
-                    android:id="@+id/spinnerDeptoResidencia"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:spinnerMode="dropdown"/>
-
-            </LinearLayout>
 
             <!-- Tipo de Documento -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Tipo de Documento de Identidad:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_radio_option"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-                <Spinner
-                    android:id="@+id/spinnerTipoDocumento"
+                <EditText
+                    android:id="@+id/etTipoDocumento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:spinnerMode="dropdown"/>
+                    android:inputType="number"
+                    android:textSize="16sp"
+                    android:enabled="false"
+                    android:textColor="@android:color/darker_gray"
+                    />
 
             </LinearLayout>
 
@@ -257,103 +72,314 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Número de Documento de Identidad:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_radio_option"
-                android:padding="8dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal"
+                android:padding="8dp">
 
                 <EditText
                     android:id="@+id/etNumeroDocumento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ingrese número de documento"
-                    android:inputType="number"
                     android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
+                    android:enabled="false"
+                    android:inputType="number"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray"/>
 
             </LinearLayout>
 
             <!-- Extensión/Complemento -->
             <TextView
+                android:id="@+id/tvExtensionDocumento"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Extensión/Complemento de Documento:"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                />
 
             <LinearLayout
+                android:id="@+id/llExtensionDocumento"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_radio_option"
-                android:padding="8dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal"
+                android:padding="8dp">
 
                 <EditText
                     android:id="@+id/etExtensionDocumento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Opcional"
-                    android:inputType="text"
                     android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
+                    android:enabled="false"
+                    android:inputType="text"
+                    android:textSize="16sp"
+                    android:maxLength="10"/>
 
             </LinearLayout>
+
 
             <!-- Departamento de Documento -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Departamento de Documento de Identidad:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_radio_option"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-                <Spinner
-                    android:id="@+id/spinnerDeptoDocumento"
+                <EditText
+                    android:id="@+id/etDeptoDocumento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:spinnerMode="dropdown"/>
+                    android:enabled="false"
+                    android:inputType="number"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray"/>
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+            <!-- Apellido Paterno -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Apellido Paterno:"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_radio_option"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <EditText
+                    android:id="@+id/etApellidoPaterno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="Ingrese apellido paterno"
+                    android:inputType="textCapWords"
+                    android:textSize="16sp"
+                    android:maxLength="50"/>
+
+            </LinearLayout>
+
+            <!-- Apellido Materno -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Apellido Materno:"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_radio_option"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <EditText
+                    android:id="@+id/etApellidoMaterno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="Ingrese apellido materno"
+                    android:inputType="textCapWords"
+                    android:textSize="16sp"
+                    android:maxLength="50"/>
+
+            </LinearLayout>
+
+            <!-- Apellido Casada/Viuda -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Apellido Casada/Viuda (si corresponde):"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_radio_option"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <EditText
+                    android:id="@+id/etApellidoCasada"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint=""
+                    android:inputType="textCapWords"
+                    android:textSize="16sp"
+                    android:maxLength="50"/>
+
+            </LinearLayout>
+
+            <!-- Primer Nombre -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Primer Nombre:"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_radio_option"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <EditText
+                    android:id="@+id/etPrimerNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="Ingrese primer nombre"
+                    android:inputType="textCapWords"
+                    android:textSize="16sp"
+                    android:maxLength="50"/>
+
+            </LinearLayout>
+
+            <!-- Segundo Nombre -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Segundo Nombre:"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_radio_option"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <EditText
+                    android:id="@+id/etSegundoNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="Opcional"
+                    android:inputType="textCapWords"
+                    android:textSize="16sp"
+                    android:maxLength="50"/>
+
+            </LinearLayout>
+
+            <!-- Fecha de Nacimiento -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Fecha de Nacimiento:"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_radio_option"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <EditText
+                    android:id="@+id/etFechaNacimiento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:hint="DD/MM/AAAA"
+                    android:inputType="date"
+                    android:textSize="16sp"
+                    android:maxLength="11"/>
+
+            </LinearLayout>
+
+            <!-- Departamento de Residencia -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Departamento de Residencia:"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_radio_option"
+                android:orientation="horizontal"
+                android:padding="6dp">
+
+                <Spinner
+                    android:id="@+id/spinnerDeptoResidencia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:spinnerMode="dropdown" />
+
+            </LinearLayout>
+
 
             <!-- Departamento de Contratación -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Departamento de Contratación:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_radio_option"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal"
+                android:padding="8dp">
 
                 <Spinner
                     android:id="@+id/spinnerDeptoContratacion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:spinnerMode="dropdown"/>
+                    android:spinnerMode="dropdown" />
 
             </LinearLayout>
 
@@ -361,24 +387,23 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Sexo:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_radio_option"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal"
+                android:padding="6dp">
 
                 <Spinner
                     android:id="@+id/spinnerSexo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:spinnerMode="dropdown"/>
+                    android:spinnerMode="dropdown" />
 
             </LinearLayout>
 
@@ -386,24 +411,23 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Estado Civil:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_radio_option"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal"
+                android:padding="6dp">
 
                 <Spinner
                     android:id="@+id/spinnerEstadoCivil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:spinnerMode="dropdown"/>
+                    android:spinnerMode="dropdown" />
 
             </LinearLayout>
 
@@ -411,24 +435,23 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Nacionalidad:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_radio_option"
-                android:padding="16dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal"
+                android:padding="6dp">
 
                 <Spinner
                     android:id="@+id/spinnerNacionalidad"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:spinnerMode="dropdown"/>
+                    android:spinnerMode="dropdown" />
 
             </LinearLayout>
 
@@ -436,26 +459,27 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Número de Celular:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_radio_option"
-                android:padding="8dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal"
+                android:padding="8dp">
 
                 <EditText
                     android:id="@+id/etCelular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:hint="Ingrese número de celular"
                     android:inputType="phone"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    android:maxLength="8"/>
 
             </LinearLayout>
 
@@ -463,26 +487,27 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Correo Electrónico:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_radio_option"
+                android:orientation="horizontal"
                 android:padding="8dp"
-                android:layout_marginBottom="16dp">
+                android:maxLength="100">
 
                 <EditText
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:hint="Ingrese correo electrónico"
                     android:inputType="textEmailAddress"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -490,26 +515,27 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="Dirección Domicilio:"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_radio_option"
-                android:padding="8dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal"
+                android:padding="8dp">
 
                 <EditText
                     android:id="@+id/etDireccion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:hint="Ingrese dirección completa"
                     android:inputType="textCapWords"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    android:maxLength="200"/>
 
             </LinearLayout>
 
@@ -520,34 +546,33 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal">
 
         <!-- Botón Atrás -->
         <Button
             android:id="@+id/btnAtras"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Atrás"
             android:layout_marginEnd="12dp"
             android:background="@drawable/btn_border"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
             android:paddingStart="24dp"
-            android:paddingEnd="24dp"/>
+            android:paddingEnd="24dp"
+            android:text="Atrás"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp" />
 
         <!-- Botón Siguiente -->
         <Button
             android:id="@+id/btnSiguiente"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Siguiente"
             android:background="@color/colorPrimary"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
-            android:enabled="false"/>
+            android:text="Siguiente"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
 
     </LinearLayout>
 

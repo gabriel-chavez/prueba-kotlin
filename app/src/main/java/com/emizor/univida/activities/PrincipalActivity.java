@@ -26,10 +26,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.emizor.univida.LoginActivity;
 import com.emizor.univida.R;
+import com.emizor.univida.fragmento.SoatcAseguradoBuscarFragment;
+import com.emizor.univida.fragmento.SoatcListarVentasFragment;
 import com.emizor.univida.fragmento.TurnoControlFragment;
 import com.emizor.univida.dialogo.DialogoEmizor;
 import com.emizor.univida.fragmento.CambiarClaveFragment;
@@ -41,10 +44,15 @@ import com.emizor.univida.fragmento.NuevoRcvFragment;
 import com.emizor.univida.fragmento.OnFragmentInteractionListener4;
 import com.emizor.univida.fragmento.TurnoHistorialFragment;
 import com.emizor.univida.modelo.dominio.univida.seguridad.User;
+import com.emizor.univida.modelo.dominio.univida.soatc.Beneficiario;
+import com.emizor.univida.modelo.dominio.univida.soatc.CliObtenerDatosResponse;
+import com.emizor.univida.modelo.dominio.univida.soatc.DatosBusquedaAseguradoTomador;
+import com.emizor.univida.modelo.dominio.univida.soatc.DatosFacturacion;
 import com.emizor.univida.modelo.dominio.univida.ventas.EfectivizarFacturaUnivida;
 import com.emizor.univida.modelo.manejador.ControladorSqlite2;
 import com.emizor.univida.util.ConfigEmizor;
 import com.emizor.univida.util.LogUtils;
+import com.emizor.univida.utils.VersionUtils;
 import com.yandex.metrica.YandexMetrica;
 import com.yandex.metrica.profile.Attribute;
 import com.yandex.metrica.profile.GenderAttribute;
@@ -52,6 +60,7 @@ import com.yandex.metrica.profile.UserProfile;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 
 public class PrincipalActivity extends RootActivity implements NavigationView.OnNavigationItemSelectedListener, OnFragmentInteractionListener4, DialogoEmizor.NotificaDialogEmizorListener {
 
@@ -61,7 +70,19 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
     private Fragment[] listaFragmentos;
     private View vistaPrincipal, vistaProgress;
     private static boolean estadoActivo = false;
+// datos para compartir entre fragment
+    public DatosBusquedaAseguradoTomador datosBusquedaAsegurado;
+    public CliObtenerDatosResponse datosTomador;
+    public CliObtenerDatosResponse datosAsegurado;
+    public List<Beneficiario> datosBeneficiario;
+    public DatosFacturacion datosFacturacion;
 
+//    public void setDatosBusquedaAseguradoTomador(DatosBusquedaAseguradoTomador datosBusquedaAseguradoTomador) {
+//        this.datosBusquedaAseguradoTomador = datosBusquedaAseguradoTomador;
+//    }
+//    public void setDatosTomador(CliObtenerDatosResponse datos) {
+//        this.datosTomador = datos;
+//    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,9 +138,19 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
+        /*Menu*/
         NavigationView navigationView = findViewById(R.id.nav_view_principal);
         navigationView.setNavigationItemSelectedListener(this);
+        Menu menu = navigationView.getMenu();
+        MenuItem menuSoat = menu.findItem(R.id.menu_soat);
+        boolean rolSoat=user.getDatosUsuario().getRolSoat();
+        menuSoat.setVisible(rolSoat);
+        MenuItem menuSoatc = menu.findItem(R.id.menu_soatc);
+        boolean rolSoatc=user.getDatosUsuario().getRolSoatc();
+        menuSoatc.setVisible(rolSoatc);
+        if (VersionUtils.isVersionLessThan(this, "1.5")) {
+            menuSoat.setVisible(true);
+        }
 
         vistaPrincipal = findViewById(R.id.vista_principal_full);
         vistaProgress = findViewById(R.id.vista_progress_principal);
@@ -127,6 +158,13 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
         int vistaActiva = 0;
         verificarTiempoLocacion();
         cambiarFragmento(new NuevaVentaFragment());
+//        // Iniciar el primer fragment
+//        if (savedInstanceState == null) {
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .replace(R.id.contenedor_vistas, new SoatcAseguradoBuscarFragment())
+//                    .commit();
+//        }
     }
 
     private void verificarTiempo() {
@@ -299,11 +337,16 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
                 cambiarFragmento(new TurnoHistorialFragment());
                 break;
                 //SOATC
-//            case R.id.menu_venta_nueva_soatc:
-//                //cambiamos el titulo del toolbar
-//                getSupportActionBar().setTitle("Historial de registros");
-//                cambiarFragmento(new TurnoHistorialFragment());
-//                break;
+            case R.id.menu_venta_nueva_soatc:
+                //cambiamos el titulo del toolbar
+                getSupportActionBar().setTitle("Venta Soatc");
+                cambiarFragmento(new SoatcAseguradoBuscarFragment());
+                break;
+            case R.id.menu_venta_lista_soatc:
+                //cambiamos el titulo del toolbar
+                getSupportActionBar().setTitle("Lista de ventas Soatc");
+                cambiarFragmento(new SoatcListarVentasFragment());
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.container_principal);
@@ -618,6 +661,12 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
             }
         }
 
-    }
 
+    }
+    public void mostrarLoading(boolean mostrar) {
+        View overlay = findViewById(R.id.loadingOverlay);
+        if (overlay != null) {
+            overlay.setVisibility(mostrar ? View.VISIBLE : View.GONE);
+        }
+    }
 }

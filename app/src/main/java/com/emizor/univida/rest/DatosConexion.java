@@ -17,7 +17,7 @@ public class DatosConexion {
 // SERVIDOR PRUEBAS 3
  //public static final String SERVIDORUNIVIDA = "https://ws8-pos-univida.univida.bo:7001";
     //desarrollo
-  //  public static final String SERVIDORUNIVIDA = "https://app-desarrollo.univida.bo:8001";
+ //   public static final String SERVIDORUNIVIDA = "https://app-desarrollo.univida.bo:8001";
 // SERVIDOR PRUEBAS 3 QA
    public static final String SERVIDORUNIVIDA = "https://ws7-pos-univida.univida.bo:7001";
     //SERVIDOR PRODUCCION
@@ -66,6 +66,14 @@ public class DatosConexion {
     public static final String URL_UNIVIDA_CONTROL_TURNOS_OBTENER = "/consultas/con-historico-obtener";
     public static final String URL_UNIVIDA_CONTROL_TURNOS_TIPO_EVENTO = "/consultas/con-tipo-evento";
     public static final String URL_UNIVIDA_CONTROL_TURNOS_TIPO_PUNTO = "/consultas/con-tipo-punto";
+
+    //SOATC
+    public static final String URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC = "/coretecnicoparametrica/par-obtener-parametricas";
+    public static final String URL_UNIVIDA_CLIENTES_VALIDAR_COBERTURA_ASEGURADO = "/coretecnicoclientes/cli-validar-cobertura-asegurado";
+    public static final String URL_UNIVIDA_CLIENTES_OBTENER_DATOS = "/coretecnicoclientes/cli-obtener-datos";
+    public static final String URL_UNIVIDA_EMISION_VALIDAR_VENDIBLE = "/coretecnicoemision/emi-poliza-efectivizar-validar-vendible";
+    public static final String URL_UNIVIDA_EMISION_EFECTIVIZAR = "/coretecnicoemision/emi-poliza-efectivizar";
+    public static final String URL_UNIVIDA_EMISION_POLIZA_LISTAR = "/coretecnicoemision/emi-poliza-listar";
 
 }
 

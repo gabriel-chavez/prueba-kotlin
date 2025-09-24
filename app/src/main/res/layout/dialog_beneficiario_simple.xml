@@ -13,7 +13,9 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:maxLines="1"
+        android:ellipsize="end" />
 
     <!-- Nombre Completo -->
     <TextView
@@ -21,7 +23,9 @@
         android:layout_height="wrap_content"
         android:text="Nombre Completo:"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        android:maxLines="1"
+        android:ellipsize="end" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,9 +40,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Ingrese nombre completo"
-            android:inputType="textCapWords"
+            android:inputType="textCapWords|textPersonName"
             android:background="@android:color/transparent"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:maxLength="100"
+            android:ellipsize="end" />
 
     </LinearLayout>
 
@@ -48,7 +56,9 @@
         android:layout_height="wrap_content"
         android:text="Parentesco:"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        android:maxLines="1"
+        android:ellipsize="end" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown" />
 
     </LinearLayout>
 
@@ -73,7 +83,9 @@
         android:layout_height="wrap_content"
         android:text="Porcentaje (%):"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        android:maxLines="1"
+        android:ellipsize="end" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -90,7 +102,11 @@
             android:hint="Ingrese porcentaje (1-100)"
             android:inputType="number"
             android:background="@android:color/transparent"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:maxLength="3"
+            android:ellipsize="end" />
 
     </LinearLayout>
 
@@ -110,17 +126,21 @@
             android:background="@drawable/btn_border"
             android:textColor="@color/colorPrimary"
             android:paddingStart="20dp"
-            android:paddingEnd="20dp"/>
+            android:paddingEnd="20dp"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
         <Button
             android:id="@+id/btnGuardar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Guardar"
+            android:text="Agregar"
             android:background="@color/colorPrimary"
             android:textColor="#FFFFFF"
             android:paddingStart="20dp"
-            android:paddingEnd="20dp"/>
+            android:paddingEnd="20dp"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
     </LinearLayout>
 

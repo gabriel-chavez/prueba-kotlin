@@ -18,6 +18,7 @@ import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.DatosRcvRes
 import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.ObtenerRcvRespUnivida;
 import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.RcvListarVentaRespUnivida;
 import com.emizor.univida.modelo.dominio.univida.seguridad.User;
+import com.emizor.univida.modelo.dominio.univida.soatc.EmiPolizaObtenerResponse;
 import com.emizor.univida.modelo.dominio.univida.ventas.Datos;
 import com.emizor.univida.modelo.dominio.univida.ventas.Detalle;
 import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.EfectivizarRcvUnivida;
@@ -951,6 +952,9 @@ public class ImprimirFactura {
 //        pImp.addAll(vectoDoc);
 
     }
+    public void prepararImpresionFacturaSoatc(User user, EmiPolizaObtenerResponse efectivizarRespUnivida) {
+
+    }
 
 //    public void prepararImpresionFactura2022(User user, EfectivizarRespUnivida efectivizarRespUnivida) {
 //
@@ -1694,6 +1698,8 @@ public class ImprimirFactura {
 //        vectoColilla.addAll(formatearLineaCadenaPeque("CARGO                : " + user.getDatosUsuario().getEmpleadoCargo(), 10));
 //
 //        pImp.addAll(vectoColilla);
+    }
+    public void procesarColillaVentaSoatc(User user, EmiPolizaObtenerResponse efectivizarRespUnivida, Date fecha){
     }
 
     public void procesarColillaVentaSoatNormal(User user, EfectivizarRespUnivida efectivizarRespUnivida, Date fecha){

@@ -17,6 +17,7 @@ import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.Efectivizar
 import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.ObtenerRcvRespUnivida;
 import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.RcvListarVentaRespUnivida;
 import com.emizor.univida.modelo.dominio.univida.seguridad.User;
+import com.emizor.univida.modelo.dominio.univida.soatc.EmiPolizaObtenerResponse;
 import com.emizor.univida.modelo.dominio.univida.ventas.Datos;
 import com.emizor.univida.modelo.dominio.univida.ventas.Detalle;
 import com.emizor.univida.modelo.dominio.univida.ventas.EfectivizarRespUnivida;
@@ -1369,6 +1370,10 @@ public class ImprimirFacturaSunmi extends ImprimirFactura{
         }
         return bitmap;
     }
+    public void prepararImpresionFacturaSoatc(User user, EmiPolizaObtenerResponse efectivizarRespUnivida) {
 
+    }
+    public void procesarColillaVentaSoatc(User user, EmiPolizaObtenerResponse efectivizarRespUnivida, Date fecha){
 
+    }
 }

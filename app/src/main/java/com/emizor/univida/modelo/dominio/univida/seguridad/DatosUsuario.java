@@ -93,6 +93,13 @@ public class DatosUsuario implements Serializable, Parcelable
     @SerializedName("superior_usuario")
     @Expose
     private String superiorUsuario;
+    @SerializedName("rol_soat")
+    @Expose
+    private boolean  rolSoat;
+
+    @SerializedName("rol_soatc")
+    @Expose
+    private boolean  rolSoatc;
     public final static Parcelable.Creator<DatosUsuario> CREATOR = new Creator<DatosUsuario>() {
 
 
@@ -139,6 +146,9 @@ public class DatosUsuario implements Serializable, Parcelable
         this.superiorCargo = ((String) in.readValue((String.class.getClassLoader())));
         this.superiorSecuencial = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.superiorUsuario = ((String) in.readValue((String.class.getClassLoader())));
+        this.rolSoat = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
+        this.rolSoatc = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
+
     }
 
     public DatosUsuario() {
@@ -381,7 +391,21 @@ public class DatosUsuario implements Serializable, Parcelable
         DatosUsuario rhs = ((DatosUsuario) other);
         return new EqualsBuilder().append(sucursalCodigo, rhs.sucursalCodigo).append(empleadoSecuencial, rhs.empleadoSecuencial).append(superiorCargo, rhs.superiorCargo).append(sucursalCiudad, rhs.sucursalCiudad).append(empleadoDocumentoCompleto, rhs.empleadoDocumentoCompleto).append(empleadoNombreCompleto, rhs.empleadoNombreCompleto).append(empleadoUsuario, rhs.empleadoUsuario).append(empleadoSegundoNombre, rhs.empleadoSegundoNombre).append(empleadoPrimerNombre, rhs.empleadoPrimerNombre).append(sucursalIdDepartamento, rhs.sucursalIdDepartamento).append(empleadoDocumentoTipo, rhs.empleadoDocumentoTipo).append(empleadoCiudadResidencia, rhs.empleadoCiudadResidencia).append(empleadoApellidoPaterno, rhs.empleadoApellidoPaterno).append(superiorUsuario, rhs.superiorUsuario).append(empleadoDocumentoExtension, rhs.empleadoDocumentoExtension).append(contratoSecuencial, rhs.contratoSecuencial).append(empleadoNombreAlternativo, rhs.empleadoNombreAlternativo).append(superiorSecuencial, rhs.superiorSecuencial).append(sucursalDepartamento, rhs.sucursalDepartamento).append(empleadoCargo, rhs.empleadoCargo).append(estadoEmpleadoActivo, rhs.estadoEmpleadoActivo).append(sucursalDireccion, rhs.sucursalDireccion).append(empleadoDireccion, rhs.empleadoDireccion).append(sucursalNombre, rhs.sucursalNombre).append(empleadoApellidoCasada, rhs.empleadoApellidoCasada).append(empleadoDocumentoNumero, rhs.empleadoDocumentoNumero).append(empleadoApellidoMaterno, rhs.empleadoApellidoMaterno).isEquals();
     }
+    public Boolean getRolSoat() {
+        return rolSoat;
+    }
 
+    public void setRolSoat(Boolean rolSoat) {
+        this.rolSoat = rolSoat;
+    }
+
+    public Boolean getRolSoatc() {
+        return rolSoatc;
+    }
+
+    public void setRolSoatc(Boolean rolSoatc) {
+        this.rolSoatc = rolSoatc;
+    }
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(contratoSecuencial);
         dest.writeValue(empleadoApellidoCasada);
@@ -410,6 +434,9 @@ public class DatosUsuario implements Serializable, Parcelable
         dest.writeValue(superiorCargo);
         dest.writeValue(superiorSecuencial);
         dest.writeValue(superiorUsuario);
+        dest.writeValue(rolSoat);
+        dest.writeValue(rolSoatc);
+
     }
 
     public int describeContents() {
