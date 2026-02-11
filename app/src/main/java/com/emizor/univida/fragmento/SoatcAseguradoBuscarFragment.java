@@ -47,10 +47,11 @@ import java.util.Map;
 public class SoatcAseguradoBuscarFragment extends Fragment {
 
     private FormViewModel viewModel;
-    private Spinner spinnerTipoDocumento;
-    private Spinner spinnerDepartamento;
+//    private Spinner spinnerTipoDocumento;
+//    private Spinner spinnerDepartamento;
+//    private EditText etComplemento;
     private EditText etNumeroDocumento;
-    private EditText etComplemento;
+
     AlertDialog.Builder builder;
     public SoatcAseguradoBuscarFragment() {
         // Required empty public constructor
@@ -76,10 +77,11 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root= inflater.inflate(R.layout.fragment_soatc_asegurado_buscar, container, false);
-        spinnerTipoDocumento = root.findViewById(R.id.spinnerTipoDocumento);
-        spinnerDepartamento = root.findViewById(R.id.spinnerDepartamento);
+//        spinnerTipoDocumento = root.findViewById(R.id.spinnerTipoDocumento);
+//        spinnerDepartamento = root.findViewById(R.id.spinnerDepartamento);
+//        etComplemento = root.findViewById(R.id.complemento);
         etNumeroDocumento = root.findViewById(R.id.numeroDocumento);
-        etComplemento = root.findViewById(R.id.complemento);
+
 
         builder = new AlertDialog.Builder(getContext());
 
@@ -91,16 +93,16 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
                 buscarAsegurado();
             }
         });
-        obtenerTiposDocumento();
-        obtenerDepartamentos();
+//        obtenerTiposDocumento();
+//        obtenerDepartamentos();
         return root;
     }
     private void buscarAsegurado()
     {
         if(validarFormulario()){
             // Obtener valores seleccionados
-            ParametricaGenerica tipoDocumento = (ParametricaGenerica) spinnerTipoDocumento.getSelectedItem();
-            ParametricaGenerica departamento = (ParametricaGenerica) spinnerDepartamento.getSelectedItem();
+        //    ParametricaGenerica tipoDocumento = (ParametricaGenerica) spinnerTipoDocumento.getSelectedItem();
+           // ParametricaGenerica departamento = (ParametricaGenerica) spinnerDepartamento.getSelectedItem();
 
             String numeroDocumento = etNumeroDocumento.getText().toString().trim();
 
@@ -111,9 +113,9 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
             parametros.put("per_documento_identidad_extension", "");
             parametros.put("per_t_par_gen_departamento_fk_documento_identidad", -1);
             // Si el departamento es necesario agregarlo
-            if (departamento != null) {
-                parametros.put("t_par_geo_departamento_fk", departamento.Identificador);
-            }
+//            if (departamento != null) {
+//                parametros.put("t_par_geo_departamento_fk", departamento.Identificador);
+//            }
 
 
 //            DatosBusquedaAseguradoTomador datosBusquedaAsegurado = new DatosBusquedaAseguradoTomador();
@@ -144,10 +146,17 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
                                          datosAsegurado.setEsNuevo(false);
                                             validarCoberturaAsegurado(datosAsegurado, resultado -> {
                                                 if (resultado.exito) {
-                                                    mostrarToast("Cobertura válida!");
+                                                    builder.setTitle("Atención")
+                                                        .setIcon(android.R.drawable.ic_dialog_info);
+                                                    builder.setMessage( "El cliente cuenta con cobertura de SOATC con los siguientes datos: "+resultado.datos.DatosAsegurado)
+                                                        .setCancelable(false)
+                                                        .setPositiveButton("Aceptar", null);
+                                                        AlertDialog alert = builder.create();
+                                                        alert.show();
+                                                        return;
                                                 } else {
-                                                    mvFormulario.ActiveViewIndex = 1; // paso 2
-                                                    CargarDatosPaso2();
+//                                                    mvFormulario.ActiveViewIndex = 1; // paso 2
+//                                                    CargarDatosPaso2();
                                                 }
                                             });
                                     }
@@ -207,7 +216,7 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
 //                                            .show();
 //                                }
                             } catch (Exception e) {
-
+                                Log.e("Asegurado",e.getMessage());
                                 Toast.makeText(getContext(), "Error al procesar respuesta", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -281,28 +290,28 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
         return true;
     }
 
-    private void obtenerTiposDocumento() {
-        List<ParametricaGenerica> tiposDocumento = ParametricasCache.getInstance().getDocumentosIdentidad();
-        if (tiposDocumento != null && !tiposDocumento.isEmpty()) {
-            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
-                    getContext(), android.R.layout.simple_spinner_item, tiposDocumento);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerTipoDocumento.setAdapter(adapter);
-
-        }
-    }
-    private void obtenerDepartamentos() {
-
-        List<ParametricaGenerica> departamentos = ParametricasCache.getInstance().getDepartamentos();
-
-        if (departamentos != null && !departamentos.isEmpty()) {
-            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
-                    getContext(), android.R.layout.simple_spinner_item, departamentos);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerDepartamento.setAdapter(adapter);
-        }
-
-
-    }
+//    private void obtenerTiposDocumento() {
+//        List<ParametricaGenerica> tiposDocumento = ParametricasCache.getInstance().getDocumentosIdentidad();
+//        if (tiposDocumento != null && !tiposDocumento.isEmpty()) {
+//            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
+//                    getContext(), android.R.layout.simple_spinner_item, tiposDocumento);
+//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//            spinnerTipoDocumento.setAdapter(adapter);
+//
+//        }
+//    }
+//    private void obtenerDepartamentos() {
+//
+//        List<ParametricaGenerica> departamentos = ParametricasCache.getInstance().getDepartamentos();
+//
+//        if (departamentos != null && !departamentos.isEmpty()) {
+//            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
+//                    getContext(), android.R.layout.simple_spinner_item, departamentos);
+//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//            spinnerDepartamento.setAdapter(adapter);
+//        }
+//
+//
+//    }
 
 }
