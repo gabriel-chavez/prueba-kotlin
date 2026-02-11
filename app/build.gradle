@@ -3,8 +3,8 @@ apply plugin: 'com.android.application'
 android {
     def _versionCode = 1
     def _major = 1
-    def _minor = 4
-    def _patch = "0"
+    def _minor = 5
+    def _patch = "2"
 
     def _versionName = "${_major}.${_minor}.${_patch}"
 
@@ -25,7 +25,7 @@ android {
         targetSdkVersion 28
         versionCode _versionCode
         versionName _versionName
-        versionCode 2
+        versionCode 5
         multiDexEnabled true //importantmultiDexEnabled true //important
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 //        vectorDrawables.useSupportLibrary = true
@@ -85,9 +85,10 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-android:6.1.18'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.natario1:CameraView:v1.5.1'
 
-
-
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
 
 }

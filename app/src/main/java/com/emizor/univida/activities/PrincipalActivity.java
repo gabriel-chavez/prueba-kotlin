@@ -33,6 +33,8 @@ import com.emizor.univida.LoginActivity;
 import com.emizor.univida.R;
 import com.emizor.univida.fragmento.SoatcAseguradoBuscarFragment;
 import com.emizor.univida.fragmento.SoatcListarVentasFragment;
+import com.emizor.univida.fragmento.SoatcRccListarFragment;
+import com.emizor.univida.fragmento.SoatcRccNuevoFragment;
 import com.emizor.univida.fragmento.TurnoControlFragment;
 import com.emizor.univida.dialogo.DialogoEmizor;
 import com.emizor.univida.fragmento.CambiarClaveFragment;
@@ -52,6 +54,7 @@ import com.emizor.univida.modelo.dominio.univida.ventas.EfectivizarFacturaUnivid
 import com.emizor.univida.modelo.manejador.ControladorSqlite2;
 import com.emizor.univida.util.ConfigEmizor;
 import com.emizor.univida.util.LogUtils;
+import com.emizor.univida.utils.ParametricasCache;
 import com.emizor.univida.utils.VersionUtils;
 import com.yandex.metrica.YandexMetrica;
 import com.yandex.metrica.profile.Attribute;
@@ -76,6 +79,10 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
     public CliObtenerDatosResponse datosAsegurado;
     public List<Beneficiario> datosBeneficiario;
     public DatosFacturacion datosFacturacion;
+
+
+
+    private MenuItem selectedMenuItem;
 
 //    public void setDatosBusquedaAseguradoTomador(DatosBusquedaAseguradoTomador datosBusquedaAseguradoTomador) {
 //        this.datosBusquedaAseguradoTomador = datosBusquedaAseguradoTomador;
@@ -151,6 +158,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
         if (VersionUtils.isVersionLessThan(this, "1.5")) {
             menuSoat.setVisible(true);
         }
+       // menuSoatc.setVisible(true);
 
         vistaPrincipal = findViewById(R.id.vista_principal_full);
         vistaProgress = findViewById(R.id.vista_progress_principal);
@@ -218,6 +226,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         verificarTiempo();
         LogUtils.i(TAG, "item menu " + item);
+
         switch (item.getItemId()) {
             case R.id.action_internet:
                 if (PrincipalActivity.this != null && !PrincipalActivity.this.isFinishing()) {
@@ -273,85 +282,82 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
 
         verificarTiempo();
 
+        if (ParametricasCache.getInstance().getPuntos() == null) {
+            // Si las paramétricas no están cargadas, iniciamos la actividad para obtenerlas
+            Intent intent1 = new Intent(getApplicationContext(), ObtenerParametricasActivity.class);
+            // Guardamos el ID del item para cambiar el fragmento después
+            selectedMenuItem = menuItem;
+            startActivityForResult(intent1, 5526);
+            return false; // No cambiamos el fragmento hasta obtener las paramétricas
+        }
+        // Si las paramétricas ya están cargadas, continuamos con el cambio de fragmento
+        cambiarFragmentoDeMenu(menuItem);
+        return true;
+
+    }
+    private void cambiarFragmentoDeMenu(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.menu_venta_nueva:
-                // cambiamos a la vista de nueva venta
                 cambiarFragmento(new NuevaVentaFragment());
-                //cambiamos el titulo del toolbar
                 getSupportActionBar().setTitle("NUEVA VENTA");
                 break;
             case R.id.menu_venta_lista:
-                //cambiamos el titulo del toolbar
                 getSupportActionBar().setTitle("LISTAR VENTAS");
-                // cambiamos a la vista de lista de ventas
-                // verificamos si lista ventas es null
-
                 if (listaFragmentos[1] == null) {
-                    // creamos el fragmento Lista venta y lo visualizamos en pantalla
                     cambiarFragmento(new ListaVentasFragment());
                 } else {
-                    // enviamos el fragmento para visualizarlo en pantalla.
                     cambiarFragmento(listaFragmentos[1]);
                 }
                 break;
             case R.id.menu_historial_qr_generados:
-                // cambiamos a la vista de nueva venta
                 cambiarFragmento(new HistorialQrGeneradosFragment());
-                //cambiamos el titulo del toolbar
                 getSupportActionBar().setTitle("HISTORIAL QR GENERADOS");
                 break;
             case R.id.menu_rcv_nuevo:
-                //cambiamos el titulo del toolbar
                 getSupportActionBar().setTitle("NUEVO RCV");
-                // cambiamos a la vista de rcv nuevo
-                // verificamos si nuevo rcv es null
                 if (listaFragmentos[2] == null) {
-                    // creamos el fragmento nuevo rcv y lo visualizamos en pantalla
                     cambiarFragmento(new NuevoRcvFragment());
                 } else {
-                    // enviamos el fragmento para visualizarlo en pantalla.
                     cambiarFragmento(listaFragmentos[2]);
                 }
                 break;
             case R.id.menu_rcv_realizadas:
-                //cambiamos el titulo del toolbar
                 getSupportActionBar().setTitle("LISTAR RCV");
-                // cambiamos a la vista de lista de rcv realizadas
-                // verificamos si lista de rcv es null
                 if (listaFragmentos[3] == null) {
-                    // creamos el fragmento lista rcv y lo visualizamos en pantalla
                     cambiarFragmento(new ListaRcvFragment());
                 } else {
-                    // enviamos el fragmento para visualizarlo en pantalla.
                     cambiarFragmento(listaFragmentos[3]);
                 }
                 break;
             case R.id.menu_turno_control:
-                //cambiamos el titulo del toolbar
                 getSupportActionBar().setTitle("Control de Turno");
                 cambiarFragmento(new TurnoControlFragment());
                 break;
             case R.id.menu_turno_historia:
-                //cambiamos el titulo del toolbar
                 getSupportActionBar().setTitle("Historial de registros");
                 cambiarFragmento(new TurnoHistorialFragment());
                 break;
-                //SOATC
             case R.id.menu_venta_nueva_soatc:
-                //cambiamos el titulo del toolbar
                 getSupportActionBar().setTitle("Venta Soatc");
                 cambiarFragmento(new SoatcAseguradoBuscarFragment());
                 break;
             case R.id.menu_venta_lista_soatc:
-                //cambiamos el titulo del toolbar
                 getSupportActionBar().setTitle("Lista de ventas Soatc");
                 cambiarFragmento(new SoatcListarVentasFragment());
                 break;
+            case R.id.menu_rcc_nuevo_soatc:
+                getSupportActionBar().setTitle("Nuevo Rcc Soatc");
+                cambiarFragmento(new SoatcRccNuevoFragment());
+                break;
+            case R.id.menu_rcc_lista_soatc:
+                getSupportActionBar().setTitle("Lista Rcc Soatc");
+                cambiarFragmento(new SoatcRccListarFragment());
+                break;
         }
 
+        // Cerrar el drawer
         DrawerLayout drawer = findViewById(R.id.container_principal);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     private void cambiarFragmento(Fragment fragment) {
@@ -495,6 +501,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
             case 4562:
                 if (resultCode == RESULT_OK) {
                     listaFragmentos[0] = null;
+                    getSupportActionBar().setTitle("NUEVA VENTA");
                     cambiarFragmento(new NuevaVentaFragment());
                 }
                 break;
@@ -520,6 +527,12 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
 
                 }
                 break;
+            case  5526:
+                if (selectedMenuItem != null) {
+                    // Cambiar el fragmento según la selección previa
+                    cambiarFragmentoDeMenu(selectedMenuItem);
+                }
+
         }
 
     }
@@ -664,9 +677,18 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
 
     }
     public void mostrarLoading(boolean mostrar) {
-        View overlay = findViewById(R.id.loadingOverlay);
-        if (overlay != null) {
-            overlay.setVisibility(mostrar ? View.VISIBLE : View.GONE);
-        }
+//        View overlay = findViewById(R.id.loadingOverlaynuevo);
+//        if (overlay != null) {
+//            if (mostrar) {
+//                overlay.setClickable(true);
+//                overlay.setFocusable(true);
+//                overlay.setVisibility(View.VISIBLE);
+//            } else {
+//                overlay.setVisibility(View.GONE);
+//                overlay.setClickable(false);
+//                overlay.setFocusable(false);
+//            }
+//        }
+        showProgress(mostrar);
     }
 }

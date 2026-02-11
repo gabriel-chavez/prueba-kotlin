@@ -1,8 +1,13 @@
 package com.emizor.univida.imprime;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
+import com.emizor.univida.R;
+import com.emizor.univida.activities.PrincipalActivity;
+import com.emizor.univida.fragmento.SoatcAseguradoBuscarFragment;
 import com.emizor.univida.modelo.dominio.univida.seguridad.User;
 import com.emizor.univida.modelo.dominio.univida.soatc.EmiPolizaObtenerResponse;
 import com.emizor.univida.modelo.dominio.univida.ventas.EfectivizarRespUnivida;
@@ -103,7 +108,9 @@ public class ImpresionManagerSoatc {
             try {
                 imprimirFactura.imprimirFactura2();
             } catch (Exception e) {
+                ((PrincipalActivity) context).mostrarLoading(false);
                 manejarErrorImpresion("Error al imprimir: " + e.getMessage(), e);
+                cambiarFragmento(new SoatcAseguradoBuscarFragment());
             }
         }).start();
     }
@@ -148,6 +155,8 @@ public class ImpresionManagerSoatc {
             imprimirFactura.prepararImpresionFacturaSoatc(user, respuesta);
             iniciarImpresion();
         } catch (Exception ex) {
+            ((PrincipalActivity) context).mostrarLoading(false);
+            cambiarFragmento(new SoatcAseguradoBuscarFragment());
             notificarError("Error al preparar impresión: " + ex.getMessage());
         }
     }
@@ -167,4 +176,22 @@ public class ImpresionManagerSoatc {
             notificarError("Error al imprimir colilla: " + ex.getMessage());
         }
     }
+    private void cambiarFragmento(Fragment fragment) {
+        try {
+            // Verifica si el context es una instancia de Activity
+            if (context instanceof PrincipalActivity) {
+                PrincipalActivity activity = (PrincipalActivity) context;
+
+                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.contenedor_vistas, fragment);
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                transaction.commit();
+            } else {
+                Log.e(TAG, "El contexto no es una instancia de Activity");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }

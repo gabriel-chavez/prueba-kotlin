@@ -54,6 +54,7 @@ public class SoatcTomadorDatosFragment extends Fragment {
     private Spinner spinnerDeptoResidencia, spinnerDeptoContratacion;
     private Spinner spinnerSexo, spinnerEstadoCivil, spinnerNacionalidad;
     private CliObtenerDatosResponse datosTomador;
+    private String fechaNacimientoFormato;
 
 
     public SoatcTomadorDatosFragment() {
@@ -142,6 +143,7 @@ public class SoatcTomadorDatosFragment extends Fragment {
                     (datePickerView, selectedYear, selectedMonth, selectedDay) -> {
                         String fecha = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
                         etFechaNacimiento.setText(fecha);
+                        fechaNacimientoFormato=String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
                     }, year, month, day);
             datePickerDialog.show();
         });
@@ -161,7 +163,18 @@ public class SoatcTomadorDatosFragment extends Fragment {
             }
         });
 
-
+//        //para mostrar los datos
+//        if (getActivity() instanceof PrincipalActivity) {
+//            PrincipalActivity principal = (PrincipalActivity) getActivity();
+//
+//            if (principal.datosAsegurado != null) {
+//                this.datosTomador = principal.datosTomador;
+//                cargarDatosTomador();
+//            }else{
+//                buscarTomador();
+//            }
+//
+//        }
         return view;
     }
 
@@ -285,21 +298,30 @@ public class SoatcTomadorDatosFragment extends Fragment {
     }
     private CliObtenerDatosResponse obtenerDatosTomadorDesdeVista() {
         CliObtenerDatosResponse datos = new CliObtenerDatosResponse();
+        // DatosBusquedaAseguradoTomador datosBusquedaAsegurado = ((PrincipalActivity) getActivity()).datosBusquedaAsegurado;
+
+        // De busqueda
+        datos.PerTParCliDocumentoIdentidadTipoFk = datosTomador.PerTParCliDocumentoIdentidadTipoFk;
+        datos.PerTParCliDocumentoIdentidadTipoDescripcion = datosTomador.PerTParCliDocumentoIdentidadTipoDescripcion;
+        datos.PerDocumentoIdentidadNumero = datosTomador.PerDocumentoIdentidadNumero;
+        datos.PerTParGenDepartamentoDescripcionDocumentoIdentidad = datosTomador.PerTParGenDepartamentoDescripcionDocumentoIdentidad;
+        datos.PerTParGenDepartamentoFkDocumentoIdentidad = datosTomador.PerTParGenDepartamentoFkDocumentoIdentidad;
+        datos.PerDocumentoIdentidadExtension = datosTomador.PerDocumentoIdentidadExtension;
 
         // EditTexts
-        datos.PerApellidoPaterno = etApellidoPaterno.getText().toString();
-        datos.PerApellidoMaterno = etApellidoMaterno.getText().toString();
-        datos.PerApellidoCasada = etApellidoCasada.getText().toString();
-        datos.PerNombrePrimero = etPrimerNombre.getText().toString();
-        datos.PerNombreSegundo = etSegundoNombre.getText().toString();
-        datos.PerNacimientoFecha = etFechaNacimiento.getText().toString();
+        datos.PerApellidoPaterno = getStringOrNull(etApellidoPaterno);
+        datos.PerApellidoMaterno = getStringOrNull(etApellidoMaterno);
+        datos.PerApellidoCasada = getStringOrNull(etApellidoCasada);
+        datos.PerNombrePrimero = getStringOrNull(etPrimerNombre);
+        datos.PerNombreSegundo = getStringOrNull(etSegundoNombre);
+        datos.PerNacimientoFecha = fechaNacimientoFormato;
         datos.PerDocumentoIdentidadNumero = parseInteger(etNumeroDocumento.getText().toString());
-        datos.PerDocumentoIdentidadExtension = etExtensionDocumento.getText().toString();
-        datos.PerTelefonoMovil = etCelular.getText().toString();
-        datos.PerCorreoElectronico = etEmail.getText().toString();
-        datos.PerDomicilioParticular = etDireccion.getText().toString();
-        datos.PerTParCliDocumentoIdentidadTipoDescripcion = etTipoDocumento.getText().toString();
-        datos.PerTParGenDepartamentoDescripcionDocumentoIdentidad = etDeptoDocumento.getText().toString();
+        datos.PerDocumentoIdentidadExtension = getStringOrNull(etExtensionDocumento);
+        datos.PerTelefonoMovil = getStringOrNull(etCelular);
+        datos.PerCorreoElectronico = getStringOrNull(etEmail);
+        datos.PerDomicilioParticular = getStringOrNull(etDireccion);
+        datos.PerTParCliDocumentoIdentidadTipoDescripcion = getStringOrNull(etTipoDocumento);
+        datos.PerTParGenDepartamentoDescripcionDocumentoIdentidad = getStringOrNull(etDeptoDocumento);
 
         // Spinners
         datos.PerTParGenDepartamentoFkNacimiento = getSpinnerId(spinnerDeptoResidencia);
@@ -310,6 +332,12 @@ public class SoatcTomadorDatosFragment extends Fragment {
 
         return datos;
     }
+
+    // Método auxiliar para verificar si el texto del EditText está vacío y devolver null si es el caso
+    private String getStringOrNull(EditText editText) {
+        return editText.getText().toString().isEmpty() ? null : editText.getText().toString();
+    }
+
 
     private Integer parseInteger(String valor) {
         try {

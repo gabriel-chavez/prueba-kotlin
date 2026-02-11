@@ -86,11 +86,6 @@ public class SoatcFacturacionFragment extends Fragment {
         layoutExtensionDocumento.setVisibility(View.GONE);
 
         obtenerDocumentosIdentidadFacturacion();
-        // Validaciones en tiempo real
-        agregarTextWatcher(etNumeroDocumento);
-        agregarTextWatcher(etNombreRazonSocial);
-        agregarTextWatcher(etEmail);
-        agregarTextWatcher(etCelular);
 
         // Botón Atrás
         btnAtras.setOnClickListener(v -> {
@@ -100,13 +95,13 @@ public class SoatcFacturacionFragment extends Fragment {
         // Botón Siguiente
         btnSiguiente.setOnClickListener(v -> {
             if (validarFormulario()) {
-                DatosFacturacion datosFacturacion= registrarDatosFacturacion();
-                ((PrincipalActivity)getActivity()).datosFacturacion=datosFacturacion;
+                DatosFacturacion datosFacturacion = registrarDatosFacturacion();
+                ((PrincipalActivity) getActivity()).datosFacturacion = datosFacturacion;
 
                 validarVendible();
-
             }
         });
+
         spinnerTipoDocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -131,22 +126,7 @@ public class SoatcFacturacionFragment extends Fragment {
         return view;
     }
 
-    private void agregarTextWatcher(EditText editText) {
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                btnSiguiente.setEnabled(validarFormulario());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-    }
 
     private void obtenerDocumentosIdentidadFacturacion() {
         List<ParametricaGenerica> documentosIdentidadFacturacion = ParametricasCache.getInstance().getDocumentosIdentidadFacturacionFacturacion();
@@ -182,7 +162,7 @@ public class SoatcFacturacionFragment extends Fragment {
         }
 
         if (celular.isEmpty()) {
-            etNumeroDocumento.setError("Ingrese número de celular");
+            etCelular.setError("Ingrese número de documento");
             return false;
         }
 
@@ -211,7 +191,7 @@ public class SoatcFacturacionFragment extends Fragment {
 //        EditText etCelular = getView().findViewById(R.id.etCelular);
 
         // Obtener valores
-        int tipoDocumento = spinnerTipoDocumento.getSelectedItemPosition() + 1; // Ajustar según tu lista de opciones
+        int tipoDocumento = spinnerTipoDocumento.getSelectedItemPosition() + 1;
         String numeroDocumento = etNumeroDocumento.getText().toString().trim();
         String extensionDocumento = etExtensionDocumento.getText().toString().trim();
         String nombreRazonSocial = etNombreRazonSocial.getText().toString().trim();

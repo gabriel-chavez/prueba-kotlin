@@ -40,6 +40,8 @@ import com.emizor.univida.modelo.dominio.univida.parametricas.TipoVehiculoRespUn
 import com.emizor.univida.modelo.dominio.univida.parametricas.UsoVehiculo;
 import com.emizor.univida.modelo.dominio.univida.parametricas.UsosVehiculoRespUnivida;
 import com.emizor.univida.modelo.dominio.univida.seguridad.User;
+import com.emizor.univida.modelo.dominio.univida.turnos.Evento;
+import com.emizor.univida.modelo.dominio.univida.turnos.Punto;
 import com.emizor.univida.modelo.manejador.ControladorSqlite2;
 import com.emizor.univida.modelo.manejador.ControladorTablas;
 import com.emizor.univida.modelo.manejador.UtilRest;
@@ -109,9 +111,8 @@ public class ObtenerParametricasActivity extends AppCompatActivity implements Di
 
         xLlave = UtilRest.getInstance().procesarDatosInterno(user.getTokenAuth(), 1);
 
-        if (VersionUtils.isVersionGreaterOrEqual(this, "1.5")) {
-            cargarParametricasSOATCGlobales();
-        }
+
+        cargarParametricasSOATCGlobales();
         obtenerTiposVehiculos();
     }
 
@@ -1104,15 +1105,19 @@ public class ObtenerParametricasActivity extends AppCompatActivity implements Di
     }
 
     private void cargarParametricasSOATCGlobales() {
-        obtenerDocumentosIdentidadSOATC();
-        obtenerDepartamentosSOATC();
-        obtenerEstadoCivilSOATC();
-        obtenerGeneroSOATC();
-        obtenerPaisSOATC();
-        obtenerParentescoSOATC();
-        obtenerDocumentosIdentidadFacturacion();
+        if (VersionUtils.isVersionGreaterOrEqual(this, "1.5")) {
+            obtenerDocumentosIdentidadSOATC();
+            obtenerDepartamentosSOATC();
+            obtenerEstadoCivilSOATC();
+            obtenerGeneroSOATC();
+            obtenerPaisSOATC();
+            obtenerParentescoSOATC();
+            obtenerDocumentosIdentidadFacturacion();
+        }
+        obtenerTiposPunto();
+        obtenerTiposEvento();
     }
-    private void obtenerDocumentosIdentidadSOATC(){
+    public void obtenerDocumentosIdentidadSOATC(){
         ApiService apiService = new ApiService(this);
         String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
         Map<String, Object> parametros = new HashMap<>();
@@ -1126,7 +1131,7 @@ public class ObtenerParametricasActivity extends AppCompatActivity implements Di
             }
         }, error -> {});
     }
-    private void obtenerDepartamentosSOATC(){
+    public void obtenerDepartamentosSOATC(){
         ApiService apiService = new ApiService(this);
         String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
         Map<String, Object> parametros = new HashMap<>();
@@ -1140,7 +1145,7 @@ public class ObtenerParametricasActivity extends AppCompatActivity implements Di
             }
         }, error -> {});
     }
-    private void obtenerEstadoCivilSOATC(){
+    public void obtenerEstadoCivilSOATC(){
         ApiService apiService = new ApiService(this);
         String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
         Map<String, Object> parametros = new HashMap<>();
@@ -1154,7 +1159,7 @@ public class ObtenerParametricasActivity extends AppCompatActivity implements Di
             }
         }, error -> {});
     }
-    private void obtenerGeneroSOATC(){
+    public void obtenerGeneroSOATC(){
         ApiService apiService = new ApiService(this);
         String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
         Map<String, Object> parametros = new HashMap<>();
@@ -1168,7 +1173,7 @@ public class ObtenerParametricasActivity extends AppCompatActivity implements Di
             }
         }, error -> {});
     }
-    private void obtenerPaisSOATC(){
+    public void obtenerPaisSOATC(){
         ApiService apiService = new ApiService(this);
         String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
         Map<String, Object> parametros = new HashMap<>();
@@ -1182,7 +1187,7 @@ public class ObtenerParametricasActivity extends AppCompatActivity implements Di
             }
         }, error -> {});
     }
-    private void obtenerParentescoSOATC(){
+    public void obtenerParentescoSOATC(){
         ApiService apiService = new ApiService(this);
         String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
         Map<String, Object> parametros = new HashMap<>();
@@ -1196,7 +1201,7 @@ public class ObtenerParametricasActivity extends AppCompatActivity implements Di
             }
         }, error -> {});
     }
-    private void obtenerDocumentosIdentidadFacturacion(){
+    public void obtenerDocumentosIdentidadFacturacion(){
         ApiService apiService = new ApiService(this);
         String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_PARAMETRICAS_TIPO_DOC_IDENTIDAD_SOATC;
         Map<String, Object> parametros = new HashMap<>();
@@ -1207,6 +1212,31 @@ public class ObtenerParametricasActivity extends AppCompatActivity implements Di
             ApiResponse<List<ParametricaGenerica>> apiResponse = new Gson().fromJson(response, responseType);
             if (apiResponse.exito) {
                 ParametricasCache.getInstance().setDocumentosIdentidadFacturacionFacturacion(apiResponse.datos);
+            }
+        }, error -> {});
+    }
+    public void obtenerTiposPunto(){
+        ApiService apiService = new ApiService(this);
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_CONTROL_TURNOS_TIPO_PUNTO;
+        Map<String, Object> parametros = new HashMap<>();
+        apiService.solicitudGet(url, response -> {
+            Type responseType = new TypeToken<ApiResponse<List<Punto>>>(){}.getType();
+            ApiResponse<List<Punto>> apiResponse = new Gson().fromJson(response, responseType);
+            if (apiResponse.exito) {
+                ParametricasCache.getInstance().setPuntos(apiResponse.datos);
+            }
+        }, error -> {});
+    }
+    public void obtenerTiposEvento(){
+        ApiService apiService = new ApiService(this);
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_CONTROL_TURNOS_TIPO_EVENTO;
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("a", "");
+        apiService.solicitudGet(url, response -> {
+            Type responseType = new TypeToken<ApiResponse<List<Evento>>>(){}.getType();
+            ApiResponse<List<Evento>> apiResponse = new Gson().fromJson(response, responseType);
+            if (apiResponse.exito) {
+                ParametricasCache.getInstance().setEventos(apiResponse.datos);
             }
         }, error -> {});
     }

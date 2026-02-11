@@ -15,13 +15,13 @@ public class DatosConexion {
 //// SERVIDOR PRUEBAS 2
   // public static final String SERVIDORUNIVIDA = "https://ws8-pos-univida.univida.bo:8001";
 // SERVIDOR PRUEBAS 3
- //public static final String SERVIDORUNIVIDA = "https://ws8-pos-univida.univida.bo:7001";
+ public static final String SERVIDORUNIVIDA = "https://ws8-pos-univida.univida.bo:7001";
     //desarrollo
- //   public static final String SERVIDORUNIVIDA = "https://app-desarrollo.univida.bo:8001";
+   // public static final String SERVIDORUNIVIDA = "https://app-desarrollo.univida.bo:8001";
 // SERVIDOR PRUEBAS 3 QA
-   public static final String SERVIDORUNIVIDA = "https://ws7-pos-univida.univida.bo:7001";
+ //  public static final String SERVIDORUNIVIDA = "https://ws7-pos-univida.univida.bo:7001";
     //SERVIDOR PRODUCCION
-    //public static final String SERVIDORUNIVIDA = "https://unividapos.univida.bo:6443";
+  //  public static final String SERVIDORUNIVIDA = "https://unividapos.univida.bo:6443";
 
     //SEGURIDAD
     public static final String URL_UNIVIDA_SEGURIDAD_AUNTENTICACION = "/seguridad/autenticacion";
@@ -52,6 +52,13 @@ public class DatosConexion {
     public static final String URL_UNIVIDA_VENTAS_QR_VALIDAR_PARAMTEROS = "/ventas/ven-qr-factura-validar-parametros";
     public static final String URL_UNIVIDA_VENTAS_QR_LISTAR_GENERADOS = "/ventas/ven-qr-listar-generados";
 
+   public static final String URL_UNIVIDA_VENTAS_REEMPLAZAR_FACTURA = "/ventas/ven-reemplazar-factura";
+   public static final String URL_UNIVIDA_VENTAS_VALIDAR_CAMBIO_PLACA = "/ventas/ven-validar-cambio-placa";
+   public static final String URL_UNIVIDA_VENTAS_VALIDAR_NIT = "/ventas/ven-validar-nit";
+   public static final String URL_UNIVIDA_VENTAS_EFECTIVIZAR_FACTURA_CICLOS_INTER_REEMPLAZAR = "/ventas/ven-efectivizar-fact-cicl-inter-reemplazo";
+
+
+
     //RCV
     public static final String URL_UNIVIDA_RCV_EFECTIVIZAR = "/reporte-cierre-ventas/efectivizar";
     public static final String URL_UNIVIDA_RCV_LISTAR_VENTAS = "/reporte-cierre-ventas/listar-ventas";
@@ -74,6 +81,16 @@ public class DatosConexion {
     public static final String URL_UNIVIDA_EMISION_VALIDAR_VENDIBLE = "/coretecnicoemision/emi-poliza-efectivizar-validar-vendible";
     public static final String URL_UNIVIDA_EMISION_EFECTIVIZAR = "/coretecnicoemision/emi-poliza-efectivizar";
     public static final String URL_UNIVIDA_EMISION_POLIZA_LISTAR = "/coretecnicoemision/emi-poliza-listar";
+    public static final String URL_UNIVIDA_CONCILIACION_COBROS_LISTAR = "/coretecnicoconciliacion/con-cobros-listar";
+    public static final String URL_UNIVIDA_CONCILIACION_ELABORAR = "/coretecnicoconciliacion/con-rcc-elaborar";
+    public static final String URL_UNIVIDA_CONCILIACION_LISTAR = "/coretecnicoconciliacion/con-rcc-listar";
+    public static final String URL_UNIVIDA_CONCILIACION_REVERTIR = "/coretecnicoconciliacion/con-rcc-revertir";
+    public static final String URL_UNIVIDA_COBRANZAS_RECIBO_EMITIR = "/coretecnicocobranzas/cob-recibo-emitir";
+    public static final String URL_UNIVIDA_EMISION_REVERTIR = "/coretecnicoemision/emi-poliza-reversion";
+    public static final String URL_UNIVIDA_EMISION_NOTIFICACION = "/coretecnicoemision/emi-poliza-efectivizar-notificacion";
+    public static final String URL_UNIVIDA_EMISION_POLIZA_OBTENER = "/coretecnicoemision/emi-poliza-obtener";
+
+
 
 }
 

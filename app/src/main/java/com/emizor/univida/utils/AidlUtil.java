@@ -249,7 +249,9 @@ public class AidlUtil {
 
             woyouService.setAlignment(aligment, null);
 
-            woyouService.printTextWithFont(content, "gh", size, null);
+            woyouService.printTextWithFont(content, "", size, null);
+            //woyouService.printText(content, null);
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }

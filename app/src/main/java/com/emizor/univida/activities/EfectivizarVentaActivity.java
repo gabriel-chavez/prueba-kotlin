@@ -52,14 +52,17 @@ import com.emizor.univida.excepcion.VoltageBajoException;
 import com.emizor.univida.fragmento.OnFragmentInteractionListener4;
 import com.emizor.univida.imprime.ImprimirAvisoListener;
 import com.emizor.univida.imprime.ImprimirFactura;
+import com.emizor.univida.modelo.dominio.univida.ApiResponse;
 import com.emizor.univida.modelo.dominio.univida.parametricas.TipoDocumentoIdentidad;
 import com.emizor.univida.modelo.dominio.univida.seguridad.User;
 import com.emizor.univida.modelo.dominio.univida.ventas.EfectivizarAdicionalUnivida;
 import com.emizor.univida.modelo.dominio.univida.ventas.EfectivizarFacturaUnivida;
 import com.emizor.univida.modelo.dominio.univida.ventas.EfectivizarRespUnivida;
 import com.emizor.univida.modelo.dominio.univida.ventas.ObtenerVentaUnivida;
+import com.emizor.univida.modelo.dominio.univida.ventas.ValidarVendibleInterRespUnivida;
 import com.emizor.univida.modelo.manejador.ControladorSqlite2;
 import com.emizor.univida.modelo.manejador.UtilRest;
+import com.emizor.univida.rest.ApiService;
 import com.emizor.univida.rest.DatosConexion;
 import com.emizor.univida.rest.VolleySingleton;
 import com.emizor.univida.util.ConfigEmizor;
@@ -68,11 +71,13 @@ import com.emizor.univida.util.LogUtils;
 import com.emizor.univida.util.Utils;
 import com.emizor.univida.util.ValidarCampo;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.pax.dal.ISys;
 import com.pax.dal.entity.ETermInfoKey;
 import com.pax.neptunelite.api.NeptuneLiteUser;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -227,6 +232,22 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
         if (bundle != null) {
             if (bundle.containsKey("objeto_efectivizar_univida")) {
                 efectivizarFacturaUnivida = bundle.getParcelable("objeto_efectivizar_univida");
+                /*se agregan las lineas de código siguientes ya que no se tiene el dato VehiSoatPropSecuencialRevertir con la anterior línea*/
+//                Intent intent = getIntent();
+//                EfectivizarFacturaUnivida efectivizarFacturaUnivida2 = intent.getParcelableExtra("objeto_efectivizar_univida");
+//                efectivizarFacturaUnivida.setVehiSoatPropSecuencialRevertir(efectivizarFacturaUnivida2.getVehiSoatPropSecuencialRevertir());
+
+                if (efectivizarFacturaUnivida != null &&
+                        efectivizarFacturaUnivida.getVehiSoatPropSecuencialRevertir() > 0) {
+
+                    btnPagoQR.setVisibility(View.GONE);
+                    btnPagoEfectivo.setVisibility(View.GONE);
+                    btnPagoQR.setChecked(false);
+                    btnPagoEfectivo.setChecked(true);
+                    btnEfectivizar.setText("Reemplazar Venta");
+                }
+
+
             }
         }
 
@@ -554,7 +575,8 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
                 mensaje += "\nNúmero de Celular: " + etTelefonoClienteEfectivizar.getText().toString();
                 mensaje += "\nSUCURSAL: " + user.getDatosUsuario().getSucursalNombre();
                 mensaje += "\nUSUARIO: " + user.getDatosUsuario().getEmpleadoNombreCompleto();
-                mensaje += "\n\nMEDIO DE PAGO: " + medioPago;
+                if (!(efectivizarFacturaUnivida.getVehiSoatPropSecuencialRevertir() > 0))
+                    mensaje += "\n\nMEDIO DE PAGO: " + medioPago;
 
                 controladorSqlite2.cerrarConexion();
 
@@ -653,15 +675,26 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
         // Identificar el medio de pago seleccionado
         ToggleButton btnPagoQR = findViewById(R.id.btnPagoQR);
         ToggleButton btnPagoEfectivo = findViewById(R.id.btnPagoEfectivo);
-
         //QR
         if (btnPagoQR.isChecked()) {
-            mostrarVentanaPagoQR(efectivizarFacturaUnivida);
-
+            if(tipoDocumentoIdentidad.getSecuencial()==5){
+                validarNitYMostrarQR(efectivizarFacturaUnivida);
+            }else{
+                mostrarVentanaPagoQR(efectivizarFacturaUnivida);
+            }
         }
         //EFECTIVO
-        if (btnPagoEfectivo.isChecked()) {
+        if (btnPagoEfectivo.isChecked() || efectivizarFacturaUnivida.getVehiSoatPropSecuencialRevertir() > 0) {
             String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_VENTAS_EFECTIVIZAR_FACTURA_CICLOS_INTER;
+            if (efectivizarFacturaUnivida.getVehiSoatPropSecuencialRevertir() > 0) {
+                url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_VENTAS_EFECTIVIZAR_FACTURA_CICLOS_INTER_REEMPLAZAR;
+
+
+            } else {
+                efectivizarFacturaUnivida.setMedioPagoFk(1);
+            }
+
+
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                     response -> manejarRespuesta(response),
                     error -> manejarError(error)) {
@@ -1890,6 +1923,32 @@ public class EfectivizarVentaActivity extends RootActivity implements DialogoEmi
             mostrarTexto("Error al decodificar el código QR.");
         }
     }
+    private void validarNitYMostrarQR(EfectivizarFacturaUnivida efectivizarFacturaUnivida){
 
+        ApiService apiService = new ApiService(this);
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_VENTAS_VALIDAR_NIT;
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("nit_cliente", efectivizarFacturaUnivida.getNitCi());
+        apiService.solicitudPost(url, parametros, response -> {
+            Type responseType = new TypeToken<ApiResponse<Void>>() {
+            }.getType();
+            ApiResponse<Void> apiResp = new Gson().fromJson(response, responseType);;
+
+            if (apiResp.exito) {
+                mostrarVentanaPagoQR(efectivizarFacturaUnivida);
+            } else {
+
+                btnEfectivizar.setEnabled(true);
+                estadoAceptarDialogo = false;
+                parametrosJson3 = null;
+                showProgress(false);
+                new android.app.AlertDialog.Builder(this)
+                        .setMessage(apiResp.mensaje)
+                        .setPositiveButton("Aceptar", (dialog, id) -> dialog.dismiss())
+                        .show();
+
+            }
+        }, error -> {});
+    }
 
 }

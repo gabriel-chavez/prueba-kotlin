@@ -105,6 +105,14 @@ public class EfectivizarFacturaUnivida implements Serializable, Parcelable
     @SerializedName("vehiculo_capacidad_carga")
     @Expose
     private Double vehiculoCapacidadCarga;
+    @SerializedName("vehi_soat_prop_secuencial_revertir")
+    @Expose
+    private Long vehiSoatPropSecuencialRevertir;
+
+    @SerializedName("medio_pago_fk")
+    @Expose
+    private Integer medioPagoFk;
+
     public final static Parcelable.Creator<EfectivizarFacturaUnivida> CREATOR = new Creator<EfectivizarFacturaUnivida>() {
 
 
@@ -155,11 +163,19 @@ public class EfectivizarFacturaUnivida implements Serializable, Parcelable
         this.vehiculoPlacaTipo = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.vehiculoCilindrada = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.vehiculoCapacidadCarga = ((Double) in.readValue((Double.class.getClassLoader())));
+        this.vehiSoatPropSecuencialRevertir=((Long) in.readValue((Long.class.getClassLoader())));
+        this.medioPagoFk=((Integer) in.readValue((Integer.class.getClassLoader())));
     }
 
     public EfectivizarFacturaUnivida() {
     }
+    public int getMedioPagoFk() {
+        return medioPagoFk;
+    }
 
+    public void setMedioPagoFk(int medioPagoFk) {
+        this.medioPagoFk = medioPagoFk;
+    }
     public String getCorreoCliente() {
         return correoCliente;
     }
@@ -187,7 +203,14 @@ public class EfectivizarFacturaUnivida implements Serializable, Parcelable
     public Integer getTipoDocIdentidadFk() {
         return tipoDocIdentidadFk;
     }
-
+    public long getVehiSoatPropSecuencialRevertir() {
+        return vehiSoatPropSecuencialRevertir != null
+                ? vehiSoatPropSecuencialRevertir
+                : 0L;
+    }
+    public void setVehiSoatPropSecuencialRevertir(long vehiSoatPropSecuencialRevertir){
+        this.vehiSoatPropSecuencialRevertir = vehiSoatPropSecuencialRevertir;
+    }
     public void setTipoDocIdentidadFk(Integer tipoDocIdentidadFk) {
         this.tipoDocIdentidadFk = tipoDocIdentidadFk;
     }
@@ -415,7 +438,7 @@ public class EfectivizarFacturaUnivida implements Serializable, Parcelable
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(vehiculoMotor).append(vehiculoCapacidadCarga).append(vehiculoCilindrada).append(vehiculoPlacaTipo).append(propTomador).append(vehiculoMarca).append(departamentoVentaFk).append(propDireccion).append(vehiculoTipoFk).append(gestionFk).append(vehiculoAnio).append(ventaDatosAdicionales).append(telefonoCliente).append(propCi).append(nitCi).append(ciComplemento).append(tipoDocIdentidadFk).append(vehiculoChasis).append(propCelular).append(correoCliente).append(departamentoPlazaCirculacionFk).append(rosetaNumero).append(razonSocial).append(vehiculoPlaca).append(vehiculoModelo).append(sucursalFk).append(propNit).append(vehiculoColor).append(prima).append(vehiculoUsoFk).append(propTelefono).toHashCode();
+        return new HashCodeBuilder().append(vehiculoMotor).append(vehiculoCapacidadCarga).append(vehiculoCilindrada).append(vehiculoPlacaTipo).append(propTomador).append(vehiculoMarca).append(departamentoVentaFk).append(propDireccion).append(vehiculoTipoFk).append(gestionFk).append(vehiculoAnio).append(ventaDatosAdicionales).append(telefonoCliente).append(propCi).append(nitCi).append(ciComplemento).append(tipoDocIdentidadFk).append(vehiculoChasis).append(propCelular).append(correoCliente).append(departamentoPlazaCirculacionFk).append(rosetaNumero).append(razonSocial).append(vehiculoPlaca).append(vehiculoModelo).append(sucursalFk).append(propNit).append(vehiculoColor).append(prima).append(vehiculoUsoFk).append(propTelefono).append(vehiSoatPropSecuencialRevertir).toHashCode();
     }
 
     @Override
@@ -462,6 +485,8 @@ public class EfectivizarFacturaUnivida implements Serializable, Parcelable
         dest.writeValue(vehiculoPlacaTipo);
         dest.writeValue(vehiculoCilindrada);
         dest.writeValue(vehiculoCapacidadCarga);
+        dest.writeValue(vehiSoatPropSecuencialRevertir);
+        dest.writeValue(medioPagoFk);
     }
 
     public int describeContents() {

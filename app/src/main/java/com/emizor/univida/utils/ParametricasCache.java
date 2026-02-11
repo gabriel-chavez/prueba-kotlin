@@ -1,6 +1,8 @@
 package com.emizor.univida.utils;
 
 import com.emizor.univida.modelo.dominio.univida.parametricas.ParametricaGenerica;
+import com.emizor.univida.modelo.dominio.univida.turnos.Evento;
+import com.emizor.univida.modelo.dominio.univida.turnos.Punto;
 
 import java.util.List;
 
@@ -13,6 +15,8 @@ public class ParametricasCache {
     private List<ParametricaGenerica> nacionalidad;
     private List<ParametricaGenerica> parentesco;
     private List<ParametricaGenerica> documentosIdentidadFacturacion;
+    private List<Punto> puntos;
+    private List<Evento> eventos;
 
     private ParametricasCache() { }
 
@@ -71,5 +75,17 @@ public class ParametricasCache {
     }
     public void setDocumentosIdentidadFacturacionFacturacion(List<ParametricaGenerica> facturacion) {
         this.documentosIdentidadFacturacion = facturacion;
+    }
+    public void setPuntos(List<Punto> puntos) {
+        this.puntos = puntos;
+    }
+    public List<Punto> getPuntos() {
+        return this.puntos;
+    }
+    public void setEventos(List<Evento> eventos) {
+        this.eventos = eventos;
+    }
+    public List<Evento> getEventos() {
+        return this.eventos;
     }
 }

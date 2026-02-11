@@ -34,4 +34,5 @@ public class ListarVentasResponse {
     public String FacturaMaestroFechaEmision;
     public int FacturaMaestroNumeroFactura;
     public String FacturaMaestroCorreoCliente;
+    public int PlaPagDetSecuencial;
 }

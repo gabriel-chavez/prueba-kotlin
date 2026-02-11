@@ -54,6 +54,25 @@ public class ValidarCampo {
         return false;
 
     }
+    public static boolean validarNumeroEntero(String texto) {
+        try {
+            // Intentar convertir el texto a un número entero
+            Integer.parseInt(texto);  // Usa Long.parseLong si el número es mayor que el rango de Integer
+            return true;
+        } catch (NumberFormatException e) {
+            // Si se produce una excepción, el valor no es un número entero
+            return false;
+        }
+    }
+    public static boolean validarNumeroLong(String texto) {
+        if (texto == null) return false;
+        try {
+            Long.parseLong(texto.trim());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
     public static boolean validarNumeroMayorACero(String numeroDecimal){
         boolean resp = false;

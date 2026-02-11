@@ -38,6 +38,26 @@ public class SoatDatosVentum implements Serializable, Parcelable
     @SerializedName("soat_medios_de_pago")
     @Expose
     private String soatMediosDePago;
+    /***/
+    @SerializedName("soat_gestion_fk")
+    @Expose
+    private Integer soatTParGestionFk;
+
+    @SerializedName("soat_vehiculo_tipo_fk")
+    @Expose
+    private Integer soatTParVehiculoTipoFk;
+
+    @SerializedName("soat_vehiculo_uso_fk")
+    @Expose
+    private Integer soatTParVehiculoUsoFk;
+
+    @SerializedName("soat_departamento_vt_fk")
+    @Expose
+    private String soatTParDepartamentoVtFk;
+
+    @SerializedName("soat_departamento_pc_fk")
+    @Expose
+    private String soatTParDepartamentoPCFk;
     public final static Parcelable.Creator<SoatDatosVentum> CREATOR = new Creator<SoatDatosVentum>() {
 
 
@@ -65,10 +85,43 @@ public class SoatDatosVentum implements Serializable, Parcelable
         this.facturaPrima = ((Double) in.readValue((Double.class.getClassLoader())));
         this.soatGenericaEstadoFk = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.soatMediosDePago = ((String) in.readValue((String.class.getClassLoader())));
+
+        this.soatTParGestionFk = ((Integer) in.readValue((String.class.getClassLoader())));
+        this.soatTParVehiculoTipoFk = ((Integer) in.readValue((String.class.getClassLoader())));
+        this.soatTParVehiculoUsoFk = ((Integer) in.readValue((String.class.getClassLoader())));
+        this.soatTParDepartamentoVtFk = ((String) in.readValue((String.class.getClassLoader())));
+        this.soatTParDepartamentoPCFk = ((String) in.readValue((String.class.getClassLoader())));
     }
 
     public SoatDatosVentum() {
     }
+
+    public int getSoatTParGestionFk() {
+        return soatTParGestionFk;
+    }
+    public void setSoatTParGestionFk(int soatTParGestionFk) {
+        this.soatTParGestionFk = soatTParGestionFk;
+    }
+    public int getSoatTParVehiculoTipoFk() {
+        return soatTParVehiculoTipoFk;
+    }
+    public void setSoatTParVehiculoTipoFk(int soatTParVehiculoTipoFk) {
+        this.soatTParVehiculoTipoFk = soatTParVehiculoTipoFk;
+    }
+    public int getSoatTParVehiculoUsoFk() {
+        return soatTParVehiculoUsoFk;
+    }
+    public void setSoatTParVehiculoUsoFk(int soatTParVehiculoUsoFk) {
+        this.soatTParVehiculoUsoFk = soatTParVehiculoUsoFk;
+    }
+    public String getSoatTParDepartamentoPCFk() {
+        return soatTParDepartamentoPCFk;
+    }
+
+    public void setSoatTParDepartamentoPCFk(String soatTParDepartamentoPCFk) {
+        this.soatTParDepartamentoPCFk = soatTParDepartamentoPCFk;
+    }
+
 
     public Long getSoatNumeroComprobante() {
         return soatNumeroComprobante;

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Vista previa de la cámara -->
-    <SurfaceView
-        android:id="@+id/surfaceView"
+    <!-- CameraView reemplaza SurfaceView -->
+    <com.otaliastudios.cameraview.CameraView
+        android:id="@+id/cameraView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />
 
     <!-- Barra con los Spinners -->
     <LinearLayout
@@ -19,7 +21,7 @@
         android:background="#80000000"
         android:gravity="center_vertical">
 
-        <!-- Contenedor Punto (vertical) -->
+        <!-- Contenedor Punto -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -36,11 +38,10 @@
             <Spinner
                 android:id="@+id/spinnerPunto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <!-- Contenedor Evento (vertical) -->
+        <!-- Contenedor Evento -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -57,8 +58,7 @@
             <Spinner
                 android:id="@+id/spinnerEvento"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </LinearLayout>
@@ -81,30 +81,29 @@
             android:clickable="true"
             android:focusable="true"
             android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="24dp">
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="24dp">
 
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/baseline_add_a_photo_24"
-            android:tint="@android:color/white" />
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/baseline_add_a_photo_24"
+                android:tint="@android:color/white" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="REGISTRAR"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:fontFamily="sans-serif-medium"
-            android:textAllCaps="true"
-            android:layout_marginTop="6dp"/>
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="REGISTRAR"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:textAllCaps="true"
+                android:layout_marginTop="6dp" />
+        </LinearLayout>
 
-</RelativeLayout>
+    </RelativeLayout>
 
-
-<ProgressBar
+    <ProgressBar
         android:id="@+id/progressBar2"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -113,4 +112,5 @@
         android:layout_centerInParent="true"
         android:layout_margin="24dp"
         android:progressDrawable="@drawable/custom_progress" />
+
 </RelativeLayout>

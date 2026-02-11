@@ -77,7 +77,8 @@
             android:hint="Ingrese número de documento"
             android:inputType="number"
             android:background="@android:color/transparent"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:maxLength="10" />
 
     </LinearLayout>
 
@@ -104,7 +105,8 @@
             android:hint="Opcional"
             android:inputType="text"
             android:background="@android:color/transparent"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:maxLength="5" />
 
     </LinearLayout>
 

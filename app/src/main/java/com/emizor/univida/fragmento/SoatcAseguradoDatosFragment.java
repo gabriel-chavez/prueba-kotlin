@@ -43,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -63,6 +64,7 @@ public class SoatcAseguradoDatosFragment extends Fragment {
     private Spinner spinnerDeptoResidencia, spinnerDeptoContratacion;
     private Spinner spinnerSexo, spinnerEstadoCivil, spinnerNacionalidad;
     private CliObtenerDatosResponse datosAsegurado;
+    private String fechaNacimientoFormato;
 
     View view;
     public SoatcAseguradoDatosFragment() {
@@ -82,6 +84,8 @@ public class SoatcAseguradoDatosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_soatc_asegurado_datos, container, false);
         btnAtras = view.findViewById(R.id.btnAtras);
@@ -128,7 +132,10 @@ public class SoatcAseguradoDatosFragment extends Fragment {
                     (datePickerView, selectedYear, selectedMonth, selectedDay) -> {
                         String fecha = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
                         etFechaNacimiento.setText(fecha);
+
+                        fechaNacimientoFormato=String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
                     }, year, month, day);
+
             datePickerDialog.show();
         });
         btnSiguiente.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +156,19 @@ public class SoatcAseguradoDatosFragment extends Fragment {
         obtenerEstadoCivil();
         obtenerGenero();
         obtenerNacionalidad();
-        buscarAsegurado();
+
+        //para mostrar los datos
+        if (getActivity() instanceof PrincipalActivity) {
+            PrincipalActivity principal = (PrincipalActivity) getActivity();
+
+            if (principal.datosAsegurado != null) {
+                this.datosAsegurado = principal.datosAsegurado;
+                cargarDatosAsegurado();
+            }else{
+                buscarAsegurado();
+            }
+
+        }
         return view;
     }
     private void buscarAsegurado() {
@@ -377,21 +396,29 @@ public class SoatcAseguradoDatosFragment extends Fragment {
     }
     private CliObtenerDatosResponse obtenerDatosAseguradoDesdeVista() {
         CliObtenerDatosResponse datos = new CliObtenerDatosResponse();
+        DatosBusquedaAseguradoTomador datosBusquedaAsegurado = ((PrincipalActivity) getActivity()).datosBusquedaAsegurado;
+
+        // De busqueda
+        datos.PerTParCliDocumentoIdentidadTipoFk = datosBusquedaAsegurado.TipoDocumentoIdentidad;
+        datos.PerTParCliDocumentoIdentidadTipoDescripcion = datosBusquedaAsegurado.TipoDocumentoIdentidadDescripcion;
+        datos.PerDocumentoIdentidadNumero = datosBusquedaAsegurado.NumeroDocumentoIdentidad;
+        datos.PerTParGenDepartamentoDescripcionDocumentoIdentidad = datosBusquedaAsegurado.DepartamentoDocumentoIdentidadDescripcion;
+        datos.PerTParGenDepartamentoFkDocumentoIdentidad = datosBusquedaAsegurado.DepartamentoDocumentoIdentidad;
+        datos.PerDocumentoIdentidadExtension = datosBusquedaAsegurado.Complemento;
 
         // EditTexts
-        datos.PerApellidoPaterno = etApellidoPaterno.getText().toString();
-        datos.PerApellidoMaterno = etApellidoMaterno.getText().toString();
-        datos.PerApellidoCasada = etApellidoCasada.getText().toString();
-        datos.PerNombrePrimero = etPrimerNombre.getText().toString();
-        datos.PerNombreSegundo = etSegundoNombre.getText().toString();
-        datos.PerNacimientoFecha = etFechaNacimiento.getText().toString();
+        datos.PerApellidoPaterno = getStringOrNull(etApellidoPaterno);
+        datos.PerApellidoMaterno = getStringOrNull(etApellidoMaterno);
+        datos.PerApellidoCasada = getStringOrNull(etApellidoCasada);
+        datos.PerNombrePrimero = getStringOrNull(etPrimerNombre);
+        datos.PerNombreSegundo = getStringOrNull(etSegundoNombre);
+        datos.PerNacimientoFecha = fechaNacimientoFormato;
         datos.PerDocumentoIdentidadNumero = parseInteger(etNumeroDocumento.getText().toString());
-        datos.PerDocumentoIdentidadExtension = etExtensionDocumento.getText().toString();
-        datos.PerTelefonoMovil = etCelular.getText().toString();
-        datos.PerCorreoElectronico = etEmail.getText().toString();
-        datos.PerDomicilioParticular = etDireccion.getText().toString();
-        datos.PerTParCliDocumentoIdentidadTipoDescripcion = etTipoDocumento.getText().toString();
-        datos.PerTParGenDepartamentoDescripcionDocumentoIdentidad = etDeptoDocumento.getText().toString();
+        datos.PerDocumentoIdentidadExtension = getStringOrNull(etExtensionDocumento);
+        datos.PerTelefonoMovil = getStringOrNull(etCelular);
+        datos.PerCorreoElectronico = getStringOrNull(etEmail);
+        datos.PerDomicilioParticular = getStringOrNull(etDireccion);
+        datos.PerTParCliDocumentoIdentidadTipoDescripcion = getStringOrNull(etTipoDocumento);
 
         // Spinners
         datos.PerTParGenDepartamentoFkNacimiento = getSpinnerId(spinnerDeptoResidencia);
@@ -401,6 +428,9 @@ public class SoatcAseguradoDatosFragment extends Fragment {
         datos.PerTParGenPaisFkNacionalidad = getSpinnerId(spinnerNacionalidad);
 
         return datos;
+    }
+    private String getStringOrNull(EditText editText) {
+        return editText.getText().toString().isEmpty() ? null : editText.getText().toString();
     }
 
     private Integer parseInteger(String valor) {

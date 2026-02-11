@@ -1,9 +1,9 @@
 package com.emizor.univida.fragmento;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +11,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.emizor.univida.R;
 import com.emizor.univida.activities.PrincipalActivity;
-import com.emizor.univida.adapter.ItemSoatcVentaListarAdapter;
+import com.emizor.univida.adapter.ItemSoatcRccListarAdapter;
 import com.emizor.univida.modelo.dominio.univida.ApiResponse;
-import com.emizor.univida.modelo.dominio.univida.soatc.ListarVentasResponse;
+import com.emizor.univida.modelo.dominio.univida.soatc.ListarCobrosResponse;
+import com.emizor.univida.modelo.dominio.univida.soatc.ListarRccResponse;
 import com.emizor.univida.rest.ApiService;
 import com.emizor.univida.rest.DatosConexion;
 import com.google.gson.Gson;
@@ -33,28 +35,33 @@ import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SoatcListarVentasFragment#newInstance} factory method to
+ * Use the {@link SoatcRccListarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SoatcListarVentasFragment extends Fragment {
-    private Button btnFecha;
-    private ItemSoatcVentaListarAdapter adapter;
+public class SoatcRccListarFragment extends Fragment {
 
+    private Button btnFecha, btnNuevoReporte;
+    private ItemSoatcRccListarAdapter adapter;
     private final Calendar cal = Calendar.getInstance();
     private final SimpleDateFormat sdfApi = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     private final SimpleDateFormat sdfApiFormato = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
     private final Gson gson = new Gson();
-    private OnVentaListadoListener ventaListadoListener;
-    public SoatcListarVentasFragment() {
+    private TextView tvTotalImporte, tvCantidadVendidos, tvCantidadValidos, tvCantidadRevertidos, tvCantidadAnulados;
+    List<ListarRccResponse> datos;
+    private OnRccListadoListener rccListadoListener;
+
+    public interface OnRccListadoListener {
+        void onRccListener();
+    }
+
+    public SoatcRccListarFragment() {
         // Required empty public constructor
     }
 
-    public static SoatcListarVentasFragment newInstance(String param1, String param2) {
-        SoatcListarVentasFragment fragment = new SoatcListarVentasFragment();
+    public static SoatcRccListarFragment newInstance(String param1, String param2) {
+        SoatcRccListarFragment fragment = new SoatcRccListarFragment();
         Bundle args = new Bundle();
 
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -67,35 +74,32 @@ public class SoatcListarVentasFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_soatc_listar_ventas, container, false);
+
+        View v= inflater.inflate(R.layout.fragment_soatc_rcc_listar, container, false);
         btnFecha = v.findViewById(R.id.btnFechaListaVenta);
         ListView listView = v.findViewById(R.id.listViewVentas);
 
-//        fechaSeleccion = Calendar.getInstance().getTime();
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        btnFecha.setText(simpleDateFormat.format(fechaSeleccion));
-
-
-//        adapter = new ItemSoatcVentaListarAdapter(getContext());
-//        listView.setAdapter(adapter);
-
-        // Fecha por defecto: hoy
         btnFecha.setText("Seleccionar fecha");
         btnFecha.setOnClickListener(_v -> mostrarDatePicker());
-        ventaListadoListener = new OnVentaListadoListener() {
+
+//        btnNuevoReporte=v.findViewById(R.id.btnNuevoReporte);
+//
+//        tvTotalImporte = v.findViewById(R.id.tvTotalImporte);
+//        tvCantidadVendidos = v.findViewById(R.id.tvCantidadVendidos);
+//        tvCantidadValidos = v.findViewById(R.id.tvCantidadValidos);
+//        tvCantidadRevertidos = v.findViewById(R.id.tvCantidadRevertidos);
+//        tvCantidadAnulados = v.findViewById(R.id.tvCantidadAnulados);
+       // btnNuevoReporte.setOnClickListener(x -> mostrarDialogResumenRcc());
+        rccListadoListener = new OnRccListadoListener() {
             @Override
-            public void onVentaListener() {
+            public void onRccListener() {
                 // Recargar las ventas cuando se revierte una
-                cargarVentasDeFecha(cal);
+                cargarRccPorFecha(cal);
             }
         };
-        adapter = new ItemSoatcVentaListarAdapter(getContext(), ventaListadoListener);
+        adapter = new ItemSoatcRccListarAdapter(getContext(),rccListadoListener);
         listView.setAdapter(adapter);
-        // Cargar hoy al abrir (opcional)
-        cargarVentasDeFecha(cal);
-
-
-
+        cargarRccPorFecha(cal);
         return v;
     }
     private void mostrarDatePicker() {
@@ -105,7 +109,7 @@ public class SoatcListarVentasFragment extends Fragment {
                     cal.set(Calendar.YEAR, year);
                     cal.set(Calendar.MONTH, month);
                     cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                    cargarVentasDeFecha(cal);
+                    cargarRccPorFecha(cal);
                 },
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
@@ -113,7 +117,7 @@ public class SoatcListarVentasFragment extends Fragment {
         );
         dp.show();
     }
-    private void cargarVentasDeFecha(Calendar fecha) {
+    private void cargarRccPorFecha(Calendar fecha) {
         String fechaStr = sdfApi.format(fecha.getTime());
         String fechaStrFormato = sdfApiFormato.format(fecha.getTime());
         btnFecha.setText(fechaStrFormato);
@@ -123,26 +127,34 @@ public class SoatcListarVentasFragment extends Fragment {
 
 
         ((PrincipalActivity) requireActivity()).mostrarLoading(true);
-        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_EMISION_POLIZA_LISTAR;
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_CONCILIACION_LISTAR;
 
         ApiService api = new ApiService(getContext());
         api.solicitudPost(url, parametros, response -> {
             ((PrincipalActivity) requireActivity()).mostrarLoading(false);
-            Type type = new TypeToken<ApiResponse<List<ListarVentasResponse>>>() {}.getType();
-            ApiResponse<List<ListarVentasResponse>> apiResp = gson.fromJson(response, type);
+            Type type = new TypeToken<ApiResponse<List<ListarRccResponse>>>() {}.getType();
+            ApiResponse<List<ListarRccResponse>> apiResp = gson.fromJson(response, type);
 
             if (apiResp != null && apiResp.exito && apiResp.datos != null) {
-                List<ListarVentasResponse> lista = apiResp.datos;
-                adapter.setData(lista);
+                datos = apiResp.datos;
+
+//                tvTotalImporte.setText(String.format(Locale.getDefault(), "Bs. %.2f", datos.RccFormularioImporte));
+//                tvCantidadVendidos.setText(String.valueOf(datos.RccCantidadComprobante));
+//                tvCantidadValidos.setText(String.valueOf(datos.RccCantidadComprobanteValidos));
+//                tvCantidadRevertidos.setText(String.valueOf(datos.RccCantidadComprobanteRevertidos));
+//                tvCantidadAnulados.setText(String.valueOf(datos.RccCantidadComprobanteAnulados));
+
+                adapter.setData(datos);
 
             } else {
                 String msg = (apiResp != null && !TextUtils.isEmpty(apiResp.mensaje))
                         ? apiResp.mensaje : "No se pudo obtener la información.";
-                new AlertDialog.Builder(requireContext())
-                        .setTitle("Atención")
+                mostrarToast(msg);
+
+                new AlertDialog.Builder(getContext())
                         .setMessage(msg)
-                        .setPositiveButton("Aceptar", (dialog, which) -> {
-                        }).show();
+                        .setPositiveButton("Aceptar", (dialog, id) -> dialog.dismiss())
+                        .show();
                 adapter.setData(null);
             }
 
@@ -151,17 +163,16 @@ public class SoatcListarVentasFragment extends Fragment {
 
             mostrarToast("Error de conexión. Intentá nuevamente.");
             adapter.setData(null);
+
+            new AlertDialog.Builder(getContext())
+                    .setMessage("Error de conexión. Intentá nuevamente.")
+                    .setPositiveButton("Aceptar", (dialog, id) -> dialog.dismiss())
+                    .show();
         });
     }
+
     private void mostrarToast(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
 
     }
-    public interface OnVentaListadoListener {
-        void onVentaListener();
-    }
-
-    
-
-
 }

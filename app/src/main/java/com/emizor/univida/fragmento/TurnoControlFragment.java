@@ -50,6 +50,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.emizor.univida.R;
+import com.emizor.univida.modelo.dominio.univida.parametricas.ParametricaGenerica;
 import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.ArchivoAdjunto;
 import com.emizor.univida.modelo.dominio.univida.seguridad.User;
 import com.emizor.univida.modelo.dominio.univida.turnos.Evento;
@@ -59,7 +60,11 @@ import com.emizor.univida.modelo.manejador.UtilRest;
 import com.emizor.univida.rest.DatosConexion;
 import com.emizor.univida.util.ConfigEmizor;
 import com.emizor.univida.util.LogUtils;
+import com.emizor.univida.utils.ParametricasCache;
 import com.google.gson.Gson;
+import com.otaliastudios.cameraview.CameraListener;
+import com.otaliastudios.cameraview.CameraView;
+import com.otaliastudios.cameraview.Facing;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -77,39 +82,60 @@ import java.util.Locale;
 import java.util.Map;
 
 public class TurnoControlFragment extends Fragment {
-    private File mi_foto;
-    private SurfaceView surfaceView;
-    private ImageView ivIamgenDeposito;
-    private android.hardware.Camera camera;
+//    private File mi_foto;
+//    private SurfaceView surfaceView;
+//    private ImageView ivIamgenDeposito;
+//    private android.hardware.Camera camera;
+//    private LinearLayout btnRegistrar;
+//    private Spinner spinnerPunto, spinnerEvento;
+//    private List<String> puntosList = new ArrayList<>();
+//    private List<String> eventosList = new ArrayList<>();
+    private double latitud, longitud;
+//    private LocationManager locationManager;
+//    private boolean isCameraReady = false;
+//    private boolean isTakingPicture = false;
+    private CameraView cameraView;
     private LinearLayout btnRegistrar;
     private Spinner spinnerPunto, spinnerEvento;
-    private List<String> puntosList = new ArrayList<>();
-    private List<String> eventosList = new ArrayList<>();
-    private double latitud, longitud;
-    private LocationManager locationManager;
-    private boolean isCameraReady = false;
-    private boolean isTakingPicture = false;
+    private ProgressBar progressBar;
     private User user;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_turno_control, container, false);
 
-        surfaceView = view.findViewById(R.id.surfaceView);
-        btnRegistrar = view.findViewById(R.id.btnRegistrar);
-
-        // Configurar el SurfaceHolder callback PRIMERO
-        SurfaceHolder surfaceHolder = surfaceView.getHolder();
-        surfaceHolder.addCallback(surfaceCallback);
-
-        btnRegistrar.setOnClickListener(v -> takePictureAndSend());
+        cameraView = view.findViewById(R.id.cameraView);
         spinnerPunto = view.findViewById(R.id.spinnerPunto);
         spinnerEvento = view.findViewById(R.id.spinnerEvento);
+        btnRegistrar = view.findViewById(R.id.btnRegistrar);
+        progressBar = view.findViewById(R.id.progressBar2);
 
+        cameraView.setFacing(Facing.BACK);
+
+
+
+        cameraView.addCameraListener(new CameraListener() {
+            @Override
+            public void onPictureTaken(byte[] jpeg) {
+                progressBar.setVisibility(View.GONE);
+
+                if (jpeg == null) {
+                    Toast.makeText(getContext(), "Error al capturar imagen", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Bitmap bitmap = BitmapFactory.decodeByteArray(jpeg, 0, jpeg.length);
+                procesarFoto(bitmap);
+            }
+        });
+
+        btnRegistrar.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+            cameraView.capturePicture();
+        });
         ControladorSqlite2 controladorSqlite2 = new ControladorSqlite2(getContext());
         user = controladorSqlite2.obtenerUsuario();
         controladorSqlite2.cerrarConexion();
-
         if (checkPermissions()) {
             // No iniciar la cámara aquí todavía - esperar a surfaceCreated
             startGPS();
@@ -118,203 +144,101 @@ public class TurnoControlFragment extends Fragment {
             requestPermissions();
         }
         return view;
+
+//
+//
+//        ///////////////////////////////////////////////////////
+//
+//        btnRegistrar = view.findViewById(R.id.btnRegistrar);
+//
+//        // Configurar el SurfaceHolder callback PRIMERO
+//        SurfaceHolder surfaceHolder = surfaceView.getHolder();
+//
+//
+//        btnRegistrar.setOnClickListener(v -> takePictureAndSend());
+//        spinnerPunto = view.findViewById(R.id.spinnerPunto);
+//        spinnerEvento = view.findViewById(R.id.spinnerEvento);
+//
+//        ControladorSqlite2 controladorSqlite2 = new ControladorSqlite2(getContext());
+//        user = controladorSqlite2.obtenerUsuario();
+//        controladorSqlite2.cerrarConexion();
+//
+//        return view;
     }
+    private void procesarFoto(Bitmap bitmap) {
+        processImageData(bitmap);
+        Toast.makeText(getContext(), "Foto capturada", Toast.LENGTH_SHORT).show();
+        // Aquí puedes convertir a Base64, guardar o enviar
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (cameraView != null) cameraView.start();
+    }
+
+    @Override
+    public void onPause() {
+        if (cameraView != null) cameraView.stop();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (cameraView != null) cameraView.destroy();
+        super.onDestroy();
+    }
+    ///////////////////////////////////////////////////////////////////////////////
     private void cargarParametricas() {
-        // Mostrar loading
-        mostrarLoading(true);
-
-        String urlPuntos = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_CONTROL_TURNOS_TIPO_PUNTO;
-        String urlEventos = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_CONTROL_TURNOS_TIPO_EVENTO;
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        // Cargar puntos
-        JsonObjectRequest requestPuntos = new JsonObjectRequest( // Cambiado a JsonObjectRequest
-                Request.Method.GET,
-                urlPuntos,
-                null,
-                new Response.Listener<JSONObject>() { // Cambiado a JSONObject
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            // Verificar si la respuesta fue exitosa
-                            boolean exito = response.getBoolean("exito");
-                            if (exito) {
-                                // Extraer el array "datos"
-                                JSONArray datosArray = response.getJSONArray("datos");
-                                List<Punto> puntos = new ArrayList<>();
-
-                                for (int i = 0; i < datosArray.length(); i++) {
-                                    JSONObject jsonObject = datosArray.getJSONObject(i);
-                                    int id = jsonObject.getInt("secuencial"); // Cambiado a "secuencial"
-                                    String nombre = jsonObject.getString("descripcion"); // Cambiado a "descripcion"
-                                    puntos.add(new Punto(id, nombre));
-                                }
-                                setupSpinnerPuntos(puntos);
-                            } else {
-                                String mensaje = response.getString("mensaje");
-                                // Manejar error del servidor
-                                builder.setTitle("Error")
-                                        .setIcon(android.R.drawable.ic_dialog_info);
-                                builder.setMessage(mensaje)
-                                        .setCancelable(false)
-                                        .setPositiveButton("OK", null);
-
-                                AlertDialog alert = builder.create();
-                                alert.show();
-
-
-                                //Toast.makeText(getContext(), mensaje, Toast.LENGTH_SHORT).show();
-
-
-
-
-                                Log.e("ServiceError", "Error del servidor (puntos): " + mensaje);
-
-                            }
-                        } catch (JSONException e) {
-                            Log.e("ServiceError", "Error parsing puntos", e);
-
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("ServiceError", "Error loading puntos: " + error.toString());
-
-                    }
-                }
-        ){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                Map<String, String> params = new HashMap<>();
-                LogUtils.i("ServiceError", "++++++++++++++++++++++++ ---------------------------");
-                params.put("version-app-pax", ConfigEmizor.VERSION);
-
-
-                if (user.getTokenAuth() != null) {
-
-                    String xtoken = UtilRest.getInstance().procesarDatosInterno(user.getTokenAuth(), 1);
-
-                    LogUtils.i("ServiceError", "getHeaders Enviando autorization :: " + xtoken);
-                    params.put("Authorization", xtoken);
-                }
-                LogUtils.i("ServiceError", "++++++++++++++++++++++++ ---------------------------");
-
-                return params;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-        };
-
-        // Cargar eventos
-        JsonObjectRequest requestEventos = new JsonObjectRequest( // Cambiado a JsonObjectRequest
-                Request.Method.GET,
-                urlEventos,
-                null,
-                new Response.Listener<JSONObject>() { // Cambiado a JSONObject
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            // Verificar si la respuesta fue exitosa
-                            boolean exito = response.getBoolean("exito");
-                            if (exito) {
-                                // Extraer el array "datos"
-                                JSONArray datosArray = response.getJSONArray("datos");
-                                List<Evento> eventos = new ArrayList<>();
-
-                                for (int i = 0; i < datosArray.length(); i++) {
-                                    JSONObject jsonObject = datosArray.getJSONObject(i);
-                                    int id = jsonObject.getInt("secuencial"); // Cambiado a "secuencial"
-                                    String nombre = jsonObject.getString("descripcion"); // Cambiado a "descripcion"
-                                    eventos.add(new Evento(id, nombre));
-                                }
-                                setupSpinnerEventos(eventos);
-                            } else {
-                                // Manejar error del servidor
-                                String mensaje = response.getString("mensaje");
-                                Toast.makeText(getContext(), mensaje, Toast.LENGTH_SHORT).show();
-                                Log.e("ServiceError", "Error del servidor (eventos): " + mensaje);
-
-                            }
-                        } catch (JSONException e) {
-                            Log.e("ServiceError", "Error parsing eventos", e);
-
-                        } finally {
-                            mostrarLoading(false);
-                        }
-                    }
-
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("ServiceError", "Error loading eventos: " + error.toString());
-
-                        mostrarLoading(false);
-                    }
-                }
-        ){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                Map<String, String> params = new HashMap<>();
-                LogUtils.i("ServiceError", "++++++++++++++++++++++++ ---------------------------");
-                params.put("version-app-pax", ConfigEmizor.VERSION);
-
-
-                if (user.getTokenAuth() != null) {
-
-                    String xtoken = UtilRest.getInstance().procesarDatosInterno(user.getTokenAuth(), 1);
-
-                    LogUtils.i("ServiceError", "getHeaders Enviando autorization :: " + xtoken);
-                    params.put("Authorization", xtoken);
-                }
-                LogUtils.i("ServiceError", "++++++++++++++++++++++++ ---------------------------");
-
-                return params;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-        };
-
-        // Agregar requests a la cola
-        Volley.newRequestQueue(getContext()).add(requestPuntos);
-        Volley.newRequestQueue(getContext()).add(requestEventos);
+        obtenerTiposEvento();
+        obtenerTiposPunto();
     }
-    private void setupSpinnerPuntos(List<Punto> puntos) {
-        ArrayAdapter<Punto> adapter = new ArrayAdapter<>(
-                getContext(),
-                R.layout.spinner_item,
-                puntos
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerPunto.setAdapter(adapter);
+    private void obtenerTiposEvento() {
+        List<Evento> eventos = ParametricasCache.getInstance().getEventos();
 
-        if (!puntos.isEmpty()) {
-            spinnerPunto.setSelection(0);
+        if (eventos != null && !eventos.isEmpty()) {
+            ArrayAdapter<Evento> adapter = new ArrayAdapter<>(
+                    getContext(), R.layout.spinner_item, eventos);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerEvento.setAdapter(adapter);
         }
     }
+    private void obtenerTiposPunto() {
+        List<Punto> puntos = ParametricasCache.getInstance().getPuntos();
 
-    private void setupSpinnerEventos(List<Evento> eventos) {
-        ArrayAdapter<Evento> adapter = new ArrayAdapter<>(
-                getContext(),
-                R.layout.spinner_item,
-                eventos
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerEvento.setAdapter(adapter);
-
-        if (!eventos.isEmpty()) {
-            spinnerEvento.setSelection(0);
+        if (puntos != null && !puntos.isEmpty()) {
+            ArrayAdapter<Punto> adapter = new ArrayAdapter<>(
+                    getContext(), R.layout.spinner_item, puntos);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerPunto.setAdapter(adapter);
         }
     }
+    //    private void setupSpinnerPuntos(List<Punto> puntos) {
+//        ArrayAdapter<Punto> adapter = new ArrayAdapter<>(
+//                getContext(),
+//                R.layout.spinner_item,
+//                puntos
+//        );
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinnerPunto.setAdapter(adapter);
+//
+//        if (!puntos.isEmpty()) {
+//            spinnerPunto.setSelection(0);
+//        }
+//    }
+//
+//    private void setupSpinnerEventos(List<Evento> eventos) {
+//        ArrayAdapter<Evento> adapter = new ArrayAdapter<>(
+//                getContext(),
+//                R.layout.spinner_item,
+//                eventos
+//        );
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinnerEvento.setAdapter(adapter);
+//
+//        if (!eventos.isEmpty()) {
+//            spinnerEvento.setSelection(0);
+//        }
+//    }
     private boolean checkPermissions() {
         return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -351,11 +275,11 @@ public class TurnoControlFragment extends Fragment {
                     // Remover updates una vez que tenemos una ubicación válida
                     locationManager.removeUpdates(this);
 
-                    // Opcional: Notificar que ya tenemos ubicación
-                    if (isTakingPicture) {
-                        // Si estábamos esperando para tomar foto, continuar
-                        new Handler().postDelayed(() -> takePictureAndSend(), 500);
-                    }
+//                    // Opcional: Notificar que ya tenemos ubicación
+//                    if (isTakingPicture) {
+//                        // Si estábamos esperando para tomar foto, continuar
+//                        new Handler().postDelayed(() -> takePictureAndSend(), 500);
+//                    }
                 }
             }
 
@@ -429,28 +353,28 @@ public class TurnoControlFragment extends Fragment {
             }
         }, 15000); // 15 segundos de timeout
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == 100) {
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-
-                // Pequeño delay para asegurar que los permisos estén aplicados
-                new Handler().postDelayed(() -> {
-                    if (surfaceView.getHolder().getSurface().isValid()) {
-                        startCamera();
-                    }
-                    // Si la superficie no está lista, surfaceCreated se encargará de iniciar la cámara
-                    startGPS();
-                    cargarParametricas();
-                }, 300);
-            } else {
-                Toast.makeText(getContext(), "Permisos denegados", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+//                                           @NonNull int[] grantResults) {
+//        if (requestCode == 100) {
+//            if (grantResults.length > 0 &&
+//                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+//                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+//
+//                // Pequeño delay para asegurar que los permisos estén aplicados
+//                new Handler().postDelayed(() -> {
+//                    if (surfaceView.getHolder().getSurface().isValid()) {
+//                        startCamera();
+//                    }
+//                    // Si la superficie no está lista, surfaceCreated se encargará de iniciar la cámara
+//                    startGPS();
+//                    cargarParametricas();
+//                }, 300);
+//            } else {
+//                Toast.makeText(getContext(), "Permisos denegados", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
     private boolean isGPSEnabled() {
         if (getActivity() == null) return false;
 
@@ -468,170 +392,170 @@ public class TurnoControlFragment extends Fragment {
         Log.d("GPS", "GPS enabled: " + isGPSEnabled + ", Network enabled: " + isNetworkEnabled);
         return isGPSEnabled || isNetworkEnabled;
     }
-    private void startCamera() {
-        try {
-            if (isCameraReady) {
-                Log.d("Camera", "Camera already ready");
-                return;
-            }
-
-            Log.d("Camera", "Attempting to start camera");
-            releaseCamera(); // Asegurarse de liberar primero
-
-            camera = Camera.open(0);
-
-            if (camera == null) {
-                Log.e("Camera", "Failed to open camera");
-                Toast.makeText(getContext(), "No se pudo abrir la cámara", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            setCameraDisplayOrientation();
-
-            Camera.Parameters params = camera.getParameters();
-
-            // Configurar parámetros
-            List<String> focusModes = params.getSupportedFocusModes();
-            if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
-                params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-            } else if (focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
-                params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-            }
-
-            // Configurar tamaño de preview
-            List<Camera.Size> supportedSizes = params.getSupportedPreviewSizes();
-            if (!supportedSizes.isEmpty()) {
-                Camera.Size optimalSize = supportedSizes.get(0);
-                params.setPreviewSize(optimalSize.width, optimalSize.height);
-            }
-
-            camera.setParameters(params);
-
-            // Configurar el preview display
-            SurfaceHolder holder = surfaceView.getHolder();
-            if (holder.getSurface().isValid()) {
-                camera.setPreviewDisplay(holder);
-                camera.startPreview();
-                isCameraReady = true;
-                Log.d("Camera", "Camera started successfully");
-
-                // Pequeño delay antes del autoenfoque
-                new Handler().postDelayed(() -> {
-                    if (camera != null && isCameraReady) {
-                        autoFocus();
-                    }
-                }, 300);
-            } else {
-                Log.d("Camera", "Surface not valid in startCamera");
-            }
-
-        } catch (Exception e) {
-            Log.e("Camera", "Error startCamera", e);
-            Toast.makeText(getContext(), "Error al abrir cámara", Toast.LENGTH_SHORT).show();
-            isCameraReady = false;
-        }
-    }
-    private void releaseCamera() {
-        try {
-            if (camera != null) {
-                camera.stopPreview();
-                camera.release();
-                camera = null;
-            }
-            isCameraReady = false;
-        } catch (Exception e) {
-            Log.e("Camera", "Error releaseCamera", e);
-        }
-    }
-    private void autoFocus() {
-        if (camera != null && isCameraReady) {
-            try {
-                camera.autoFocus(new Camera.AutoFocusCallback() {
-                    @Override
-                    public void onAutoFocus(boolean success, Camera camera) {
-                        // Solo registrar, no hacer nada más
-                        Log.d("Camera", "Autoenfoque: " + (success ? "éxito" : "falló"));
-                    }
-                });
-            } catch (Exception e) {
-                Log.e("Camera", "Error en autoFocus", e);
-            }
-        }
-    }
+//    private void startCamera() {
+//        try {
+//            if (isCameraReady) {
+//                Log.d("Camera", "Camera already ready");
+//                return;
+//            }
+//
+//            Log.d("Camera", "Attempting to start camera");
+//            releaseCamera(); // Asegurarse de liberar primero
+//
+//            camera = Camera.open(0);
+//
+//            if (camera == null) {
+//                Log.e("Camera", "Failed to open camera");
+//                Toast.makeText(getContext(), "No se pudo abrir la cámara", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//
+//            setCameraDisplayOrientation();
+//
+//            Camera.Parameters params = camera.getParameters();
+//
+//            // Configurar parámetros
+//            List<String> focusModes = params.getSupportedFocusModes();
+//            if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+//                params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+//            } else if (focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+//                params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+//            }
+//
+//            // Configurar tamaño de preview
+//            List<Camera.Size> supportedSizes = params.getSupportedPreviewSizes();
+//            if (!supportedSizes.isEmpty()) {
+//                Camera.Size optimalSize = supportedSizes.get(0);
+//                params.setPreviewSize(optimalSize.width, optimalSize.height);
+//            }
+//
+//            camera.setParameters(params);
+//
+//            // Configurar el preview display
+//            SurfaceHolder holder = surfaceView.getHolder();
+//            if (holder.getSurface().isValid()) {
+//                camera.setPreviewDisplay(holder);
+//                camera.startPreview();
+//                isCameraReady = true;
+//                Log.d("Camera", "Camera started successfully");
+//
+//                // Pequeño delay antes del autoenfoque
+//                new Handler().postDelayed(() -> {
+//                    if (camera != null && isCameraReady) {
+//                        autoFocus();
+//                    }
+//                }, 300);
+//            } else {
+//                Log.d("Camera", "Surface not valid in startCamera");
+//            }
+//
+//        } catch (Exception e) {
+//            Log.e("Camera", "Error startCamera", e);
+//            Toast.makeText(getContext(), "Error al abrir cámara", Toast.LENGTH_SHORT).show();
+//            isCameraReady = false;
+//        }
+//    }
+//    private void releaseCamera() {
+//        try {
+//            if (camera != null) {
+//                camera.stopPreview();
+//                camera.release();
+//                camera = null;
+//            }
+//            isCameraReady = false;
+//        } catch (Exception e) {
+//            Log.e("Camera", "Error releaseCamera", e);
+//        }
+//    }
+//    private void autoFocus() {
+//        if (camera != null && isCameraReady) {
+//            try {
+//                camera.autoFocus(new Camera.AutoFocusCallback() {
+//                    @Override
+//                    public void onAutoFocus(boolean success, Camera camera) {
+//                        // Solo registrar, no hacer nada más
+//                        Log.d("Camera", "Autoenfoque: " + (success ? "éxito" : "falló"));
+//                    }
+//                });
+//            } catch (Exception e) {
+//                Log.e("Camera", "Error en autoFocus", e);
+//            }
+//        }
+//    }
 
     // Método para ajustar la orientación de la cámara según la orientación del dispositivo
-    private void setCameraDisplayOrientation() {
-        Camera.CameraInfo info = new Camera.CameraInfo();
-        Camera.getCameraInfo(0, info);
-
-        int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
-        int degrees = 0;
-
-        switch (rotation) {
-            case Surface.ROTATION_0: degrees = 0; break;
-            case Surface.ROTATION_90: degrees = 90; break;
-            case Surface.ROTATION_180: degrees = 180; break;
-            case Surface.ROTATION_270: degrees = 270; break;
-        }
-
-        int result;
-        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            result = (info.orientation + degrees) % 360;
-            result = (360 - result) % 360;
-        } else { // cámara trasera
-            result = (info.orientation - degrees + 360) % 360;
-        }
-
-        camera.setDisplayOrientation(result);
-    }
+//    private void setCameraDisplayOrientation() {
+//        Camera.CameraInfo info = new Camera.CameraInfo();
+//        Camera.getCameraInfo(0, info);
+//
+//        int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
+//        int degrees = 0;
+//
+//        switch (rotation) {
+//            case Surface.ROTATION_0: degrees = 0; break;
+//            case Surface.ROTATION_90: degrees = 90; break;
+//            case Surface.ROTATION_180: degrees = 180; break;
+//            case Surface.ROTATION_270: degrees = 270; break;
+//        }
+//
+//        int result;
+//        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+//            result = (info.orientation + degrees) % 360;
+//            result = (360 - result) % 360;
+//        } else { // cámara trasera
+//            result = (info.orientation - degrees + 360) % 360;
+//        }
+//
+//        camera.setDisplayOrientation(result);
+//    }
 
     // Método para tomar una foto
-    private void takePictureAndSend() {
-        // Verificar si el GPS está activado
-        if (!isGPSEnabled()) {
-            showGPSDisabledAlert();
-            return;
-        }
-
-        // Verificar si tenemos ubicación válida
-        if (latitud == 0.0 && longitud == 0.0) {
-            Toast.makeText(getContext(), "Obteniendo ubicación, espere por favor...", Toast.LENGTH_SHORT).show();
-            startGPS(); // Reiniciar la obtención de ubicación
-            return;
-        }
-
-        if (!isCameraReady || camera == null || isTakingPicture) {
-            Toast.makeText(getContext(), "Cámara no disponible", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        isTakingPicture = true;
-        try {
-            camera.autoFocus(new Camera.AutoFocusCallback() {
-                @Override
-                public void onAutoFocus(boolean success, Camera camera) {
-                    // Independientemente de si el autoenfoque tuvo éxito, intentar tomar la foto
-                    try {
-                        camera.takePicture(null, null, new Camera.PictureCallback() {
-                            @Override
-                            public void onPictureTaken(byte[] data, Camera camera) {
-                                isTakingPicture = false;
-                                processImageData(data, camera);
-                            }
-                        });
-                    } catch (Exception e) {
-                        isTakingPicture = false;
-                        Log.e("Camera", "Error en takePicture", e);
-                        restartPreview();
-                    }
-                }
-            });
-        } catch (Exception e) {
-            isTakingPicture = false;
-            Log.e("Camera", "Error en autoFocus", e);
-            restartPreview();
-        }
-    }
+//    private void takePictureAndSend() {
+//        // Verificar si el GPS está activado
+//        if (!isGPSEnabled()) {
+//            showGPSDisabledAlert();
+//            return;
+//        }
+//
+//        // Verificar si tenemos ubicación válida
+//        if (latitud == 0.0 && longitud == 0.0) {
+//            Toast.makeText(getContext(), "Obteniendo ubicación, espere por favor...", Toast.LENGTH_SHORT).show();
+//            startGPS(); // Reiniciar la obtención de ubicación
+//            return;
+//        }
+//
+//        if (!isCameraReady || camera == null || isTakingPicture) {
+//            Toast.makeText(getContext(), "Cámara no disponible", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        isTakingPicture = true;
+//        try {
+//            camera.autoFocus(new Camera.AutoFocusCallback() {
+//                @Override
+//                public void onAutoFocus(boolean success, Camera camera) {
+//                    // Independientemente de si el autoenfoque tuvo éxito, intentar tomar la foto
+//                    try {
+//                        camera.takePicture(null, null, new Camera.PictureCallback() {
+//                            @Override
+//                            public void onPictureTaken(byte[] data, Camera camera) {
+//                                isTakingPicture = false;
+//                                //processImageData(data, camera);
+//                            }
+//                        });
+//                    } catch (Exception e) {
+//                        isTakingPicture = false;
+//                        Log.e("Camera", "Error en takePicture", e);
+//                     //   restartPreview();
+//                    }
+//                }
+//            });
+//        } catch (Exception e) {
+//            isTakingPicture = false;
+//            Log.e("Camera", "Error en autoFocus", e);
+//        //    restartPreview();
+//        }
+//    }
     private void showGPSDisabledAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("GPS Desactivado");
@@ -650,25 +574,8 @@ public class TurnoControlFragment extends Fragment {
 
         builder.show();
     }
-    private void processImageData(byte[] data, Camera camera) {
+    private void processImageData(Bitmap bitmap) {
         try {
-            if (data == null || data.length == 0) {
-                throw new Exception("Datos de imagen vacíos");
-            }
-
-            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-            if (bitmap == null) {
-                throw new Exception("Error al decodificar bitmap");
-            }
-
-            // Rotar la imagen si es necesario
-            int rotation = getCameraRotation();
-            if (rotation != 0) {
-                Matrix matrix = new Matrix();
-                matrix.postRotate(rotation);
-                bitmap = Bitmap.createBitmap(bitmap, 0, 0,
-                        bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            }
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos);
@@ -679,7 +586,7 @@ public class TurnoControlFragment extends Fragment {
 
         } catch (Exception e) {
             Log.e("Camera", "Error procesando imagen", e);
-            restartPreview();
+          //  restartPreview();
         }
     }
 
@@ -687,7 +594,7 @@ public class TurnoControlFragment extends Fragment {
         // Verificar nuevamente que tenemos ubicación válida
         if (latitud == 0.0 || longitud == 0.0) {
             Toast.makeText(getContext(), "Error: No se pudo obtener la ubicación GPS", Toast.LENGTH_LONG).show();
-            restartPreview();
+           // restartPreview();
             return;
         }
 
@@ -699,140 +606,140 @@ public class TurnoControlFragment extends Fragment {
                 .setMessage("¿Confirmar registro con los siguientes datos?\n\n" +
                         "Punto: " + punto + "\n" +
                         "Evento: " + evento + "\n"
-                        )
+                )
                 .setCancelable(false)
                 .setPositiveButton("Sí", (dialog, which) -> {
                     remitir(encodedImage);
                 })
                 .setNegativeButton("No", (dialog, which) -> {
-                    restartPreview();
+                  //  restartPreview();
                 })
                 .show();
     }
-    private void restartPreview() {
-        try {
-            if (camera != null) {
-                camera.stopPreview();
-                camera.startPreview();
-                isCameraReady = true;
-                // No llamar a autoFocus() inmediatamente aquí
-            }
-        } catch (Exception e) {
-            Log.e("Camera", "Error al reiniciar preview", e);
-            isCameraReady = false;
-            releaseCamera();
-            startCamera(); // Reiniciar completamente la cámara
-        }
-    }
-    private SurfaceHolder.Callback surfaceCallback = new SurfaceHolder.Callback() {
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-            Log.d("Camera", "Surface created");
-            if (checkPermissions() && !isCameraReady) {
-                startCamera();
-            }
-        }
+//    private void restartPreview() {
+//        try {
+//            if (camera != null) {
+//                camera.stopPreview();
+//                camera.startPreview();
+//                isCameraReady = true;
+//                // No llamar a autoFocus() inmediatamente aquí
+//            }
+//        } catch (Exception e) {
+//            Log.e("Camera", "Error al reiniciar preview", e);
+//            isCameraReady = false;
+//            releaseCamera();
+//            startCamera(); // Reiniciar completamente la cámara
+//        }
+//    }
+//    private SurfaceHolder.Callback surfaceCallback = new SurfaceHolder.Callback() {
+//        @Override
+//        public void surfaceCreated(SurfaceHolder holder) {
+//            Log.d("Camera", "Surface created");
+//            if (checkPermissions() && !isCameraReady) {
+//                startCamera();
+//            }
+//        }
+//
+//        @Override
+//        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+//            Log.d("Camera", "Surface changed: " + width + "x" + height);
+//            if (camera != null && isCameraReady) {
+//                try {
+//                    camera.stopPreview();
+//                    setCameraDisplayOrientation();
+//                    camera.setPreviewDisplay(holder);
+//                    camera.startPreview();
+//                    Log.d("Camera", "Preview restarted after surface change");
+//                } catch (Exception e) {
+//                    Log.e("Camera", "Error en surfaceChanged", e);
+//                    restartCamera();
+//                }
+//            }
+//        }
+//
+//        @Override
+//        public void surfaceDestroyed(SurfaceHolder holder) {
+//            Log.d("Camera", "Surface destroyed");
+//            if (camera != null) {
+//                try {
+//                    camera.stopPreview();
+//                    Log.d("Camera", "Preview stopped in surfaceDestroyed");
+//                } catch (Exception e) {
+//                    Log.e("Camera", "Error stopping preview", e);
+//                }
+//            }
+//            isCameraReady = false;
+//        }
+//    };
+//    private int getCameraRotation() {
+//        Camera.CameraInfo info = new Camera.CameraInfo();
+//        Camera.getCameraInfo(0, info);
+//
+//        int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
+//        int degrees = 0;
+//
+//        switch (rotation) {
+//            case Surface.ROTATION_0: degrees = 0; break;
+//            case Surface.ROTATION_90: degrees = 90; break;
+//            case Surface.ROTATION_180: degrees = 180; break;
+//            case Surface.ROTATION_270: degrees = 270; break;
+//        }
+//
+//        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+//            return (info.orientation + degrees) % 360;
+//        } else {
+//            return (info.orientation - degrees + 360) % 360;
+//        }
+//    }
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        Log.d("Camera", "onPause called");
+//
+//        // Solo detener el preview, no liberar la cámara completamente
+//        if (camera != null) {
+//            try {
+//                camera.stopPreview();
+//                Log.d("Camera", "Preview stopped in onPause");
+//            } catch (Exception e) {
+//                Log.e("Camera", "Error stopping preview in onPause", e);
+//            }
+//        }
+//        isCameraReady = false;
+//    }
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        Log.d("Camera", "onDestroyView called");
+//
+//        // Liberar completamente la cámara cuando el fragmento se destruye
+//        releaseCamera();
+//    }
 
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            Log.d("Camera", "Surface changed: " + width + "x" + height);
-            if (camera != null && isCameraReady) {
-                try {
-                    camera.stopPreview();
-                    setCameraDisplayOrientation();
-                    camera.setPreviewDisplay(holder);
-                    camera.startPreview();
-                    Log.d("Camera", "Preview restarted after surface change");
-                } catch (Exception e) {
-                    Log.e("Camera", "Error en surfaceChanged", e);
-                    restartCamera();
-                }
-            }
-        }
-
-        @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
-            Log.d("Camera", "Surface destroyed");
-            if (camera != null) {
-                try {
-                    camera.stopPreview();
-                    Log.d("Camera", "Preview stopped in surfaceDestroyed");
-                } catch (Exception e) {
-                    Log.e("Camera", "Error stopping preview", e);
-                }
-            }
-            isCameraReady = false;
-        }
-    };
-    private int getCameraRotation() {
-        Camera.CameraInfo info = new Camera.CameraInfo();
-        Camera.getCameraInfo(0, info);
-
-        int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
-        int degrees = 0;
-
-        switch (rotation) {
-            case Surface.ROTATION_0: degrees = 0; break;
-            case Surface.ROTATION_90: degrees = 90; break;
-            case Surface.ROTATION_180: degrees = 180; break;
-            case Surface.ROTATION_270: degrees = 270; break;
-        }
-
-        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            return (info.orientation + degrees) % 360;
-        } else {
-            return (info.orientation - degrees + 360) % 360;
-        }
-    }
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d("Camera", "onPause called");
-
-        // Solo detener el preview, no liberar la cámara completamente
-        if (camera != null) {
-            try {
-                camera.stopPreview();
-                Log.d("Camera", "Preview stopped in onPause");
-            } catch (Exception e) {
-                Log.e("Camera", "Error stopping preview in onPause", e);
-            }
-        }
-        isCameraReady = false;
-    }
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d("Camera", "onDestroyView called");
-
-        // Liberar completamente la cámara cuando el fragmento se destruye
-        releaseCamera();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("Camera", "onResume called");
-
-        if (checkPermissions()) {
-            // Verificar si la superficie está lista y la cámara no está iniciada
-            if (surfaceView.getHolder().getSurface().isValid() && !isCameraReady) {
-                Log.d("Camera", "Surface is valid, starting camera");
-                startCamera();
-            }
-            // Si la superficie no está lista, surfaceCreated se encargará de iniciar la cámara
-        } else {
-            requestPermissions();
-        }
-    }
-    private void restartCamera() {
-        if (camera != null) {
-            camera.stopPreview();
-            camera.release();
-            camera = null;
-        }
-        startCamera();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        Log.d("Camera", "onResume called");
+//
+//        if (checkPermissions()) {
+//            // Verificar si la superficie está lista y la cámara no está iniciada
+//            if (surfaceView.getHolder().getSurface().isValid() && !isCameraReady) {
+//                Log.d("Camera", "Surface is valid, starting camera");
+//                startCamera();
+//            }
+//            // Si la superficie no está lista, surfaceCreated se encargará de iniciar la cámara
+//        } else {
+//            requestPermissions();
+//        }
+//    }
+//    private void restartCamera() {
+//        if (camera != null) {
+//            camera.stopPreview();
+//            camera.release();
+//            camera = null;
+//        }
+//        startCamera();
+//    }
     // Enviar la imagen al servidor
     private void remitir(String encodedImage) {
         mostrarLoading(true);
@@ -842,7 +749,7 @@ public class TurnoControlFragment extends Fragment {
 
         if (puntoSeleccionado == null || eventoSeleccionado == null) {
             Toast.makeText(getContext(), "Seleccione punto y evento", Toast.LENGTH_SHORT).show();
-            restartPreview();
+            //restartPreview();
             return;
         }
 
@@ -894,7 +801,7 @@ public class TurnoControlFragment extends Fragment {
             mostrarLoading(false);
             e.printStackTrace();
             Toast.makeText(getContext(), "Error al crear JSON", Toast.LENGTH_SHORT).show();
-            restartPreview();
+            //restartPreview();
             return;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -958,7 +865,7 @@ public class TurnoControlFragment extends Fragment {
                             Log.e("ServerResponse", "Error inesperado en respuesta", e);
                             Toast.makeText(getContext(), "Error inesperado", Toast.LENGTH_SHORT).show();
                         } finally {
-                            restartPreview();
+                        //    restartPreview();
                         }
                     }
                 },
@@ -972,7 +879,7 @@ public class TurnoControlFragment extends Fragment {
                             Log.e("ServerError", "Datos: " + new String(error.networkResponse.data));
                         }
                         Toast.makeText(getContext(), "Error al enviar registro", Toast.LENGTH_SHORT).show();
-                        restartPreview();
+                      //  restartPreview();
                     }
                 }
         ) {

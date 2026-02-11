@@ -1,8 +1,10 @@
 package com.emizor.univida.fragmento;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,7 @@ import com.beardedhen.androidbootstrap.BootstrapText;
 import com.beardedhen.androidbootstrap.font.FontAwesome;
 import com.emizor.univida.InicioActivity;
 import com.emizor.univida.R;
+import com.emizor.univida.activities.PrincipalActivity;
 import com.emizor.univida.modelo.dominio.univida.parametricas.Departamento;
 import com.emizor.univida.modelo.dominio.univida.parametricas.Gestion;
 import com.emizor.univida.modelo.dominio.univida.parametricas.TipoPlaca;
@@ -74,10 +77,17 @@ public class NuevaVentaFragment extends Fragment {
     private View vistaPrima, vistaBuscar;
 
     private BootstrapButton bsbAceptarBuscarPlaca;
+    private BootstrapButton bsbCancelarReemplazoPlaca;
 
-    private TextView tvGestion, tvPlaca;
+    private TextView tvGestion, tvPlaca,tvNotaPrima;
 
     private TipoPlaca tipoPlacaSeleccionado;
+    /***/
+    private double reemplazoPrimaAnterior = 0.0;
+    private int reemplazoMedioPagoFkAnterior = 0;
+    private long reemplazoTVehiSoatPropFkAnterior = 0L;
+    private String reemplazoPlacaNueva = "";
+    private boolean esReemplazo = false;
 
     public NuevaVentaFragment() {
         // Required empty public constructor
@@ -86,6 +96,27 @@ public class NuevaVentaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+        if (args != null) {
+            reemplazoPrimaAnterior = args.getDouble("reemplazoPrimaAnterior", 0.0);
+            reemplazoMedioPagoFkAnterior = args.getInt("reemplazoMedioPagoFkAnterior", 0);
+            reemplazoTVehiSoatPropFkAnterior = args.getLong("reemplazoTVehiSoatPropFkAnterior", 0L);
+            reemplazoPlacaNueva = args.getString("reemplazoPlacaNueva", "");
+
+            // Verificar si es un reemplazo (si se envió la placa)
+            esReemplazo = !reemplazoPlacaNueva.isEmpty();
+
+            LogUtils.i(TAG, "Es reemplazo: " + esReemplazo);
+            if (esReemplazo) {
+                LogUtils.i(TAG, "Placa para reemplazo: " + reemplazoPlacaNueva);
+            }
+
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            if (activity != null && activity.getSupportActionBar() != null) {
+                activity.getSupportActionBar().setTitle("REEMPLAZO DE VENTA");
+            }
+        }
     }
 
     @Override
@@ -104,7 +135,7 @@ public class NuevaVentaFragment extends Fragment {
         }
 
         etPlacaBuscar = vistaNuevaVenta.findViewById(R.id.etPlacaBuscar);
-
+        tvNotaPrima=vistaNuevaVenta.findViewById(R.id.tvNotaPrima);
         gestionSeleccionada = null;
         usoVehiculoSeleccionado = null;
         tipoVehiculoSeleccionado = null;
@@ -158,6 +189,10 @@ public class NuevaVentaFragment extends Fragment {
                 tipoPlacaSeleccionado = (TipoPlaca) parent.getSelectedItem();
 
                 etPlacaBuscar.setText("");
+                if (esReemplazo && !reemplazoPlacaNueva.isEmpty()) {
+                    etPlacaBuscar.setText(reemplazoPlacaNueva);
+                }
+
                 setttingTipoPlacaSelected(tipoPlacaSeleccionado);
 
                 if (tipoPlacaSeleccionado.getSecuencial() < 0){
@@ -171,7 +206,19 @@ public class NuevaVentaFragment extends Fragment {
             }
         });
 
-        //FIUN TIPO PLACA
+        //FIN TIPO PLACA
+        bsbCancelarReemplazoPlaca = vistaNuevaVenta.findViewById(R.id.bsbCancelarReemplazoPlaca);
+        bsbCancelarReemplazoPlaca.setVisibility(View.GONE);
+        tvNotaPrima.setVisibility(View.GONE);
+        /*************************PARA REEMPLAZO********************/
+        if (esReemplazo && !reemplazoPlacaNueva.isEmpty()) {
+            etPlacaBuscar.setText(reemplazoPlacaNueva);
+            etPlacaBuscar.setEnabled(false);
+            spTipoPlaca.setEnabled(false);
+            bsbCancelarReemplazoPlaca.setVisibility(View.VISIBLE);
+            tvNotaPrima.setVisibility(View.VISIBLE);
+        }
+        /***********************************************************/
 
         // USO VEHICULO
         spTipoUso  = vistaNuevaVenta.findViewById(R.id.spTipoUso);
@@ -288,6 +335,12 @@ public class NuevaVentaFragment extends Fragment {
                 resetearBusqueda();
             }
         });
+        bsbCancelarReemplazoPlaca.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetearBusqueda();
+            }
+        });
 
         return vistaNuevaVenta;
     }
@@ -310,6 +363,23 @@ public class NuevaVentaFragment extends Fragment {
         spTipoUso.setSelection(0);
         tvGestion.setText("GESTIÓN: ");
         tvPlaca.setText("PLACA: ");
+
+        etPlacaBuscar.setEnabled(true);
+        etPlacaBuscar.setText("");
+        spTipoPlaca.setEnabled(true);
+        bsbCancelarReemplazoPlaca.setVisibility(View.GONE);
+
+        reemplazoPrimaAnterior = 0.0;
+        reemplazoMedioPagoFkAnterior = 0;
+        reemplazoTVehiSoatPropFkAnterior = 0L;
+        reemplazoPlacaNueva = "";
+        esReemplazo = false;
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null && activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setTitle("NUEVA VENTA");
+        }
+        tvNotaPrima.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -626,6 +696,24 @@ public class NuevaVentaFragment extends Fragment {
 
                                         if (obtenerPrimaRespUnivida.getMontoPrima() != null && obtenerPrimaRespUnivida.getMontoPrima() > 0) {
 
+                                            if(esReemplazo && obtenerPrimaRespUnivida.getMontoPrima()!=reemplazoPrimaAnterior){
+                                                ((PrincipalActivity) getContext()).mostrarLoading(false);
+
+                                                int montoPrima = obtenerPrimaRespUnivida.getMontoPrima();
+
+                                                new AlertDialog.Builder(getContext())
+                                                        .setTitle("Atención")
+                                                        .setMessage(
+                                                                "Se ha detectado una inconsistencia en las primas.\n\n" +
+                                                                        "Prima anterior: Bs " + String.format("%.2f", reemplazoPrimaAnterior) + "\n" +
+                                                                        "Prima actual calculada: Bs " + String.format("%.2f", (double) montoPrima) + "\n\n" +
+                                                                        "Por favor, verifique la información antes de continuar."
+                                                        )
+                                                        .setPositiveButton("Aceptar", (dialog, which) -> dialog.dismiss())
+                                                        .show();
+                                                return;
+                                            }
+
                                             EfectivizarFacturaUnivida efectivizarFacturaUnivida = new EfectivizarFacturaUnivida();
 
                                             efectivizarFacturaUnivida.setDepartamentoPlazaCirculacionFk(departamentoSeleccionado.getCodigo());
@@ -643,6 +731,11 @@ public class NuevaVentaFragment extends Fragment {
                                             efectivizarFacturaUnivida.setRosetaNumero(null);
                                             efectivizarFacturaUnivida.setNitCi(null);
                                             efectivizarFacturaUnivida.setVehiculoPlacaTipo(tipoPlacaSeleccionado.getSecuencial());
+                                            /*para reemplazo*/
+                                            efectivizarFacturaUnivida.setMedioPagoFk(reemplazoMedioPagoFkAnterior);
+                                            efectivizarFacturaUnivida.setVehiSoatPropSecuencialRevertir(reemplazoTVehiSoatPropFkAnterior);
+
+                                            /**/
 
                                             Object [] datos = new Object[2];
 

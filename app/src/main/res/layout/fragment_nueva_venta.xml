@@ -64,6 +64,29 @@
             app:bootstrapSize="lg"
             app:bootstrapText="{fa_search} BUSCAR (Criterio de Búsqueda)"
             app:roundedCorners="true" />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/bsbCancelarReemplazoPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="3dp"
+            app:bootstrapBrand="warning"
+            app:bootstrapSize="lg"
+            app:bootstrapText="CANCELAR REEMPLAZO DE VENTA"
+            app:roundedCorners="true" />
+        <TextView
+            android:id="@+id/tvNotaPrima"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Los cambios solo están permitidos si la prima es igual a la original. No aplica para ventas con primas distintas."
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="14sp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:gravity="center"
+
+            />
     </LinearLayout>
 
 

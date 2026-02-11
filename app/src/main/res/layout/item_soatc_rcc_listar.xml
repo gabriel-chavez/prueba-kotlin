@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="3dp"
+    app:cardUseCompatPadding="true"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="#F9F9F9">
+
+        <!-- Número de RCC -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Número de RCC:"
+                android:textStyle="bold"
+                android:textColor="#333"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textStyle="bold"
+                android:textColor="#555"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Formulario Importe -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Formulario importe:"
+                android:textColor="#333" />
+
+            <TextView
+                android:id="@+id/tv_importe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bs. 0.00"
+                android:textColor="#555" />
+        </LinearLayout>
+
+        <!-- Cantidad -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cantidad:"
+                android:textColor="#333" />
+
+            <TextView
+                android:id="@+id/tv_cantidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#555" />
+        </LinearLayout>
+
+        <!-- Válidos -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Válidos:"
+                android:textColor="#333" />
+
+            <TextView
+                android:id="@+id/tv_validos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#555" />
+        </LinearLayout>
+
+        <!-- Revertidos -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Revertidos:"
+                android:textColor="#333" />
+
+            <TextView
+                android:id="@+id/tv_revertidos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#555" />
+        </LinearLayout>
+
+        <!-- Anulados -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Anulados:"
+                android:textColor="#333" />
+
+            <TextView
+                android:id="@+id/tv_anulados"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#555" />
+        </LinearLayout>
+
+        <!-- Estado -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Estado:"
+                android:textStyle="bold"
+                android:textColor="#333"
+                android:layout_marginRight="4dp" />
+
+            <TextView
+                android:id="@+id/tv_estado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:text="Procesado"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:background="@drawable/bg_estado_procesado" />
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

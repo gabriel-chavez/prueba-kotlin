@@ -1,7 +1,9 @@
 package com.emizor.univida.fragmento;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +13,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.emizor.univida.R;
+import com.emizor.univida.activities.EfectivizarVentaActivity;
 import com.emizor.univida.activities.PrincipalActivity;
+import com.emizor.univida.dialogo.DialogoEmizor;
+import com.emizor.univida.excepcion.ErrorPapelException;
+import com.emizor.univida.excepcion.ImpresoraErrorException;
+import com.emizor.univida.excepcion.NoHayPapelException;
+import com.emizor.univida.excepcion.VoltageBajoException;
 import com.emizor.univida.imprime.ImpresionManagerSoatc;
+import com.emizor.univida.imprime.ImprimirAvisoListener;
+import com.emizor.univida.imprime.ImprimirFactura;
 import com.emizor.univida.modelo.dominio.univida.ApiResponse;
+import com.emizor.univida.modelo.dominio.univida.seguridad.User;
 import com.emizor.univida.modelo.dominio.univida.soatc.Beneficiario;
 import com.emizor.univida.modelo.dominio.univida.soatc.CliObtenerDatosResponse;
 import com.emizor.univida.modelo.dominio.univida.soatc.DatosFacturacion;
@@ -26,6 +37,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -34,12 +47,13 @@ import java.util.Map;
  * Use the {@link SoatcResumenFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SoatcResumenFragment extends Fragment implements ImpresionManagerSoatc.ImpresionListener {
+public class SoatcResumenFragment extends Fragment implements ImpresionManagerSoatc.ImpresionListener, ImprimirAvisoListener {
 
     private String nombreAsegurado, direccion, ciudad, telefono, email, vigencia;
     private String nombreFacturacion, documento, extension, emailFacturacion, celularFacturacion;
     private ImpresionManagerSoatc impresionManager;
     private EmiPolizaObtenerResponse respuestaEfectivizacion;
+    private ImprimirFactura imprimirFactura;
 
     public SoatcResumenFragment() {
         // Required empty public constructor
@@ -131,7 +145,8 @@ public class SoatcResumenFragment extends Fragment implements ImpresionManagerSo
             efectivizarVenta();
 
         });
-
+        imprimirFactura = ImprimirFactura.obtenerImpresora(requireContext());
+        imprimirFactura.setAvisoListener(this);
         return view;
     }
 
@@ -152,7 +167,7 @@ public class SoatcResumenFragment extends Fragment implements ImpresionManagerSo
         String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_EMISION_EFECTIVIZAR;
         ((PrincipalActivity) requireActivity()).mostrarLoading(true);
         apiService.solicitudPost(url, request, response -> {
-            ((PrincipalActivity) requireActivity()).mostrarLoading(false);
+
             Type responseType = new TypeToken<ApiResponse<EmiPolizaObtenerResponse>>() {
             }.getType();
             ApiResponse<EmiPolizaObtenerResponse> apiResponse = new Gson().fromJson(response, responseType);
@@ -181,9 +196,10 @@ public class SoatcResumenFragment extends Fragment implements ImpresionManagerSo
 
         requireActivity().runOnUiThread(() -> {
             new android.app.AlertDialog.Builder(requireContext())
-                    .setTitle("Validación")
+                    .setTitle("Efectivización")
                     .setMessage(mensaje)
                     .setPositiveButton("OK", null)
+
                     .show();
         });
     }
@@ -192,13 +208,13 @@ public class SoatcResumenFragment extends Fragment implements ImpresionManagerSo
 
         requireActivity().runOnUiThread(() -> {
             new android.app.AlertDialog.Builder(requireContext())
-                    .setTitle("Validación")
+                    .setTitle("Efectivización")
                     .setMessage(mensaje)
                     .setCancelable(false)
                     .setPositiveButton("Reintentar", (dialog, which) -> {
                         if (onReintentar != null) onReintentar.run();
                     })
-                    .setNegativeButton("Cancelar", (dialog, which) -> {
+                    .setNegativeButton("Aceptar", (dialog, which) -> {
                         if (onCancelar != null) onCancelar.run();
                         dialog.dismiss();
                     })
@@ -209,38 +225,46 @@ public class SoatcResumenFragment extends Fragment implements ImpresionManagerSo
 
     @Override
     public void onImpresionCompletada() {
-        getActivity().runOnUiThread(() -> {
-            mostrarDialogo("Impresión completada exitosamente");
-
-            navegarASiguientePantalla();
-        });
+        if (getActivity() != null && isAdded()) {
+            getActivity().runOnUiThread(() -> {
+                mostrarDialogo("Impresión completada exitosamente");
+                navegarASiguientePantalla();
+            });
+        }
     }
 
     @Override
     public void onErrorImpresion(String mensaje) {
-        getActivity().runOnUiThread(() -> {
-            //  btnConfirmar.setEnabled(true);
-            mostrarDialogo("Error en impresión: " + mensaje);
-        });
+        if (getActivity() != null && isAdded()) {
+            getActivity().runOnUiThread(() -> {
+                mostrarDialogo("Error en impresión: " + mensaje);
+            });
+        }
     }
 
     @Override
     public void onTerminoDeImprimir() {
         getActivity().runOnUiThread(() -> {
-
-            preguntarImpresionColilla();
+            cambiarFragmento(new SoatcAseguradoBuscarFragment());
+          //  preguntarImpresionColilla();
         });
     }
 
     @Override
     public void onImpresionIniciada() {
-        getActivity().runOnUiThread(() -> {
-            Toast.makeText(getActivity(), "Iniciando impresión...", Toast.LENGTH_SHORT).show();
-        });
+        if (getActivity() != null && isAdded()) {
+            getActivity().runOnUiThread(() -> {
+                Toast.makeText(getActivity(), "Iniciando impresión...", Toast.LENGTH_SHORT).show();
+            });
+        }
     }
 
     private void procesarRespuestaEfectivizacion(ApiResponse<EmiPolizaObtenerResponse> apiResponse) {
 
+        if (!isAdded() || getActivity() == null) {
+            // Si el fragmento no está adjunto, evitamos proceder
+            return;
+        }
 
         if (apiResponse.exito && apiResponse.datos != null) {
             respuestaEfectivizacion = apiResponse.datos;
@@ -252,19 +276,48 @@ public class SoatcResumenFragment extends Fragment implements ImpresionManagerSo
 //            Log.d("IMPRESION", "Cliente: " + respuestaEfectivizacion.getPolizaDetalle().getClientePN().getNombreCompleto());
 
             // INICIAR IMPRESIÓN
-            if (impresionManager != null) {
-                mostrarDialogoExito(apiResponse.mensaje, () -> {
-                    impresionManager.imprimirFacturaSoatc(respuestaEfectivizacion);
-                });
-            } else {
-                mostrarDialogo("Impresión no disponible - ");
-                //     btnConfirmar.setEnabled(true);
+            try {
+                ControladorSqlite2 controladorSqlite2 = new ControladorSqlite2(requireContext());
+                User user = controladorSqlite2.obtenerUsuario();
+                imprimirFactura.prepararImpresionFacturaSoatc(user, respuestaEfectivizacion);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                //mostrarMensaje("No se puede imprimir los datos por que algunos o todos son nulos.");
+                ((PrincipalActivity) requireActivity()).mostrarLoading(false);
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Atención")
+                        .setMessage("No se puede imprimir los datos por que algunos o todos son nulos.")
+                        .setPositiveButton("Aceptar", (dialog, which) -> {
+                            cambiarFragmento(new SoatcAseguradoBuscarFragment());
+                        }).show();
+                return;
             }
+
+            iniciarImprimir();
+
+//
+//            if (impresionManager != null) {
+//                mostrarDialogoExito(apiResponse.mensaje, () -> {
+//                    impresionManager.imprimirFacturaSoatc(respuestaEfectivizacion);
+//                });
+//            } else {
+//                ((PrincipalActivity) requireActivity()).mostrarLoading(false);
+//                new AlertDialog.Builder(getActivity())
+//                        .setTitle("Atención")
+//                        .setMessage("Impresión no disponible")
+//                        .setPositiveButton("Aceptar", (dialog, which) -> {
+//                            cambiarFragmento(new SoatcAseguradoBuscarFragment());
+//                        }).show();
+//                //     btnConfirmar.setEnabled(true);
+//            }
         }
         else{
+            ((PrincipalActivity) requireActivity()).mostrarLoading(false);
             mostrarDialogo2(apiResponse.mensaje,()->{
                 efectivizarVenta();
             },()->{
+                //cambiarFragmento(new SoatcAseguradoBuscarFragment());
                 Toast.makeText(getContext(), "Operación cancelada", Toast.LENGTH_SHORT).show();
             });
         }
@@ -278,6 +331,7 @@ public class SoatcResumenFragment extends Fragment implements ImpresionManagerSo
                 .setPositiveButton("Sí", (dialog, which) -> {
                     if (impresionManager != null && respuestaEfectivizacion != null) {
                         impresionManager.imprimirColillaSoatc(respuestaEfectivizacion);
+                        ((PrincipalActivity) requireActivity()).mostrarLoading(false);
                     }
                 })
                 .setNegativeButton("No", (dialog, which) -> {
@@ -313,5 +367,99 @@ public class SoatcResumenFragment extends Fragment implements ImpresionManagerSo
         if (getActivity() != null) {
             getActivity().getSupportFragmentManager().popBackStack();
         }
+    }
+    private void cambiarFragmento(Fragment fragment) {
+
+        try {
+            if (getActivity() != null) {
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.contenedor_vistas, fragment);
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                transaction.commit();
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void iniciarImprimir() {
+
+        requireActivity().runOnUiThread(() -> {
+          //  contadorImprimir++;
+
+            new Thread(() -> {
+                try {
+                    imprimirFactura.imprimirFactura2();
+                } catch (ImpresoraErrorException e) {
+                    e.printStackTrace();
+                   // errorImp = true;
+                    mostrarMensaje("Error en la impresora.");
+                    //contadorImprimir = cantDocsImprimir;
+                } catch (NoHayPapelException e) {
+                    e.printStackTrace();
+                    //errorImp = true;
+                    mostrarMensaje("No hay papel para imprimir.");
+                    //contadorImprimir = cantDocsImprimir;
+                } catch (VoltageBajoException e) {
+                    e.printStackTrace();
+                    //errorImp = true;
+                    mostrarMensaje("Error de batería baja. No podrá imprimir con la batería baja.");
+                    //contadorImprimir = cantDocsImprimir;
+                } catch (ErrorPapelException e) {
+                    e.printStackTrace();
+                    //errorImp = true;
+                    mostrarMensaje("Error en la impresora");
+                    //contadorImprimir = cantDocsImprimir;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    ///errorImp = true;
+                    mostrarMensaje("Error al imprimir los datos. Si esto persiste, comuníquese con el encargado.");
+                  //  contadorImprimir = cantDocsImprimir;
+                }
+            }).start();
+        });
+
+    }
+    private void mostrarMensaje(final String mensaje) {
+        try {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Atención")
+                    .setMessage(mensaje)
+                    .setPositiveButton("Aceptar", (dialog, which) -> {
+                        dialog.dismiss();
+                    }).show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    @Override
+    public void terminoDeImprimir() {
+        requireActivity().runOnUiThread(() -> {
+            cambiarFragmento(new SoatcAseguradoBuscarFragment());
+            ((PrincipalActivity) requireActivity()).mostrarLoading(false);
+              //  preguntarAbrir();
+
+        });
+    }
+    private void preguntarAbrir() {
+        try {
+            Date fechaImpresion = Calendar.getInstance().getTime();
+            ControladorSqlite2 controlador = new ControladorSqlite2(getActivity());
+            com.emizor.univida.modelo.dominio.univida.seguridad.User user = controlador.obtenerUsuario();
+            controlador.cerrarConexion();
+
+            imprimirFactura.procesarColillaVentaSoatc(user, respuestaEfectivizacion, fechaImpresion);
+
+            DialogoEmizor dialogoEmizor = new DialogoEmizor();
+            dialogoEmizor.setTipoDialogo(7);
+            dialogoEmizor.setMensaje("Imprimir Colilla?");
+            dialogoEmizor.setCancelable(false);
+            dialogoEmizor.show(requireActivity().getSupportFragmentManager(), null);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
     }
 }

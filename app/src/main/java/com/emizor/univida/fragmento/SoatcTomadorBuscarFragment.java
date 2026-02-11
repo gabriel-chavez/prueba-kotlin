@@ -144,7 +144,7 @@ public class SoatcTomadorBuscarFragment extends Fragment {
                             new AlertDialog.Builder(requireContext())
                                     .setTitle("Confirmación")
                                     .setMessage(apiResponse.mensaje)
-                                    .setPositiveButton("Continuar", (dialog, which) -> {
+                                    .setPositiveButton("Registrar Tomador", (dialog, which) -> {
                                         CliObtenerDatosResponse cliObtenerDatos= new CliObtenerDatosResponse();
                                         cliObtenerDatos.PerTParCliDocumentoIdentidadTipoFk=tipoDocumento.Identificador;
                                         cliObtenerDatos.PerTParCliDocumentoIdentidadTipoDescripcion=tipoDocumento.Descripcion;

@@ -41,7 +41,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            />
 
         <!--<fragment
             android:id="@+id/fragmentDatosUsuario"
@@ -82,12 +83,12 @@
         android:visibility="gone" />
 
     <FrameLayout
-        android:id="@+id/loadingOverlay"
+        android:id="@+id/loadingOverlaynuevo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#80000000"
-        android:clickable="true"
-        android:focusable="true"
+        android:clickable="false"
+        android:focusable="false"
         android:visibility="gone">
 
         <LinearLayout

@@ -1,19 +1,17 @@
 package com.emizor.univida.modelo.dominio.univida.turnos;
 
 public class Punto {
-    private int id;
-    private String nombre;
+    private int secuencial;
+    private String descripcion;
 
-    public Punto(int id, String nombre) {
-        this.id = id;
-        this.nombre = nombre;
-    }
+    public Punto(){}
 
-    public int getId() { return id; }
-    public String getNombre() { return nombre; }
+
+    public int getId() { return secuencial; }
+    public String getNombre() { return descripcion; }
 
     @Override
     public String toString() {
-        return nombre;
+        return descripcion;
     }
 }

@@ -56,6 +56,16 @@ public class SoatcBeneficiariosFragment extends Fragment {
         btnAgregarBeneficiario = view.findViewById(R.id.btnAgregarBeneficiario);
         btnAtras = view.findViewById(R.id.btnAtras);
         btnSiguiente = view.findViewById(R.id.btnSiguiente);
+
+        if (getActivity() instanceof PrincipalActivity) {
+            PrincipalActivity principal = (PrincipalActivity) getActivity();
+
+            if (principal.datosBeneficiario != null) {
+                this.listaBeneficiarios = principal.datosBeneficiario;
+                cargarDatosBeneficiario();
+            }
+
+        }
         btnSiguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,6 +192,50 @@ public class SoatcBeneficiariosFragment extends Fragment {
 
         containerBeneficiarios.addView(itemView);
         checkListaVacia();
+    }
+    private void cargarDatosBeneficiario() {
+        if (listaBeneficiarios == null || listaBeneficiarios.isEmpty()) {
+            tvListaVacia.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        tvListaVacia.setVisibility(View.GONE);
+        containerBeneficiarios.removeAllViews();
+
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+
+        for (Beneficiario beneficiario : listaBeneficiarios) {
+            View itemView = inflater.inflate(R.layout.item_beneficiario_simple, containerBeneficiarios, false);
+
+            TextView tvNombre = itemView.findViewById(R.id.tvNombreCompleto);
+            TextView tvParentesco = itemView.findViewById(R.id.tvParentesco);
+            TextView tvPorcentaje = itemView.findViewById(R.id.tvPorcentaje);
+            Button btnEliminar = itemView.findViewById(R.id.btnEliminar);
+
+            // Obtener descripción del parentesco desde cache paramétricas
+            ParametricaGenerica parentesco = null;
+            if (ParametricasCache.getInstance().getParentesco() != null) {
+                for (ParametricaGenerica p : ParametricasCache.getInstance().getParentesco()) {
+                    if (p.Identificador == beneficiario.getParentesco()) {
+                        parentesco = p;
+                        break;
+                    }
+                }
+            }
+
+            tvNombre.setText(beneficiario.getNombre());
+            tvParentesco.setText(parentesco != null ? parentesco.Descripcion : "Sin definir");
+            tvPorcentaje.setText(beneficiario.getPorcentaje() + "%");
+
+            // Acción eliminar
+            btnEliminar.setOnClickListener(v -> {
+                containerBeneficiarios.removeView(itemView);
+                listaBeneficiarios.remove(beneficiario);
+                checkListaVacia();
+            });
+
+            containerBeneficiarios.addView(itemView);
+        }
     }
 
     private void checkListaVacia() {
