@@ -101,7 +101,7 @@ public class SoatcTomadorDatosFragment extends Fragment {
         etTipoDocumento = view.findViewById(R.id.etTipoDocumento);
         etDeptoDocumento = view.findViewById(R.id.etDeptoDocumento);
         // Inicializar Spinners
-        spinnerDeptoResidencia = view.findViewById(R.id.spinnerDeptoResidencia);
+       // spinnerDeptoResidencia = view.findViewById(R.id.spinnerDeptoResidencia);
         spinnerDeptoContratacion = view.findViewById(R.id.spinnerDeptoContratacion);
         spinnerSexo = view.findViewById(R.id.spinnerSexo);
         spinnerEstadoCivil = view.findViewById(R.id.spinnerEstadoCivil);

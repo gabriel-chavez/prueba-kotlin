@@ -1,10 +1,10 @@
 package com.emizor.univida.modelo.dominio.univida.soatc;
 
 public class DatosBusquedaAseguradoTomador {
-    public int TipoDocumentoIdentidad;
+    public Integer TipoDocumentoIdentidad;
     public String TipoDocumentoIdentidadDescripcion;
-    public int NumeroDocumentoIdentidad;
+    public Integer NumeroDocumentoIdentidad;
     public String Complemento;
-    public int DepartamentoDocumentoIdentidad;
+    public Integer DepartamentoDocumentoIdentidad;
     public String DepartamentoDocumentoIdentidadDescripcion;
 }

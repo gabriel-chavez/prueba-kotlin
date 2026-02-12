@@ -13,7 +13,8 @@ android {
             keyAlias 'unipax'
             keyPassword 'MRc(Y/Jfn8C*X@3n'
            // storeFile file('D:/Fuentes/vulcan/Aplicacion Android/unividapax.jks')
-            storeFile file('C:/Users/USUARIO/Documents/Proyectos/POS/unividapax.jks')
+            storeFile file('C:/Users/lchavez/StudioProjects/unividapax.jks')
+
             storePassword 'G/BP/wmBgUz9X+Y?'
         }
     }

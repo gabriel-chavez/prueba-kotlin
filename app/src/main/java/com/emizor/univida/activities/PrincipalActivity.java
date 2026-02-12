@@ -77,6 +77,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
     public DatosBusquedaAseguradoTomador datosBusquedaAsegurado;
     public CliObtenerDatosResponse datosTomador;
     public CliObtenerDatosResponse datosAsegurado;
+
     public List<Beneficiario> datosBeneficiario;
     public DatosFacturacion datosFacturacion;
 

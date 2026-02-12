@@ -56,6 +56,18 @@
             android:maxLength="10" />
 
     </LinearLayout>
+
+    <!-- Mensaje para resultados múltiples -->
+    <TextView
+        android:id="@+id/tvMensajeResultadosMultiples"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Se encontro más de un cliente con el mismo documento de identidad, por favor seleccione uno:"
+        android:textColor="@color/colorAccent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp"/>
+
     <!-- Lista de resultados -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvResultados"

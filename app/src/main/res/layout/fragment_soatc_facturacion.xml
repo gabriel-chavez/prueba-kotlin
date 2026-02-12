@@ -78,7 +78,7 @@
                 android:orientation="horizontal"
                 android:background="@drawable/bg_radio_option"
                 android:padding="8dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="8dp">
 
                 <EditText
                     android:id="@+id/etNumeroDocumento"

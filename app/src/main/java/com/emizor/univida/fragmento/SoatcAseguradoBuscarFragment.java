@@ -3,6 +3,8 @@ package com.emizor.univida.fragmento;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,15 +15,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.emizor.univida.R;
 import com.emizor.univida.activities.PrincipalActivity;
+import com.emizor.univida.adapter.AseguradoAdapter;
 import com.emizor.univida.databinding.ActivityPrincipalBinding;
 import com.emizor.univida.modelo.dominio.univida.ApiResponse;
 import com.emizor.univida.modelo.dominio.univida.parametricas.ParametricaGenerica;
+import com.emizor.univida.modelo.dominio.univida.soatc.CliObtenerDatosResponse;
 import com.emizor.univida.modelo.dominio.univida.soatc.CliValidarCoberturaAseguradoResponse;
 import com.emizor.univida.modelo.dominio.univida.soatc.ClientesObtenerDatosResponse;
 import com.emizor.univida.modelo.dominio.univida.soatc.DatosBusquedaAseguradoTomador;
@@ -35,6 +40,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,11 +52,10 @@ import java.util.Map;
  */
 public class SoatcAseguradoBuscarFragment extends Fragment {
 
-    private FormViewModel viewModel;
-//    private Spinner spinnerTipoDocumento;
-//    private Spinner spinnerDepartamento;
-//    private EditText etComplemento;
     private EditText etNumeroDocumento;
+    private RecyclerView rvResultados;
+    private TextView tvMensajeResultadosMultiples;
+    private AseguradoAdapter aseguradoAdapter;
 
     AlertDialog.Builder builder;
     public SoatcAseguradoBuscarFragment() {
@@ -77,10 +82,17 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root= inflater.inflate(R.layout.fragment_soatc_asegurado_buscar, container, false);
-//        spinnerTipoDocumento = root.findViewById(R.id.spinnerTipoDocumento);
-//        spinnerDepartamento = root.findViewById(R.id.spinnerDepartamento);
-//        etComplemento = root.findViewById(R.id.complemento);
         etNumeroDocumento = root.findViewById(R.id.numeroDocumento);
+        rvResultados = root.findViewById(R.id.rvResultados);
+        tvMensajeResultadosMultiples = root.findViewById(R.id.tvMensajeResultadosMultiples);
+
+        rvResultados.setLayoutManager(new LinearLayoutManager(getContext()));
+        aseguradoAdapter = new AseguradoAdapter(new ArrayList<>(), item -> {
+            // Acción al seleccionar un asegurado de la lista
+            item.EsNuevo=false;
+            procesarSeleccionAsegurado(item);
+        });
+        rvResultados.setAdapter(aseguradoAdapter);
 
 
         builder = new AlertDialog.Builder(getContext());
@@ -93,39 +105,54 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
                 buscarAsegurado();
             }
         });
-//        obtenerTiposDocumento();
-//        obtenerDepartamentos();
         return root;
     }
+
+    private void procesarSeleccionAsegurado(CliObtenerDatosResponse datosAsegurado) {
+
+
+        // Actualizar datos de búsqueda en PrincipalActivity para evitar NPE en el siguiente fragmento
+        DatosBusquedaAseguradoTomador dbat = new DatosBusquedaAseguradoTomador();
+        dbat.NumeroDocumentoIdentidad = datosAsegurado.PerDocumentoIdentidadNumero;
+        dbat.TipoDocumentoIdentidad = datosAsegurado.PerTParCliDocumentoIdentidadTipoFk;
+        dbat.TipoDocumentoIdentidadDescripcion = datosAsegurado.PerTParCliDocumentoIdentidadTipoDescripcion;
+        dbat.Complemento = datosAsegurado.PerDocumentoIdentidadExtension;
+        dbat.DepartamentoDocumentoIdentidad = datosAsegurado.PerTParGenDepartamentoFkDocumentoIdentidad;
+        dbat.DepartamentoDocumentoIdentidadDescripcion = datosAsegurado.PerTParGenDepartamentoDescripcionDocumentoIdentidad;
+        ((PrincipalActivity) getActivity()).datosBusquedaAsegurado = dbat;
+
+        validarCoberturaAsegurado(datosAsegurado, resultado -> {
+            if (resultado.exito) {
+                builder.setTitle("Atención")
+                        .setIcon(android.R.drawable.ic_dialog_info);
+                builder.setMessage("El cliente cuenta con cobertura de SOATC con los siguientes datos: " + resultado.datos.DatosAsegurado)
+                        .setCancelable(false)
+                        .setPositiveButton("Aceptar", null);
+                AlertDialog alert = builder.create();
+                alert.show();
+            } else {
+                // Navegar al siguiente paso con los datos del asegurado
+                ((PrincipalActivity)getActivity()).datosAsegurado = datosAsegurado;
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.contenedor_vistas, new SoatcAseguradoDatosFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+    }
+
     private void buscarAsegurado()
     {
         if(validarFormulario()){
-            // Obtener valores seleccionados
-        //    ParametricaGenerica tipoDocumento = (ParametricaGenerica) spinnerTipoDocumento.getSelectedItem();
-           // ParametricaGenerica departamento = (ParametricaGenerica) spinnerDepartamento.getSelectedItem();
 
             String numeroDocumento = etNumeroDocumento.getText().toString().trim();
-
 
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("per_t_par_cli_documento_identidad_tipo_fk", -1);
             parametros.put("per_documento_identidad_numero", numeroDocumento);
             parametros.put("per_documento_identidad_extension", "");
             parametros.put("per_t_par_gen_departamento_fk_documento_identidad", -1);
-            // Si el departamento es necesario agregarlo
-//            if (departamento != null) {
-//                parametros.put("t_par_geo_departamento_fk", departamento.Identificador);
-//            }
-
-
-//            DatosBusquedaAseguradoTomador datosBusquedaAsegurado = new DatosBusquedaAseguradoTomador();
-//            datosBusquedaAsegurado.NumeroDocumentoIdentidad=Integer.parseInt(numeroDocumento);
-//            datosBusquedaAsegurado.TipoDocumentoIdentidad=tipoDocumento.Identificador;
-//           // datosBusquedaAsegurado.Complemento=complemento;
-//            datosBusquedaAsegurado.DepartamentoDocumentoIdentidad=departamento.Identificador;
-//            datosBusquedaAsegurado.DepartamentoDocumentoIdentidadDescripcion=departamento.Descripcion;
-//            datosBusquedaAsegurado.TipoDocumentoIdentidadDescripcion=tipoDocumento.Descripcion;
-
 
             ApiService apiService = new ApiService(getContext());
             String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_CLIENTES_OBTENER_DATOS;
@@ -137,84 +164,43 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
                         public void onResponse(String response) {
                             ((PrincipalActivity) requireActivity()).mostrarLoading(false);
                             try {
-                                Type responseType = new TypeToken<ApiResponse<List<ClientesObtenerDatosResponse>>>() {}.getType();
-                                ApiResponse<List<ClientesObtenerDatosResponse>> apiResponse = new Gson().fromJson(response, responseType);
+                                Type responseType = new TypeToken<ApiResponse<List<CliObtenerDatosResponse>>>() {}.getType();
+                                ApiResponse<List<CliObtenerDatosResponse>> apiResponse = new Gson().fromJson(response, responseType);
                                 Log.i("obtenerdatos", "onResponse: "+response);
+
                                 if(apiResponse.exito){
+                                    rvResultados.setVisibility(View.GONE);
+                                    tvMensajeResultadosMultiples.setVisibility(View.GONE);
                                     if (apiResponse.datos != null && apiResponse.datos.size() == 1) {
-                                        ClientesObtenerDatosResponse datosAsegurado = apiResponse.datos.get(0);
-                                         datosAsegurado.setEsNuevo(false);
-                                            validarCoberturaAsegurado(datosAsegurado, resultado -> {
-                                                if (resultado.exito) {
-                                                    builder.setTitle("Atención")
-                                                        .setIcon(android.R.drawable.ic_dialog_info);
-                                                    builder.setMessage( "El cliente cuenta con cobertura de SOATC con los siguientes datos: "+resultado.datos.DatosAsegurado)
-                                                        .setCancelable(false)
-                                                        .setPositiveButton("Aceptar", null);
-                                                        AlertDialog alert = builder.create();
-                                                        alert.show();
-                                                        return;
-                                                } else {
-//                                                    mvFormulario.ActiveViewIndex = 1; // paso 2
-//                                                    CargarDatosPaso2();
-                                                }
-                                            });
+                                        CliObtenerDatosResponse cliente = apiResponse.datos.get(0);
+                                        cliente.EsNuevo = true;
+                                        procesarSeleccionAsegurado(cliente);
+                                    } else if (apiResponse.datos != null && apiResponse.datos.size() > 1) {
+                                        aseguradoAdapter.updateData(apiResponse.datos);
+                                        rvResultados.setVisibility(View.VISIBLE);
+                                        tvMensajeResultadosMultiples.setVisibility(View.VISIBLE);
                                     }
                                 }
                                 else{
-
-                                    //mostrar lista de asegurados
+                                    //mostrar lista de asegurados si vienen en datos aunque exito sea falso
+                                    if (apiResponse.mensaje.equals("La información del cliente no pudo ser obtenida.")) {
+                                        CliObtenerDatosResponse cliente = new CliObtenerDatosResponse();
+                                        cliente.EsNuevo = true;
+                                        cliente.PerDocumentoIdentidadNumero= Integer.parseInt(numeroDocumento);
+                                        procesarSeleccionAsegurado(cliente);
+                                    } else {
+                                        rvResultados.setVisibility(View.GONE);
+                                        tvMensajeResultadosMultiples.setVisibility(View.GONE);
+                                        // Manejar caso de no encontrado o error
+                                        builder.setTitle("Atención")
+                                                .setIcon(android.R.drawable.ic_dialog_info);
+                                        builder.setMessage(apiResponse.mensaje)
+                                                .setCancelable(false)
+                                                .setPositiveButton("Aceptar", null);
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    }
                                 }
-//                                if (!apiResponse.exito &&
-//                                        !"No existe SOATC vigente para el Número de Documento proporcionado."
-//                                                .equals(apiResponse.mensaje))
-//                                {
-//                                    builder.setTitle("Atención")
-//                                            .setIcon(android.R.drawable.ic_dialog_info);
-//                                    builder.setMessage(apiResponse.mensaje)
-//                                            .setCancelable(false)
-//                                            .setPositiveButton("Aceptar", null);
-//                                    AlertDialog alert = builder.create();
-//                                    alert.show();
-//                                    return;
-//                                }
-//                                if (!apiResponse.exito) {
-//
-//                                    new AlertDialog.Builder(requireContext())
-//                                            .setTitle("Confirmación")
-//                                            .setMessage(apiResponse.mensaje)
-//                                            .setPositiveButton("Venta nueva", (dialog, which) -> {
-//
-//                                                ((PrincipalActivity)getActivity()).datosBusquedaAsegurado=datosBusquedaAsegurado;
-//                                                ((PrincipalActivity)getActivity()).datosBeneficiario=null;
-//                                                ((PrincipalActivity)getActivity()).datosAsegurado=null;
-//                                                ((PrincipalActivity)getActivity()).datosTomador=null;
-//                                                ((PrincipalActivity)getActivity()).datosFacturacion=null;
-//
-//                                                getFragmentManager()
-//                                                        .beginTransaction()
-//                                                        .replace(R.id.contenedor_vistas, new SoatcTomadorDiferenteFragment())
-//                                                        .addToBackStack(null)
-//                                                        .commit();
-//                                            })
-//                                            .setNegativeButton("Cancelar", (dialog, which) -> {
-//                                                dialog.dismiss();
-//                                            })
-//                                            .show();
-//
-//                                } else {
-//                                    String mensaje = "El asegurado con documento de identidad "
-//                                            + apiResponse.datos.PerDocumentoIdentidadNumero + " " + apiResponse.datos.PerTParGenDepartamentoAbreviacionDocumentoIdentidad
-//                                            + " cuenta con cobertura vigente desde el "
-//                                            + apiResponse.datos.PolDetFechaVigenciaIniFormato + " hasta el "
-//                                            + apiResponse.datos.PolDetFechaVigenciaFinFormato + ".";
-//
-//                                    new AlertDialog.Builder(requireContext())
-//                                            .setTitle("Cobertura Vigente")
-//                                            .setMessage(mensaje)
-//                                            .setPositiveButton("Aceptar", (dialog, which) -> dialog.dismiss())
-//                                            .show();
-//                                }
                             } catch (Exception e) {
                                 Log.e("Asegurado",e.getMessage());
                                 Toast.makeText(getContext(), "Error al procesar respuesta", Toast.LENGTH_SHORT).show();
@@ -233,15 +219,15 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
     public interface CoberturaCallback {
         void onResultado(ApiResponse<CliValidarCoberturaAseguradoResponse> resultado);
     }
-    private void validarCoberturaAsegurado(ClientesObtenerDatosResponse cliente, CoberturaCallback callback) {
+    private void validarCoberturaAsegurado(CliObtenerDatosResponse cliente, CoberturaCallback callback) {
 
         ((PrincipalActivity) requireActivity()).mostrarLoading(true);
 
         Map<String, Object> parametros = new HashMap<>();
         parametros.put("t_poliza_detalle_fk", -1);
-        parametros.put("t_par_cli_documento_identidad_tipo_fk", cliente.getPerTParCliDocumentoIdentidadTipoFk());
-        parametros.put("documento_identidad_numero", cliente.getPerDocumentoIdentidadNumero());
-        parametros.put("documento_identidad_extension", cliente.getPerDocumentoIdentidadExtension());
+        parametros.put("t_par_cli_documento_identidad_tipo_fk", cliente.PerTParCliDocumentoIdentidadTipoFk);
+        parametros.put("documento_identidad_numero", cliente.PerDocumentoIdentidadNumero);
+        parametros.put("documento_identidad_extension", cliente.PerDocumentoIdentidadExtension);
 
         String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_CLIENTES_VALIDAR_COBERTURA_ASEGURADO;
         ApiResponse<CliValidarCoberturaAseguradoResponse> resultado = new ApiResponse<>();
@@ -254,14 +240,14 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
             try {
                 Type type = new TypeToken<ApiResponse<CliValidarCoberturaAseguradoResponse>>() {}.getType();
                 ApiResponse<CliValidarCoberturaAseguradoResponse> apiResp = new Gson().fromJson(response, type);
+                callback.onResultado(apiResp);
+
 
             } catch (Exception e) {
                 resultado.exito = false;
                 resultado.mensaje = "Error procesando respuesta del servidor.";
+                callback.onResultado(resultado);
             }
-
-            // devolver resultado al que llamó el método
-            callback.onResultado(resultado);
 
         }, error -> {
             ((PrincipalActivity) requireActivity()).mostrarLoading(false);
@@ -289,29 +275,5 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
 
         return true;
     }
-
-//    private void obtenerTiposDocumento() {
-//        List<ParametricaGenerica> tiposDocumento = ParametricasCache.getInstance().getDocumentosIdentidad();
-//        if (tiposDocumento != null && !tiposDocumento.isEmpty()) {
-//            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
-//                    getContext(), android.R.layout.simple_spinner_item, tiposDocumento);
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            spinnerTipoDocumento.setAdapter(adapter);
-//
-//        }
-//    }
-//    private void obtenerDepartamentos() {
-//
-//        List<ParametricaGenerica> departamentos = ParametricasCache.getInstance().getDepartamentos();
-//
-//        if (departamentos != null && !departamentos.isEmpty()) {
-//            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
-//                    getContext(), android.R.layout.simple_spinner_item, departamentos);
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            spinnerDepartamento.setAdapter(adapter);
-//        }
-//
-//
-//    }
 
 }

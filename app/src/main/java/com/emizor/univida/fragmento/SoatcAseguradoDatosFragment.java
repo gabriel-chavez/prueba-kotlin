@@ -46,34 +46,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SoatcAseguradoDatosFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SoatcAseguradoDatosFragment extends Fragment {
 
     private Button btnAtras, btnSiguiente;
-    // EditTexts
     private EditText etApellidoPaterno, etApellidoMaterno, etApellidoCasada;
-    private EditText etPrimerNombre, etSegundoNombre, etFechaNacimiento;
-    private EditText etNumeroDocumento, etExtensionDocumento, etCelular;
-    private EditText etEmail, etDireccion, etTipoDocumento, etDeptoDocumento;
-
-    // Spinners
-    private Spinner spinnerDeptoResidencia, spinnerDeptoContratacion;
+    private EditText etPrimerNombre, etSegundoNombre, etFechaNacimiento,etNumeroDocumento;
+    private EditText etExtensionDocumento, etCelular;
+    private EditText etEmail, etDireccion;
+    private Spinner spinnerDeptoResidencia,spinnerTipoDocumento,spinnerDeptoDocumento;
     private Spinner spinnerSexo, spinnerEstadoCivil, spinnerNacionalidad;
     private CliObtenerDatosResponse datosAsegurado;
     private String fechaNacimientoFormato;
-
     View view;
-    public SoatcAseguradoDatosFragment() {
-        // Required empty public constructor
-    }
+
+    public SoatcAseguradoDatosFragment() {}
 
     public static SoatcAseguradoDatosFragment newInstance(String param1, String param2) {
-        SoatcAseguradoDatosFragment fragment = new SoatcAseguradoDatosFragment();
-        return fragment;
+        return new SoatcAseguradoDatosFragment();
     }
 
     @Override
@@ -82,15 +71,18 @@ public class SoatcAseguradoDatosFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_soatc_asegurado_datos, container, false);
+        inicializarVistas();
+        configurarListeners();
+        cargarDatosParametricos();
+        cargarDatosIniciales();
+        return view;
+    }
+
+    private void inicializarVistas() {
         btnAtras = view.findViewById(R.id.btnAtras);
         btnSiguiente = view.findViewById(R.id.btnSiguiente);
-        // Inicializar EditTexts
         etApellidoPaterno = view.findViewById(R.id.etApellidoPaterno);
         etApellidoMaterno = view.findViewById(R.id.etApellidoMaterno);
         etApellidoCasada = view.findViewById(R.id.etApellidoCasada);
@@ -102,207 +94,167 @@ public class SoatcAseguradoDatosFragment extends Fragment {
         etCelular = view.findViewById(R.id.etCelular);
         etEmail = view.findViewById(R.id.etEmail);
         etDireccion = view.findViewById(R.id.etDireccion);
-        etTipoDocumento = view.findViewById(R.id.etTipoDocumento);
-        etDeptoDocumento = view.findViewById(R.id.etDeptoDocumento);
-        // Inicializar Spinners
+        spinnerTipoDocumento = view.findViewById(R.id.spinnerTipoDocumento);
+        spinnerDeptoDocumento = view.findViewById(R.id.spinnerDeptoDocumento);
         spinnerDeptoResidencia = view.findViewById(R.id.spinnerDeptoResidencia);
-        spinnerDeptoContratacion = view.findViewById(R.id.spinnerDeptoContratacion);
+
         spinnerSexo = view.findViewById(R.id.spinnerSexo);
         spinnerEstadoCivil = view.findViewById(R.id.spinnerEstadoCivil);
         spinnerNacionalidad = view.findViewById(R.id.spinnerNacionalidad);
+    }
 
-        etFechaNacimiento.setOnClickListener(v -> {
-
-            final Calendar calendar = Calendar.getInstance();
-
-            String fechaNacimiento = etFechaNacimiento.getText().toString();
-            if (!fechaNacimiento.isEmpty()) {
-                String[] partes = fechaNacimiento.split("/");
-                int day = Integer.parseInt(partes[0]);
-                int month = Integer.parseInt(partes[1]) - 1;
-                int year = Integer.parseInt(partes[2]);
-                calendar.set(year, month, day);
-            }
-
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                    (datePickerView, selectedYear, selectedMonth, selectedDay) -> {
-                        String fecha = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
-                        etFechaNacimiento.setText(fecha);
-
-                        fechaNacimientoFormato=String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
-                    }, year, month, day);
-
-            datePickerDialog.show();
-        });
-        btnSiguiente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validarFormulario()) {
-                    datosAsegurado = obtenerDatosAseguradoDesdeVista();
-                    ((PrincipalActivity)getActivity()).datosAsegurado = datosAsegurado;
-                    validarVendible();
-
-                }
+    private void configurarListeners() {
+        etFechaNacimiento.setOnClickListener(v -> mostrarSelectorFecha());
+        btnSiguiente.setOnClickListener(v -> {
+            if (validarFormulario()) {
+                datosAsegurado = obtenerDatosAseguradoDesdeVista();
+                ((PrincipalActivity) getActivity()).datosAsegurado = datosAsegurado;
+                validarVendible();
             }
         });
-        btnAtras.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
-        });
-        obtenerDepartamentos();
-        obtenerEstadoCivil();
-        obtenerGenero();
-        obtenerNacionalidad();
+        btnAtras.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+    }
 
-        //para mostrar los datos
+    private void cargarDatosIniciales() {
         if (getActivity() instanceof PrincipalActivity) {
             PrincipalActivity principal = (PrincipalActivity) getActivity();
-
             if (principal.datosAsegurado != null) {
                 this.datosAsegurado = principal.datosAsegurado;
-                cargarDatosAsegurado();
-            }else{
+                cargarDatosAseguradoEnVista();
+            } else {
                 buscarAsegurado();
             }
-
         }
-        return view;
     }
+
     private void buscarAsegurado() {
+        DatosBusquedaAseguradoTomador datosBusqueda = ((PrincipalActivity) getActivity()).datosBusquedaAsegurado;
+        if (datosBusqueda == null) return;
 
-        DatosBusquedaAseguradoTomador datosBusquedaAsegurado = ((PrincipalActivity) getActivity()).datosBusquedaAsegurado;
+        Map<String, Object> params = new HashMap<>();
+        params.put("per_t_par_cli_documento_identidad_tipo_fk", datosBusqueda.TipoDocumentoIdentidad);
+        params.put("per_documento_identidad_numero", datosBusqueda.NumeroDocumentoIdentidad);
+        params.put("per_documento_identidad_extension", datosBusqueda.Complemento);
+        params.put("per_t_par_gen_departamento_fk_documento_identidad", datosBusqueda.DepartamentoDocumentoIdentidad);
 
-        Map<String, Object> parametros = new HashMap<>();
-        parametros.put("per_t_par_cli_documento_identidad_tipo_fk", datosBusquedaAsegurado.TipoDocumentoIdentidad);
-        parametros.put("per_documento_identidad_numero", datosBusquedaAsegurado.NumeroDocumentoIdentidad);
-        parametros.put("per_documento_identidad_extension", datosBusquedaAsegurado.Complemento);
-        parametros.put("per_t_par_gen_departamento_fk_documento_identidad", datosBusquedaAsegurado.DepartamentoDocumentoIdentidad);
-        ApiService apiService = new ApiService(getContext());
-        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_CLIENTES_OBTENER_DATOS;
         ((PrincipalActivity) requireActivity()).mostrarLoading(true);
-
-        apiService.solicitudPost(url, parametros, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                ((PrincipalActivity) requireActivity()).mostrarLoading(false);
-                try {
-                    Type responseType = new TypeToken<ApiResponse<CliObtenerDatosResponse>>() {
-                    }.getType();
-                    ApiResponse<CliObtenerDatosResponse> apiResponse = null;
-
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                        apiResponse = parsearRespuesta(response);
-                    }
-
-                    if (!apiResponse.exito) {
-                        if(apiResponse.codigo_retorno==0){
-
-                            CliObtenerDatosResponse cliObtenerDatos= new CliObtenerDatosResponse();
-                            cliObtenerDatos.PerTParCliDocumentoIdentidadTipoFk=datosBusquedaAsegurado.TipoDocumentoIdentidad;
-                            cliObtenerDatos.PerTParCliDocumentoIdentidadTipoDescripcion=datosBusquedaAsegurado.TipoDocumentoIdentidadDescripcion;
-                            cliObtenerDatos.PerDocumentoIdentidadNumero=datosBusquedaAsegurado.NumeroDocumentoIdentidad;
-                            cliObtenerDatos.PerTParGenDepartamentoDescripcionDocumentoIdentidad=datosBusquedaAsegurado.DepartamentoDocumentoIdentidadDescripcion;
-                            cliObtenerDatos.PerTParGenDepartamentoFkDocumentoIdentidad=datosBusquedaAsegurado.DepartamentoDocumentoIdentidad;
-                            cliObtenerDatos.PerDocumentoIdentidadExtension=datosBusquedaAsegurado.Complemento;
-
-                            datosAsegurado=cliObtenerDatos;
-//                            new AlertDialog.Builder(requireContext())
-//                                    .setTitle("Atención")
-//                                    .setMessage(apiResponse.mensaje)
-//                                    .setPositiveButton("Continuar", (dialog, which) -> {
-//                                    }).show();
-                            cargarDatosAsegurado();
-                        }else{
-                            new AlertDialog.Builder(requireContext())
-                                    .setTitle("Atención")
-                                    .setMessage(apiResponse.mensaje)
-                                    .setPositiveButton("Aceptar", (dialog, which) -> {
-                                    }).show();
+        new ApiService(getContext()).solicitudPost(DatosConexion.URL_UNIVIDA_CLIENTES_OBTENER_DATOS, params,
+                response -> {
+                    ((PrincipalActivity) requireActivity()).mostrarLoading(false);
+                    try {
+                        ApiResponse<CliObtenerDatosResponse> apiResponse = parsearRespuesta(response);
+                        if (apiResponse.exito) {
+                            datosAsegurado = apiResponse.datos;
+                            datosAsegurado.EsNuevo = false;
+                            cargarDatosAseguradoEnVista();
+                        } else if (apiResponse.codigo_retorno == 0) {
+                            datosAsegurado = new CliObtenerDatosResponse();
+                            datosAsegurado.EsNuevo = true;
+                            cargarDatosDesdeBusqueda(datosBusqueda);
+                            cargarDatosAseguradoEnVista();
+                        } else {
+                            mostrarDialogo("Atención", apiResponse.mensaje);
                         }
-                    } else {
-                        datosAsegurado=apiResponse.datos;
-                        cargarDatosAsegurado();
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Error al procesar respuesta", Toast.LENGTH_SHORT).show();
                     }
-
-                } catch (Exception e) {
-
-                    Toast.makeText(getContext(), "Error al procesar respuesta", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                ((PrincipalActivity) requireActivity()).mostrarLoading(false);
-                Toast.makeText(getContext(), "Error de conexión", Toast.LENGTH_SHORT).show();
-            }
-        });
+                },
+                error -> {
+                    ((PrincipalActivity) requireActivity()).mostrarLoading(false);
+                    Toast.makeText(getContext(), "Error de conexión", Toast.LENGTH_SHORT).show();
+                });
     }
-    @RequiresApi(api = Build.VERSION_CODES.N)
+
+    private void cargarDatosDesdeBusqueda(DatosBusquedaAseguradoTomador datos) {
+        datosAsegurado.PerTParCliDocumentoIdentidadTipoFk = datos.TipoDocumentoIdentidad;
+        datosAsegurado.PerTParCliDocumentoIdentidadTipoDescripcion = datos.TipoDocumentoIdentidadDescripcion;
+        datosAsegurado.PerDocumentoIdentidadNumero = datos.NumeroDocumentoIdentidad;
+        datosAsegurado.PerTParGenDepartamentoDescripcionDocumentoIdentidad = datos.DepartamentoDocumentoIdentidadDescripcion;
+        datosAsegurado.PerTParGenDepartamentoFkDocumentoIdentidad = datos.DepartamentoDocumentoIdentidad;
+        datosAsegurado.PerDocumentoIdentidadExtension = datos.Complemento;
+    }
+
     private ApiResponse<CliObtenerDatosResponse> parsearRespuesta(String response) {
         Type responseType = new TypeToken<ApiResponse<CliObtenerDatosResponse>>() {}.getType();
-
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
                 .registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, typeOfT, context) -> {
-                    String dateStr = json.getAsString();
                     try {
-                        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(dateStr);
-                    } catch (ParseException e1) {
-                        try {
-                            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(dateStr);
-                        } catch (ParseException e2) {
-                            return null;
-                        }
+                        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).parse(json.getAsString());
+                    } catch (ParseException e) {
+                        return null;
                     }
-                })
-                .create();
-
+                }).create();
         return gson.fromJson(response, responseType);
     }
-    private void cargarDatosAsegurado(){
 
+    private void cargarDatosAseguradoEnVista() {
+        if (datosAsegurado == null) return;
 
-        TextView tvExtensionDocumento = view.findViewById(R.id.tvExtensionDocumento);
-        LinearLayout llExtensionDocumento = view.findViewById(R.id.llExtensionDocumento);
+        LinearLayout llDocumentoExistente = view.findViewById(R.id.llDocumentoExistente);
+        LinearLayout llDocumentoNuevo = view.findViewById(R.id.llDocumentoNuevo);
 
-        if (datosAsegurado.PerTParCliDocumentoIdentidadTipoFk == 7 ||
-                datosAsegurado.PerTParCliDocumentoIdentidadTipoFk == 4 ||
-                datosAsegurado.PerTParCliDocumentoIdentidadTipoFk == 2) {
-            tvExtensionDocumento.setVisibility(View.VISIBLE);
-            llExtensionDocumento.setVisibility(View.VISIBLE);
-            etExtensionDocumento.setEnabled(true);
-            etExtensionDocumento.setTextColor(getResources().getColor(android.R.color.black));
+        if (datosAsegurado.EsNuevo) {
+            llDocumentoExistente.setVisibility(View.GONE);
+            llDocumentoNuevo.setVisibility(View.VISIBLE);
+            TextView tvNumeroDocumentoGrande = view.findViewById(R.id.tvNumeroDocumentoGrande);
+            tvNumeroDocumentoGrande.setText(String.valueOf(datosAsegurado.PerDocumentoIdentidadNumero));
         } else {
-            tvExtensionDocumento.setVisibility(View.GONE);
-            llExtensionDocumento.setVisibility(View.GONE);
+            llDocumentoExistente.setVisibility(View.VISIBLE);
+            llDocumentoNuevo.setVisibility(View.GONE);
+            TextView tvDocumentoResumen = view.findViewById(R.id.tvDocumentoResumen);
+            TextView tvDeptoResumen = view.findViewById(R.id.tvDeptoResumen);
+            String docInfo = datosAsegurado.PerTParCliDocumentoIdentidadTipoAbreviacion + " - " + datosAsegurado.PerDocumentoIdentidadNumero;
+            tvDocumentoResumen.setText(docInfo);
+            tvDeptoResumen.setText(datosAsegurado.PerTParGenDepartamentoDescripcionDocumentoIdentidad);
         }
 
-        // EditTexts
+        // Setear valores en los campos
         etApellidoPaterno.setText(datosAsegurado.PerApellidoPaterno);
         etApellidoMaterno.setText(datosAsegurado.PerApellidoMaterno);
         etApellidoCasada.setText(datosAsegurado.PerApellidoCasada);
         etPrimerNombre.setText(datosAsegurado.PerNombrePrimero);
         etSegundoNombre.setText(datosAsegurado.PerNombreSegundo);
         etFechaNacimiento.setText(datosAsegurado.PerNacimientoFechaFormato);
-        etNumeroDocumento.setText(datosAsegurado.PerDocumentoIdentidadNumero != null ?
-                String.valueOf(datosAsegurado.PerDocumentoIdentidadNumero) : "");
+        etNumeroDocumento.setText(String.valueOf(datosAsegurado.PerDocumentoIdentidadNumero));
         etExtensionDocumento.setText(datosAsegurado.PerDocumentoIdentidadExtension);
         etCelular.setText(datosAsegurado.PerTelefonoMovil);
         etEmail.setText(datosAsegurado.PerCorreoElectronico);
         etDireccion.setText(datosAsegurado.PerDomicilioParticular);
-        etTipoDocumento.setText(datosAsegurado.PerTParCliDocumentoIdentidadTipoDescripcion);
-        etDeptoDocumento.setText(datosAsegurado.PerTParGenDepartamentoDescripcionDocumentoIdentidad);
 
-        // Spinners
+
+        setSpinnerValue(spinnerTipoDocumento, datosAsegurado.PerTParCliDocumentoIdentidadTipoDescripcion);
+        setSpinnerValue(spinnerDeptoDocumento, datosAsegurado.PerTParGenDepartamentoDescripcionDocumentoIdentidad);
         setSpinnerValue(spinnerDeptoResidencia, datosAsegurado.PerTParGenDepartamentoDescripcionNacimiento);
-        setSpinnerValue(spinnerDeptoContratacion, datosAsegurado.PerTParGenDepartamentoDescripcionNacimiento);
+
         setSpinnerValue(spinnerSexo, datosAsegurado.PerTParCliGeneroDescripcion);
         setSpinnerValue(spinnerEstadoCivil, datosAsegurado.PerTParCliEstadoCivilDescripcion);
         setSpinnerValue(spinnerNacionalidad, datosAsegurado.PerTParGenPaisDescripcionResidencia);
     }
+
+    // ... MÉTODOS DE VALIDACIÓN, SPINNERS Y DIÁLOGOS ...
+    private void mostrarSelectorFecha() {
+        final Calendar calendar = Calendar.getInstance();
+        if (!etFechaNacimiento.getText().toString().isEmpty()) {
+            try {
+                Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(etFechaNacimiento.getText().toString());
+                calendar.setTime(date);
+            } catch (ParseException e) { /* Ignorar error */ }
+        }
+        new DatePickerDialog(getContext(), (view, year, month, day) -> {
+            fechaNacimientoFormato = String.format(Locale.US, "%04d-%02d-%02d", year, month + 1, day);
+            etFechaNacimiento.setText(String.format(Locale.US, "%02d/%02d/%04d", day, month + 1, year));
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    private void cargarDatosParametricos() {
+        // Carga de spinners desde cache
+        obtenerDepartamentos();
+        obtenerEstadoCivil();
+        obtenerGenero();
+        obtenerNacionalidad();
+        obtenerDocumentosIdentidad();
+    }
+
     private void setSpinnerValue(Spinner spinner, String value) {
         if (spinner.getAdapter() == null || value == null) return;
         for (int i = 0; i < spinner.getAdapter().getCount(); i++) {
@@ -312,46 +264,50 @@ public class SoatcAseguradoDatosFragment extends Fragment {
             }
         }
     }
-    private void obtenerDepartamentos() {
-        List<ParametricaGenerica> departamentos = ParametricasCache.getInstance().getDepartamentos();
+    private void obtenerDocumentosIdentidad() {
+        List<ParametricaGenerica> documentosIdentidad = ParametricasCache.getInstance().getDocumentosIdentidad();
 
-        if (departamentos != null && !departamentos.isEmpty()) {
+        if (documentosIdentidad != null && !documentosIdentidad.isEmpty()) {
             ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
-                    getContext(), android.R.layout.simple_spinner_item, departamentos);
+                    getContext(), android.R.layout.simple_spinner_item, documentosIdentidad);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerTipoDocumento.setAdapter(adapter);
+
+        }
+    }
+    private void obtenerDepartamentos() {
+        List<ParametricaGenerica> data = ParametricasCache.getInstance().getDepartamentos();
+        if (data != null) {
+            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerDeptoResidencia.setAdapter(adapter);
-            spinnerDeptoContratacion.setAdapter(adapter);
+
+            spinnerDeptoDocumento.setAdapter(adapter);
         }
     }
 
     private void obtenerEstadoCivil() {
-        List<ParametricaGenerica> estadoCivil = ParametricasCache.getInstance().getEstadoCivil();
-
-        if (estadoCivil != null && !estadoCivil.isEmpty()) {
-            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
-                    getContext(), android.R.layout.simple_spinner_item, estadoCivil);
+        List<ParametricaGenerica> data = ParametricasCache.getInstance().getEstadoCivil();
+        if (data != null) {
+            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerEstadoCivil.setAdapter(adapter);
         }
     }
 
     private void obtenerGenero() {
-        List<ParametricaGenerica> genero = ParametricasCache.getInstance().getGenero();
-
-        if (genero != null && !genero.isEmpty()) {
-            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
-                    getContext(), android.R.layout.simple_spinner_item, genero);
+        List<ParametricaGenerica> data = ParametricasCache.getInstance().getGenero();
+        if (data != null) {
+            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerSexo.setAdapter(adapter);
         }
     }
 
     private void obtenerNacionalidad() {
-        List<ParametricaGenerica> nacionalidad = ParametricasCache.getInstance().getNacionalidad();
-
-        if (nacionalidad != null && !nacionalidad.isEmpty()) {
-            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
-                    getContext(), android.R.layout.simple_spinner_item, nacionalidad);
+        List<ParametricaGenerica> data = ParametricasCache.getInstance().getNacionalidad();
+        if (data != null) {
+            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerNacionalidad.setAdapter(adapter);
         }
@@ -394,45 +350,54 @@ public class SoatcAseguradoDatosFragment extends Fragment {
 
         return valido;
     }
+
     private CliObtenerDatosResponse obtenerDatosAseguradoDesdeVista() {
         CliObtenerDatosResponse datos = new CliObtenerDatosResponse();
-        DatosBusquedaAseguradoTomador datosBusquedaAsegurado = ((PrincipalActivity) getActivity()).datosBusquedaAsegurado;
+       // DatosBusquedaAseguradoTomador dbat = ((PrincipalActivity) getActivity()).datosBusquedaAsegurado;
 
-        // De busqueda
-        datos.PerTParCliDocumentoIdentidadTipoFk = datosBusquedaAsegurado.TipoDocumentoIdentidad;
-        datos.PerTParCliDocumentoIdentidadTipoDescripcion = datosBusquedaAsegurado.TipoDocumentoIdentidadDescripcion;
-        datos.PerDocumentoIdentidadNumero = datosBusquedaAsegurado.NumeroDocumentoIdentidad;
-        datos.PerTParGenDepartamentoDescripcionDocumentoIdentidad = datosBusquedaAsegurado.DepartamentoDocumentoIdentidadDescripcion;
-        datos.PerTParGenDepartamentoFkDocumentoIdentidad = datosBusquedaAsegurado.DepartamentoDocumentoIdentidad;
-        datos.PerDocumentoIdentidadExtension = datosBusquedaAsegurado.Complemento;
-
-        // EditTexts
+        datos.PerDocumentoIdentidadNumero = parseInteger(etNumeroDocumento.getText().toString());
+        datos.PerDocumentoIdentidadExtension = getStringOrNull(etExtensionDocumento);
         datos.PerApellidoPaterno = getStringOrNull(etApellidoPaterno);
         datos.PerApellidoMaterno = getStringOrNull(etApellidoMaterno);
         datos.PerApellidoCasada = getStringOrNull(etApellidoCasada);
         datos.PerNombrePrimero = getStringOrNull(etPrimerNombre);
         datos.PerNombreSegundo = getStringOrNull(etSegundoNombre);
         datos.PerNacimientoFecha = fechaNacimientoFormato;
-        datos.PerDocumentoIdentidadNumero = parseInteger(etNumeroDocumento.getText().toString());
-        datos.PerDocumentoIdentidadExtension = getStringOrNull(etExtensionDocumento);
         datos.PerTelefonoMovil = getStringOrNull(etCelular);
         datos.PerCorreoElectronico = getStringOrNull(etEmail);
         datos.PerDomicilioParticular = getStringOrNull(etDireccion);
-        datos.PerTParCliDocumentoIdentidadTipoDescripcion = getStringOrNull(etTipoDocumento);
-
         // Spinners
-        datos.PerTParGenDepartamentoFkNacimiento = getSpinnerId(spinnerDeptoResidencia);
-        datos.PerTParGenDepartamentoFkDocumentoIdentidad = getSpinnerId(spinnerDeptoContratacion);
+        datos.PerTParCliDocumentoIdentidadTipoFk = getSpinnerId(spinnerTipoDocumento);
+        datos.PerTParGenDepartamentoFkDocumentoIdentidad = getSpinnerId(spinnerDeptoDocumento);
+       //RESIDENCIA ES PARA LA POLIZA
+       // datos.PerTParGenDe = getSpinnerId(spinnerDeptoResidencia);
         datos.PerTParCliGeneroFk = getSpinnerId(spinnerSexo);
         datos.PerTParCliEstadoCivilFk = getSpinnerId(spinnerEstadoCivil);
         datos.PerTParGenPaisFkNacionalidad = getSpinnerId(spinnerNacionalidad);
-
+        datos.PerTParGenDepartamentoFkVenta=getSpinnerId(spinnerDeptoResidencia);
+//        if (dbat != null) {
+//            datos.PerTParCliDocumentoIdentidadTipoFk = dbat.TipoDocumentoIdentidad;
+//            datos.PerTParCliDocumentoIdentidadTipoDescripcion = dbat.TipoDocumentoIdentidadDescripcion;
+//            datos.PerDocumentoIdentidadNumero = dbat.NumeroDocumentoIdentidad;
+//            datos.PerTParGenDepartamentoDescripcionDocumentoIdentidad = dbat.DepartamentoDocumentoIdentidadDescripcion;
+//            datos.PerTParGenDepartamentoFkDocumentoIdentidad = dbat.DepartamentoDocumentoIdentidad;
+//            datos.PerDocumentoIdentidadExtension = dbat.Complemento;
+//        } else if (this.datosAsegurado != null) {
+//            datos.PerTParCliDocumentoIdentidadTipoFk = this.datosAsegurado.PerTParCliDocumentoIdentidadTipoFk;
+//            //... copiar los demás campos
+//        }
+//
+//        datos.PerApellidoPaterno = etApellidoPaterno.getText().toString();
+//        //... obtener el resto de datos de la UI
         return datos;
     }
-    private String getStringOrNull(EditText editText) {
-        return editText.getText().toString().isEmpty() ? null : editText.getText().toString();
+    private Integer getSpinnerId(Spinner spinner) {
+        ParametricaGenerica parametrica = (ParametricaGenerica) spinner.getSelectedItem();
+        if (spinner.getSelectedItem() instanceof ParametricaGenerica) {
+            return parametrica.Identificador;
+        }
+        return null;
     }
-
     private Integer parseInteger(String valor) {
         try {
             return valor != null && !valor.isEmpty() ? Integer.parseInt(valor) : null;
@@ -440,13 +405,8 @@ public class SoatcAseguradoDatosFragment extends Fragment {
             return null;
         }
     }
-
-    private Integer getSpinnerId(Spinner spinner) {
-        ParametricaGenerica parametrica = (ParametricaGenerica) spinner.getSelectedItem();
-        if (spinner.getSelectedItem() instanceof ParametricaGenerica) {
-            return parametrica.Identificador;
-        }
-        return null;
+    private String getStringOrNull(EditText editText) {
+        return editText.getText().toString().isEmpty() ? null : editText.getText().toString();
     }
     private void validarVendible() {
         CliObtenerDatosResponse datosAsegurado = ((PrincipalActivity) getActivity()).datosAsegurado;
@@ -466,24 +426,29 @@ public class SoatcAseguradoDatosFragment extends Fragment {
         ((PrincipalActivity) requireActivity()).mostrarLoading(true);
         apiService.solicitudPost(url, request, response -> {
             ((PrincipalActivity) requireActivity()).mostrarLoading(false);
-            Type responseType = new TypeToken<ApiResponse<Object>>() {}.getType();
-            ApiResponse<Object> apiResponse = new Gson().fromJson(response, responseType);
-            if (apiResponse.exito) {
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.contenedor_vistas, new SoatcBeneficiariosFragment())
-                        .addToBackStack(null)
-                        .commit();
-            } else {
-                mostrarDialogo(apiResponse.mensaje);
+            try {
+                Type responseType = new TypeToken<ApiResponse<Object>>() {}.getType();
+                ApiResponse<Object> apiResponse = new Gson().fromJson(response, responseType);
+                if (apiResponse.exito) {
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.contenedor_vistas, new SoatcBeneficiariosFragment())
+                            .addToBackStack(null)
+                            .commit();
+                } else {
+                    mostrarDialogo("Validación", apiResponse.mensaje);
+                }
+            } catch (Exception e) {
+                mostrarDialogo("Error", "Error al validar vendible");
             }
         }, error -> {
             ((PrincipalActivity) requireActivity()).mostrarLoading(false);
-            // Manejo de error de conexión
+            mostrarDialogo("Error", "Error de conexión al validar vendible");
         });
     }
-    private void mostrarDialogo(String mensaje) {
-        new android.app.AlertDialog.Builder(getContext())
-                .setTitle("Validación")
+
+    private void mostrarDialogo(String titulo, String mensaje) {
+        new AlertDialog.Builder(getContext())
+                .setTitle(titulo)
                 .setMessage(mensaje)
                 .setPositiveButton("OK", null)
                 .show();

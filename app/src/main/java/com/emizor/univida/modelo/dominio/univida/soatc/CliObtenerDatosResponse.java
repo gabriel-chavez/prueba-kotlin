@@ -3,7 +3,8 @@ package com.emizor.univida.modelo.dominio.univida.soatc;
 import java.util.Date;
 
 public class CliObtenerDatosResponse  {
-
+    public Integer PerTParGenDepartamentoFkVenta;
+    public boolean EsNuevo;
     // Datos principales del cliente
     public String PerApellidoCasada;
     public String PerApellidoMaterno;
