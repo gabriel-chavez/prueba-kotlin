@@ -19,6 +19,7 @@ import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.ObtenerRcvR
 import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.RcvListarVentaRespUnivida;
 import com.emizor.univida.modelo.dominio.univida.seguridad.User;
 import com.emizor.univida.modelo.dominio.univida.soatc.EmiPolizaObtenerResponse;
+import com.emizor.univida.modelo.dominio.univida.soatc.ListarRccResponse;
 import com.emizor.univida.modelo.dominio.univida.ventas.Datos;
 import com.emizor.univida.modelo.dominio.univida.ventas.Detalle;
 import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.EfectivizarRcvUnivida;
@@ -444,7 +445,7 @@ public class ImprimirFactura {
         notify();
 
     }
-
+    public void prepararImpresionRcc(User user, ListarRccResponse rccResponse) {}
     public void prepararImpresionRcv(User user, EfectivizarRcvUnivida efectivizarRcvUnivida, String secuencial, RcvListarVentaRespUnivida rcvListarVentaRespUnivida) {
         prepararImpresionRcvNormal(user,efectivizarRcvUnivida, secuencial, rcvListarVentaRespUnivida);
 //        LogUtils.i(TAG, "PREPARAMOS FACTURA");

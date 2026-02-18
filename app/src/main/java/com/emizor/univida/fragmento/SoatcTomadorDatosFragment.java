@@ -1,9 +1,11 @@
 package com.emizor.univida.fragmento;
 
 import android.app.DatePickerDialog;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +15,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.emizor.univida.R;
 import com.emizor.univida.activities.PrincipalActivity;
 import com.emizor.univida.modelo.dominio.univida.ApiResponse;
@@ -29,12 +30,17 @@ import com.emizor.univida.rest.ApiService;
 import com.emizor.univida.rest.DatosConexion;
 import com.emizor.univida.utils.ParametricasCache;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -44,18 +50,15 @@ import java.util.Map;
  */
 public class SoatcTomadorDatosFragment extends Fragment {
     private Button btnAtras, btnSiguiente;
-    // EditTexts
     private EditText etApellidoPaterno, etApellidoMaterno, etApellidoCasada;
-    private EditText etPrimerNombre, etSegundoNombre, etFechaNacimiento;
-    private EditText etNumeroDocumento, etExtensionDocumento, etCelular;
-    private EditText etEmail, etDireccion, etTipoDocumento, etDeptoDocumento;
-
-    // Spinners
-    private Spinner spinnerDeptoResidencia, spinnerDeptoContratacion;
+    private EditText etPrimerNombre, etSegundoNombre, etFechaNacimiento,etNumeroDocumento;
+    private EditText etExtensionDocumento, etCelular;
+    private EditText etEmail, etDireccion;
+    private Spinner spinnerTipoDocumento,spinnerDeptoDocumento;
     private Spinner spinnerSexo, spinnerEstadoCivil, spinnerNacionalidad;
     private CliObtenerDatosResponse datosTomador;
     private String fechaNacimientoFormato;
-
+    View view;
 
     public SoatcTomadorDatosFragment() {
         // Required empty public constructor
@@ -81,12 +84,16 @@ public class SoatcTomadorDatosFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.fragment_soatc_tomador_datos, container, false);
-        datosTomador = ((PrincipalActivity) getActivity()).datosTomador;
-
+        view = inflater.inflate(R.layout.fragment_soatc_tomador_datos, container, false);
+        inicializarVistas();
+        configurarListeners();
+        cargarDatosParametricos();
+        cargarDatosIniciales();
+        return view;
+    }
+    private void inicializarVistas() {
         btnAtras = view.findViewById(R.id.btnAtras);
         btnSiguiente = view.findViewById(R.id.btnSiguiente);
-        // Inicializar EditTexts
         etApellidoPaterno = view.findViewById(R.id.etApellidoPaterno);
         etApellidoMaterno = view.findViewById(R.id.etApellidoMaterno);
         etApellidoCasada = view.findViewById(R.id.etApellidoCasada);
@@ -98,109 +105,169 @@ public class SoatcTomadorDatosFragment extends Fragment {
         etCelular = view.findViewById(R.id.etCelular);
         etEmail = view.findViewById(R.id.etEmail);
         etDireccion = view.findViewById(R.id.etDireccion);
-        etTipoDocumento = view.findViewById(R.id.etTipoDocumento);
-        etDeptoDocumento = view.findViewById(R.id.etDeptoDocumento);
-        // Inicializar Spinners
-       // spinnerDeptoResidencia = view.findViewById(R.id.spinnerDeptoResidencia);
-        spinnerDeptoContratacion = view.findViewById(R.id.spinnerDeptoContratacion);
+        spinnerTipoDocumento = view.findViewById(R.id.spinnerTipoDocumento);
+        spinnerDeptoDocumento = view.findViewById(R.id.spinnerDeptoDocumento);
+        //spinnerDeptoResidencia = view.findViewById(R.id.spinnerDeptoResidencia);
+
         spinnerSexo = view.findViewById(R.id.spinnerSexo);
         spinnerEstadoCivil = view.findViewById(R.id.spinnerEstadoCivil);
         spinnerNacionalidad = view.findViewById(R.id.spinnerNacionalidad);
-
-        // Mostrar o ocultar extensión/complemento según tipo de documento
-        TextView tvExtensionDocumento = view.findViewById(R.id.tvExtensionDocumento);
-        LinearLayout llExtensionDocumento = view.findViewById(R.id.llExtensionDocumento);
-
-        if (datosTomador.PerTParCliDocumentoIdentidadTipoFk == 7 ||
-                datosTomador.PerTParCliDocumentoIdentidadTipoFk == 4 ||
-                datosTomador.PerTParCliDocumentoIdentidadTipoFk == 2) {
-            tvExtensionDocumento.setVisibility(View.VISIBLE);
-            llExtensionDocumento.setVisibility(View.VISIBLE);
-            etExtensionDocumento.setEnabled(true);
-            etExtensionDocumento.setTextColor(getResources().getColor(android.R.color.black));
-        } else {
-            tvExtensionDocumento.setVisibility(View.GONE);
-            llExtensionDocumento.setVisibility(View.GONE);
-        }
-        etFechaNacimiento.setOnClickListener(v -> {
-
-            final Calendar calendar = Calendar.getInstance();
-
-            String fechaNacimiento = etFechaNacimiento.getText().toString();
-            if (!fechaNacimiento.isEmpty()) {
-                String[] partes = fechaNacimiento.split("/");
-                int day = Integer.parseInt(partes[0]);
-                int month = Integer.parseInt(partes[1]) - 1;
-                int year = Integer.parseInt(partes[2]);
-                calendar.set(year, month, day);
-            }
-
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                    (datePickerView, selectedYear, selectedMonth, selectedDay) -> {
-                        String fecha = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
-                        etFechaNacimiento.setText(fecha);
-                        fechaNacimientoFormato=String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
-                    }, year, month, day);
-            datePickerDialog.show();
-        });
-        obtenerDepartamentos();
-        obtenerEstadoCivil();
-        obtenerGenero();
-        obtenerNacionalidad();
-        if (datosTomador != null) {
-            cargarDatosTomador();
-        }
-        btnAtras.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
-        });
+    }
+    private void configurarListeners() {
+        etFechaNacimiento.setOnClickListener(v -> mostrarSelectorFecha());
         btnSiguiente.setOnClickListener(v -> {
             if (validarFormulario()) {
+                datosTomador = obtenerDatosTomadorDesdeVista();
+                ((PrincipalActivity) getActivity()).datosTomador = datosTomador;
                 validarVendible();
             }
         });
+        btnAtras.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+    }
+    private void cargarDatosIniciales() {
+        if (getActivity() instanceof PrincipalActivity) {
+            PrincipalActivity principal = (PrincipalActivity) getActivity();
+            if (principal.datosTomador != null) {
+                this.datosTomador = principal.datosTomador;
+                cargarDatosTomadorEnVista();
+            } else {
+                buscarTomador();
+            }
+        }
+    }
+    private void buscarTomador() {
+        DatosBusquedaAseguradoTomador datosBusqueda = ((PrincipalActivity) getActivity()).datosBusquedaAseguradoTomador;
+        if (datosBusqueda == null) return;
 
-//        //para mostrar los datos
-//        if (getActivity() instanceof PrincipalActivity) {
-//            PrincipalActivity principal = (PrincipalActivity) getActivity();
-//
-//            if (principal.datosAsegurado != null) {
-//                this.datosTomador = principal.datosTomador;
-//                cargarDatosTomador();
-//            }else{
-//                buscarTomador();
-//            }
-//
-//        }
-        return view;
+        Map<String, Object> params = new HashMap<>();
+        params.put("per_t_par_cli_documento_identidad_tipo_fk", datosBusqueda.TipoDocumentoIdentidad);
+        params.put("per_documento_identidad_numero", datosBusqueda.NumeroDocumentoIdentidad);
+        params.put("per_documento_identidad_extension", datosBusqueda.Complemento);
+        params.put("per_t_par_gen_departamento_fk_documento_identidad", datosBusqueda.DepartamentoDocumentoIdentidad);
+
+        ((PrincipalActivity) requireActivity()).mostrarLoading(true);
+        new ApiService(getContext()).solicitudPost(DatosConexion.URL_UNIVIDA_CLIENTES_OBTENER_DATOS, params,
+                response -> {
+                    ((PrincipalActivity) requireActivity()).mostrarLoading(false);
+                    try {
+                        ApiResponse<CliObtenerDatosResponse> apiResponse = parsearRespuesta(response);
+                        if (apiResponse.exito) {
+                            datosTomador = apiResponse.datos;
+                            datosTomador.EsNuevo = false;
+                            cargarDatosTomadorEnVista();
+                        } else if (apiResponse.codigo_retorno == 0) {
+                            datosTomador = new CliObtenerDatosResponse();
+                            datosTomador.EsNuevo = true;
+                            cargarDatosDesdeBusqueda(datosBusqueda);
+                            cargarDatosTomadorEnVista();
+                        } else {
+                            mostrarDialogo("Atención", apiResponse.mensaje);
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Error al procesar respuesta", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> {
+                    ((PrincipalActivity) requireActivity()).mostrarLoading(false);
+                    Toast.makeText(getContext(), "Error de conexión", Toast.LENGTH_SHORT).show();
+                });
+    }
+    private void cargarDatosDesdeBusqueda(DatosBusquedaAseguradoTomador datos) {
+        datosTomador.PerTParCliDocumentoIdentidadTipoFk = datos.TipoDocumentoIdentidad;
+        datosTomador.PerTParCliDocumentoIdentidadTipoDescripcion = datos.TipoDocumentoIdentidadDescripcion;
+        datosTomador.PerDocumentoIdentidadNumero = datos.NumeroDocumentoIdentidad;
+        datosTomador.PerTParGenDepartamentoDescripcionDocumentoIdentidad = datos.DepartamentoDocumentoIdentidadDescripcion;
+        datosTomador.PerTParGenDepartamentoFkDocumentoIdentidad = datos.DepartamentoDocumentoIdentidad;
+        datosTomador.PerDocumentoIdentidadExtension = datos.Complemento;
     }
 
-    private void cargarDatosTomador() {
-        // EditTexts
+    private ApiResponse<CliObtenerDatosResponse> parsearRespuesta(String response) {
+        Type responseType = new TypeToken<ApiResponse<CliObtenerDatosResponse>>() {}.getType();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, typeOfT, context) -> {
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).parse(json.getAsString());
+                        }
+                    } catch (ParseException e) {
+                        return null;
+                    }
+                    return null;
+                }).create();
+        return gson.fromJson(response, responseType);
+    }
+
+    private void cargarDatosTomadorEnVista() {
+        if (datosTomador == null) return;
+
+        LinearLayout llDocumentoExistente = view.findViewById(R.id.llDocumentoExistente);
+        LinearLayout llDocumentoNuevo = view.findViewById(R.id.llDocumentoNuevo);
+
+        if (datosTomador.EsNuevo) {
+            llDocumentoExistente.setVisibility(View.GONE);
+            llDocumentoNuevo.setVisibility(View.VISIBLE);
+            TextView tvNumeroDocumentoGrande = view.findViewById(R.id.tvNumeroDocumentoGrande);
+            tvNumeroDocumentoGrande.setText(String.valueOf(datosTomador.PerDocumentoIdentidadNumero));
+        } else {
+            llDocumentoExistente.setVisibility(View.VISIBLE);
+            llDocumentoNuevo.setVisibility(View.GONE);
+            TextView tvDocumentoResumen = view.findViewById(R.id.tvDocumentoResumen);
+            TextView tvDeptoResumen = view.findViewById(R.id.tvDeptoResumen);
+            String docInfo = datosTomador.PerTParCliDocumentoIdentidadTipoAbreviacion + " - " + datosTomador.PerDocumentoIdentidadNumero;
+            tvDocumentoResumen.setText(docInfo);
+            tvDeptoResumen.setText(datosTomador.PerTParGenDepartamentoDescripcionDocumentoIdentidad);
+        }
+
+        // Setear valores en los campos
         etApellidoPaterno.setText(datosTomador.PerApellidoPaterno);
         etApellidoMaterno.setText(datosTomador.PerApellidoMaterno);
         etApellidoCasada.setText(datosTomador.PerApellidoCasada);
         etPrimerNombre.setText(datosTomador.PerNombrePrimero);
         etSegundoNombre.setText(datosTomador.PerNombreSegundo);
         etFechaNacimiento.setText(datosTomador.PerNacimientoFechaFormato);
-        etNumeroDocumento.setText(datosTomador.PerDocumentoIdentidadNumero != null ?
-                String.valueOf(datosTomador.PerDocumentoIdentidadNumero) : "");
+        etNumeroDocumento.setText(String.valueOf(datosTomador.PerDocumentoIdentidadNumero));
         etExtensionDocumento.setText(datosTomador.PerDocumentoIdentidadExtension);
         etCelular.setText(datosTomador.PerTelefonoMovil);
         etEmail.setText(datosTomador.PerCorreoElectronico);
         etDireccion.setText(datosTomador.PerDomicilioParticular);
-        etTipoDocumento.setText(datosTomador.PerTParCliDocumentoIdentidadTipoDescripcion);
-        etDeptoDocumento.setText(datosTomador.PerTParGenDepartamentoDescripcionDocumentoIdentidad);
 
-        // Spinners
-        setSpinnerValue(spinnerDeptoResidencia, datosTomador.PerTParGenDepartamentoDescripcionNacimiento);
-        setSpinnerValue(spinnerDeptoContratacion, datosTomador.PerTParGenDepartamentoDescripcionNacimiento);
+        // Pre-cargar fecha en formato API si ya existe
+        if (datosTomador.PerNacimientoFecha != null && !datosTomador.PerNacimientoFecha.isEmpty()) {
+            fechaNacimientoFormato = datosTomador.PerNacimientoFecha;
+        }
+
+        setSpinnerValue(spinnerTipoDocumento, datosTomador.PerTParCliDocumentoIdentidadTipoDescripcion);
+        setSpinnerValue(spinnerDeptoDocumento, datosTomador.PerTParGenDepartamentoDescripcionDocumentoIdentidad);
+       // setSpinnerValue(spinnerDeptoResidencia, datosTomador.PerTParGenDepartamentoDescripcionNacimiento);
+
         setSpinnerValue(spinnerSexo, datosTomador.PerTParCliGeneroDescripcion);
         setSpinnerValue(spinnerEstadoCivil, datosTomador.PerTParCliEstadoCivilDescripcion);
         setSpinnerValue(spinnerNacionalidad, datosTomador.PerTParGenPaisDescripcionResidencia);
+    }
+
+    private void mostrarSelectorFecha() {
+        final Calendar calendar = Calendar.getInstance();
+        if (!etFechaNacimiento.getText().toString().isEmpty()) {
+            try {
+                Date date = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(etFechaNacimiento.getText().toString());
+                }
+                calendar.setTime(date);
+            } catch (ParseException e) { /* Ignorar error */ }
+        }
+        new DatePickerDialog(getContext(), (view, year, month, day) -> {
+            fechaNacimientoFormato = String.format(Locale.US, "%04d-%02d-%02d", year, month + 1, day);
+            etFechaNacimiento.setText(String.format(Locale.US, "%02d/%02d/%04d", day, month + 1, year));
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    private void cargarDatosParametricos() {
+        obtenerDepartamentos();
+        obtenerEstadoCivil();
+        obtenerGenero();
+        obtenerNacionalidad();
+        obtenerDocumentosIdentidad();
     }
 
     private void setSpinnerValue(Spinner spinner, String value) {
@@ -212,48 +279,50 @@ public class SoatcTomadorDatosFragment extends Fragment {
             }
         }
     }
+    private void obtenerDocumentosIdentidad() {
+        List<ParametricaGenerica> documentosIdentidad = ParametricasCache.getInstance().getDocumentosIdentidad();
 
-
-    private void obtenerDepartamentos() {
-        List<ParametricaGenerica> departamentos = ParametricasCache.getInstance().getDepartamentos();
-
-        if (departamentos != null && !departamentos.isEmpty()) {
+        if (documentosIdentidad != null && !documentosIdentidad.isEmpty()) {
             ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
-                    getContext(), android.R.layout.simple_spinner_item, departamentos);
+                    getContext(), android.R.layout.simple_spinner_item, documentosIdentidad);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerDeptoResidencia.setAdapter(adapter);
-            spinnerDeptoContratacion.setAdapter(adapter);
+            spinnerTipoDocumento.setAdapter(adapter);
+
+        }
+    }
+    private void obtenerDepartamentos() {
+        List<ParametricaGenerica> data = ParametricasCache.getInstance().getDepartamentos();
+        if (data != null) {
+            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            //spinnerDeptoResidencia.setAdapter(adapter);
+
+            spinnerDeptoDocumento.setAdapter(adapter);
         }
     }
 
     private void obtenerEstadoCivil() {
-        List<ParametricaGenerica> estadoCivil = ParametricasCache.getInstance().getEstadoCivil();
-
-        if (estadoCivil != null && !estadoCivil.isEmpty()) {
-            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
-                    getContext(), android.R.layout.simple_spinner_item, estadoCivil);
+        List<ParametricaGenerica> data = ParametricasCache.getInstance().getEstadoCivil();
+        if (data != null) {
+            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerEstadoCivil.setAdapter(adapter);
         }
     }
 
     private void obtenerGenero() {
-        List<ParametricaGenerica> genero = ParametricasCache.getInstance().getGenero();
-
-        if (genero != null && !genero.isEmpty()) {
-            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
-                    getContext(), android.R.layout.simple_spinner_item, genero);
+        List<ParametricaGenerica> data = ParametricasCache.getInstance().getGenero();
+        if (data != null) {
+            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerSexo.setAdapter(adapter);
         }
     }
 
     private void obtenerNacionalidad() {
-        List<ParametricaGenerica> nacionalidad = ParametricasCache.getInstance().getNacionalidad();
-
-        if (nacionalidad != null && !nacionalidad.isEmpty()) {
-            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(
-                    getContext(), android.R.layout.simple_spinner_item, nacionalidad);
+        List<ParametricaGenerica> data = ParametricasCache.getInstance().getNacionalidad();
+        if (data != null) {
+            ArrayAdapter<ParametricaGenerica> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerNacionalidad.setAdapter(adapter);
         }
@@ -277,7 +346,10 @@ public class SoatcTomadorDatosFragment extends Fragment {
         }
 
         String celular = etCelular.getText().toString();
-        if (!celular.isEmpty() && !celular.matches("\\d{8}")) {
+        if (celular.isEmpty()) {
+            etCelular.setError("Este campo es obligatorio");
+            valido = false;
+        } else if (!celular.matches("\\d{8}")) {
             etCelular.setError("Número de celular inválido");
             valido = false;
         }
@@ -289,56 +361,57 @@ public class SoatcTomadorDatosFragment extends Fragment {
         }
 
         String direccion = etDireccion.getText().toString();
-        if (direccion.length() > 100) {
+        if (direccion.isEmpty()) {
+            etDireccion.setError("Este campo es obligatorio");
+            valido = false;
+        } else if (direccion.length() > 100) {
             etDireccion.setError("Dirección demasiado larga");
             valido = false;
         }
 
+
+
         return valido;
     }
+
     private CliObtenerDatosResponse obtenerDatosTomadorDesdeVista() {
         CliObtenerDatosResponse datos = new CliObtenerDatosResponse();
-        // DatosBusquedaAseguradoTomador datosBusquedaAsegurado = ((PrincipalActivity) getActivity()).datosBusquedaAsegurado;
-
-        // De busqueda
-        datos.PerTParCliDocumentoIdentidadTipoFk = datosTomador.PerTParCliDocumentoIdentidadTipoFk;
-        datos.PerTParCliDocumentoIdentidadTipoDescripcion = datosTomador.PerTParCliDocumentoIdentidadTipoDescripcion;
-        datos.PerDocumentoIdentidadNumero = datosTomador.PerDocumentoIdentidadNumero;
-        datos.PerTParGenDepartamentoDescripcionDocumentoIdentidad = datosTomador.PerTParGenDepartamentoDescripcionDocumentoIdentidad;
-        datos.PerTParGenDepartamentoFkDocumentoIdentidad = datosTomador.PerTParGenDepartamentoFkDocumentoIdentidad;
-        datos.PerDocumentoIdentidadExtension = datosTomador.PerDocumentoIdentidadExtension;
-
-        // EditTexts
+        datos.EsNuevo=datosTomador.EsNuevo;
+        datos.PerDocumentoIdentidadNumero = parseInteger(etNumeroDocumento.getText().toString());
+        datos.PerDocumentoIdentidadExtension = getStringOrNull(etExtensionDocumento);
         datos.PerApellidoPaterno = getStringOrNull(etApellidoPaterno);
         datos.PerApellidoMaterno = getStringOrNull(etApellidoMaterno);
         datos.PerApellidoCasada = getStringOrNull(etApellidoCasada);
         datos.PerNombrePrimero = getStringOrNull(etPrimerNombre);
         datos.PerNombreSegundo = getStringOrNull(etSegundoNombre);
+        
+        // Si no se usó el selector de fecha, intentar parsear lo que haya en el EditText
+        if (fechaNacimientoFormato == null || fechaNacimientoFormato.isEmpty()) {
+            String fechaUI = etFechaNacimiento.getText().toString();
+            if (fechaUI.matches("\\d{2}/\\d{2}/\\d{4}")) {
+                String[] parts = fechaUI.split("/");
+                fechaNacimientoFormato = parts[2] + "-" + parts[1] + "-" + parts[0];
+            }
+        }
         datos.PerNacimientoFecha = fechaNacimientoFormato;
-        datos.PerDocumentoIdentidadNumero = parseInteger(etNumeroDocumento.getText().toString());
-        datos.PerDocumentoIdentidadExtension = getStringOrNull(etExtensionDocumento);
+        
         datos.PerTelefonoMovil = getStringOrNull(etCelular);
         datos.PerCorreoElectronico = getStringOrNull(etEmail);
         datos.PerDomicilioParticular = getStringOrNull(etDireccion);
-        datos.PerTParCliDocumentoIdentidadTipoDescripcion = getStringOrNull(etTipoDocumento);
-        datos.PerTParGenDepartamentoDescripcionDocumentoIdentidad = getStringOrNull(etDeptoDocumento);
-
-        // Spinners
-        datos.PerTParGenDepartamentoFkNacimiento = getSpinnerId(spinnerDeptoResidencia);
-        datos.PerTParGenDepartamentoFkDocumentoIdentidad = getSpinnerId(spinnerDeptoContratacion);
+        datos.PerTParCliDocumentoIdentidadTipoFk = getSpinnerId(spinnerTipoDocumento);
+        datos.PerTParGenDepartamentoFkDocumentoIdentidad = getSpinnerId(spinnerDeptoDocumento);
         datos.PerTParCliGeneroFk = getSpinnerId(spinnerSexo);
         datos.PerTParCliEstadoCivilFk = getSpinnerId(spinnerEstadoCivil);
         datos.PerTParGenPaisFkNacionalidad = getSpinnerId(spinnerNacionalidad);
-
+       // datos.PerTParGenDepartamentoFkVenta=getSpinnerId(spinnerDeptoResidencia);
         return datos;
     }
-
-    // Método auxiliar para verificar si el texto del EditText está vacío y devolver null si es el caso
-    private String getStringOrNull(EditText editText) {
-        return editText.getText().toString().isEmpty() ? null : editText.getText().toString();
+    private Integer getSpinnerId(Spinner spinner) {
+        if (spinner != null && spinner.getSelectedItem() instanceof ParametricaGenerica) {
+            return ((ParametricaGenerica) spinner.getSelectedItem()).Identificador;
+        }
+        return null;
     }
-
-
     private Integer parseInteger(String valor) {
         try {
             return valor != null && !valor.isEmpty() ? Integer.parseInt(valor) : null;
@@ -346,20 +419,14 @@ public class SoatcTomadorDatosFragment extends Fragment {
             return null;
         }
     }
-
-    private Integer getSpinnerId(Spinner spinner) {
-        ParametricaGenerica parametrica = (ParametricaGenerica) spinner.getSelectedItem();
-        if (spinner.getSelectedItem() instanceof ParametricaGenerica) {
-            return parametrica.Identificador;
-        }
-        return null;
+    private String getStringOrNull(EditText editText) {
+        return editText.getText().toString().isEmpty() ? null : editText.getText().toString();
     }
     private void validarVendible() {
-        datosTomador = obtenerDatosTomadorDesdeVista();
-        /*solo para validar datos del tomador se envia en asegurado lo mismo que tomador y null en beneficiarios y facturacion*/
-        CliObtenerDatosResponse datosAsegurado = datosTomador;
-        List<Beneficiario> datosBeneficiario = null;
-        DatosFacturacion datosFacturacion = null;
+        CliObtenerDatosResponse datosAsegurado = ((PrincipalActivity) getActivity()).datosAsegurado;
+        CliObtenerDatosResponse datosTomador = ((PrincipalActivity) getActivity()).datosTomador;
+        List<Beneficiario> datosBeneficiario = ((PrincipalActivity) getActivity()).datosBeneficiario;
+        DatosFacturacion datosFacturacion = ((PrincipalActivity) getActivity()).datosFacturacion;
 
         Map<String, Object> request = RequestBuilderEfectivizar.construirRequest(
                 datosFacturacion,
@@ -373,31 +440,31 @@ public class SoatcTomadorDatosFragment extends Fragment {
         ((PrincipalActivity) requireActivity()).mostrarLoading(true);
         apiService.solicitudPost(url, request, response -> {
             ((PrincipalActivity) requireActivity()).mostrarLoading(false);
-            Type responseType = new TypeToken<ApiResponse<Object>>() {}.getType();
-            ApiResponse<Object> apiResponse = new Gson().fromJson(response, responseType);
-            if (apiResponse.exito) {
-                //datosTomador = obtenerDatosTomadorDesdeVista();
-                ((PrincipalActivity)getActivity()).datosTomador = datosTomador;
-                FragmentTransaction transaction = requireActivity()
-                        .getSupportFragmentManager()
-                        .beginTransaction();
-                transaction.replace(R.id.contenedor_vistas, new SoatcAseguradoDatosFragment());
-                transaction.addToBackStack(null);
-                transaction.commit();
-            } else {
-                mostrarDialogo(apiResponse.mensaje);
+            try {
+                Type responseType = new TypeToken<ApiResponse<Object>>() {}.getType();
+                ApiResponse<Object> apiResponse = new Gson().fromJson(response, responseType);
+                if (apiResponse.exito) {
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.contenedor_vistas, new SoatcBeneficiariosFragment())
+                            .addToBackStack(null)
+                            .commit();
+                } else {
+                    mostrarDialogo("Validación", apiResponse.mensaje);
+                }
+            } catch (Exception e) {
+                mostrarDialogo("Error", "Error al validar vendible");
             }
         }, error -> {
             ((PrincipalActivity) requireActivity()).mostrarLoading(false);
-            // Manejo de error de conexión
+            mostrarDialogo("Error", "Error de conexión al validar vendible");
         });
     }
-    private void mostrarDialogo(String mensaje) {
-        new android.app.AlertDialog.Builder(getContext())
-                .setTitle("Validación")
+
+    private void mostrarDialogo(String titulo, String mensaje) {
+        new AlertDialog.Builder(getContext())
+                .setTitle(titulo)
                 .setMessage(mensaje)
                 .setPositiveButton("OK", null)
                 .show();
     }
-
 }

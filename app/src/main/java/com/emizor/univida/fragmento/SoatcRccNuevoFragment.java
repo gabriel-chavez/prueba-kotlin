@@ -17,8 +17,16 @@ import android.widget.Toast;
 import com.emizor.univida.R;
 import com.emizor.univida.activities.PrincipalActivity;
 import com.emizor.univida.adapter.ItemSoatcRccNuevoAdapter;
+import com.emizor.univida.excepcion.ImpresoraErrorException;
+import com.emizor.univida.excepcion.NoHayPapelException;
+import com.emizor.univida.excepcion.VoltageBajoException;
+import com.emizor.univida.imprime.ImprimirFactura;
 import com.emizor.univida.modelo.dominio.univida.ApiResponse;
+import com.emizor.univida.modelo.dominio.univida.seguridad.User;
+import com.emizor.univida.modelo.dominio.univida.soatc.ElaborarRccResponse;
 import com.emizor.univida.modelo.dominio.univida.soatc.ListarCobrosResponse;
+import com.emizor.univida.modelo.dominio.univida.soatc.ListarRccResponse;
+import com.emizor.univida.modelo.manejador.ControladorSqlite2;
 import com.emizor.univida.rest.ApiService;
 import com.emizor.univida.rest.DatosConexion;
 import com.google.gson.Gson;
@@ -46,6 +54,7 @@ public class SoatcRccNuevoFragment extends Fragment {
     private final Gson gson = new Gson();
     private TextView tvTotalImporte, tvCantidadVendidos, tvCantidadValidos, tvCantidadRevertidos, tvCantidadAnulados;
     private ListarCobrosResponse datos;
+    private ImprimirFactura imprimirFactura;
 
     public SoatcRccNuevoFragment() {
         // Required empty public constructor
@@ -88,6 +97,8 @@ public class SoatcRccNuevoFragment extends Fragment {
             if(validarFormulario())
                 mostrarDialogResumenRcc();
         } );
+
+        imprimirFactura = ImprimirFactura.obtenerImpresora(getContext());
 
         cargarVentasDeFecha(cal);
         return v;
@@ -224,36 +235,44 @@ public class SoatcRccNuevoFragment extends Fragment {
         ApiService api = new ApiService(getContext());
         api.solicitudPost(url, parametros, response -> {
             ((PrincipalActivity) requireActivity()).mostrarLoading(false);
-            Type type = new TypeToken<ApiResponse<ListarCobrosResponse>>() {}.getType();
-            ApiResponse<ListarCobrosResponse> apiResp = gson.fromJson(response, type);
+            try {
+                Type type = new TypeToken<ApiResponse<ElaborarRccResponse>>() {}.getType();
+                ApiResponse<ElaborarRccResponse> apiResp = gson.fromJson(response, type);
 
-            if (apiResp != null && apiResp.exito) {
-               // this.datos  = apiResp.datos;
+                if (apiResp != null && apiResp.exito && apiResp.datos != null) {
+                    
+                    final ElaborarRccResponse rccResult = apiResp.datos;
 
-                tvTotalImporte.setText(String.format(Locale.getDefault(), "Bs. %.2f", 0.0));
-                tvCantidadVendidos.setText(String.valueOf(0));
-                tvCantidadValidos.setText(String.valueOf(0));
-                tvCantidadRevertidos.setText(String.valueOf(0));
-                tvCantidadAnulados.setText(String.valueOf(0));
-                this.datos=null;
-                adapter.setData(null);
-                new AlertDialog.Builder(getContext())
-                        .setMessage(apiResp.mensaje)
-                        .setPositiveButton("Aceptar", (dialog, id) -> {
-                           // cargarVentasDeFecha(cal);
-                            this.datos=null;
-                            dialog.dismiss();
-                        })
-                        .show();
+                    tvTotalImporte.setText(String.format(Locale.getDefault(), "Bs. %.2f", 0.0));
+                    tvCantidadVendidos.setText(String.valueOf(0));
+                    tvCantidadValidos.setText(String.valueOf(0));
+                    tvCantidadRevertidos.setText(String.valueOf(0));
+                    tvCantidadAnulados.setText(String.valueOf(0));
+                    this.datos=null;
+                    adapter.setData(null);
 
-            } else {
-                String msg = (apiResp != null && !TextUtils.isEmpty(apiResp.mensaje))
-                        ? apiResp.mensaje : "No se pudo obtener la información.";
-                new AlertDialog.Builder(getContext())
-                        .setMessage(msg)
-                        .setPositiveButton("Aceptar", (dialog, id) -> dialog.dismiss())
-                        .show();
-                adapter.setData(null);
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Éxito")
+                            .setMessage(apiResp.mensaje)
+                            .setCancelable(false)
+                            .setPositiveButton("Aceptar", (dialog, id) -> {
+                                this.datos=null;
+                                dialog.dismiss();
+                                obtenerRccParaImpresion(rccResult.RccSecuencial);
+                            })
+                            .show();
+
+                } else {
+                    String msg = (apiResp != null && !TextUtils.isEmpty(apiResp.mensaje))
+                            ? apiResp.mensaje : "No se pudo obtener la información.";
+                    new AlertDialog.Builder(getContext())
+                            .setMessage(msg)
+                            .setPositiveButton("Aceptar", (dialog, id) -> dialog.dismiss())
+                            .show();
+                    adapter.setData(null);
+                }
+            } catch (Exception e) {
+                Toast.makeText(getContext(), "Error al procesar la respuesta", Toast.LENGTH_SHORT).show();
             }
 
         }, error -> {
@@ -263,6 +282,68 @@ public class SoatcRccNuevoFragment extends Fragment {
             adapter.setData(null);
         });
     }
+
+    private void obtenerRccParaImpresion(int rccSecuencial) {
+        ((PrincipalActivity) requireActivity()).mostrarLoading(true);
+        String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_CONCILIACION_OBTENER;
+        Map<String, Object> params = new HashMap<>();
+        params.put("rcc_secuencial", rccSecuencial);
+
+        new ApiService(getContext()).solicitudPost(url, params, response -> {
+            ((PrincipalActivity) requireActivity()).mostrarLoading(false);
+            try {
+                Type type = new TypeToken<ApiResponse<ListarRccResponse>>() {}.getType();
+                ApiResponse<ListarRccResponse> apiResp = gson.fromJson(response, type);
+                if(apiResp.exito && apiResp.datos != null) {
+                    imprimirReporte(apiResp.datos);
+                } else {
+                    mostrarToast(apiResp.mensaje != null ? apiResp.mensaje : "No se pudo obtener el reporte para imprimir.");
+                }
+            } catch (Exception e) {
+                mostrarToast("Error al obtener el reporte para imprimir.");
+            }
+        }, error -> {
+            ((PrincipalActivity) requireActivity()).mostrarLoading(false);
+            mostrarToast("Error de red al obtener el reporte.");
+        });
+    }
+
+    private void imprimirReporte(ListarRccResponse rccResponse) {
+        try {
+            ControladorSqlite2 controlador = new ControladorSqlite2(getContext());
+            User user = controlador.obtenerUsuario();
+            controlador.cerrarConexion();
+
+            if (user == null) {
+                Toast.makeText(getContext(), "Error: Usuario no encontrado", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            imprimirFactura.prepararImpresionRcc(user, rccResponse);
+            ejecutarImpresion();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Error al preparar la impresión", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void ejecutarImpresion() {
+        try {
+            imprimirFactura.imprimirFactura2();
+        } catch (NoHayPapelException | ImpresoraErrorException | VoltageBajoException e) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Impresión")
+                    .setMessage(e.getMessage())
+                    .setCancelable(false)
+                    .setPositiveButton("Reintentar", (dialog, which) -> ejecutarImpresion())
+                    .setNegativeButton("Cancelar", null)
+                    .show();
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Error inesperado al imprimir", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private boolean validarFormulario() {
         boolean valido = true;
 

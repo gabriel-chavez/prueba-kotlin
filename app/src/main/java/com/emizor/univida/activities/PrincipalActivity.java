@@ -26,7 +26,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.emizor.univida.LoginActivity;
@@ -74,7 +73,7 @@ public class PrincipalActivity extends RootActivity implements NavigationView.On
     private View vistaPrincipal, vistaProgress;
     private static boolean estadoActivo = false;
 // datos para compartir entre fragment
-    public DatosBusquedaAseguradoTomador datosBusquedaAsegurado;
+    public DatosBusquedaAseguradoTomador datosBusquedaAseguradoTomador;
     public CliObtenerDatosResponse datosTomador;
     public CliObtenerDatosResponse datosAsegurado;
 

@@ -1,10 +1,10 @@
 package com.emizor.univida.fragmento;
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -18,8 +18,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.emizor.univida.R;
 import com.emizor.univida.activities.PrincipalActivity;
 import com.emizor.univida.modelo.dominio.univida.ApiResponse;
@@ -128,7 +126,7 @@ public class SoatcAseguradoDatosFragment extends Fragment {
     }
 
     private void buscarAsegurado() {
-        DatosBusquedaAseguradoTomador datosBusqueda = ((PrincipalActivity) getActivity()).datosBusquedaAsegurado;
+        DatosBusquedaAseguradoTomador datosBusqueda = ((PrincipalActivity) getActivity()).datosBusquedaAseguradoTomador;
         if (datosBusqueda == null) return;
 
         Map<String, Object> params = new HashMap<>();
@@ -179,10 +177,13 @@ public class SoatcAseguradoDatosFragment extends Fragment {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, typeOfT, context) -> {
                     try {
-                        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).parse(json.getAsString());
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).parse(json.getAsString());
+                        }
                     } catch (ParseException e) {
                         return null;
                     }
+                    return null;
                 }).create();
         return gson.fromJson(response, responseType);
     }
@@ -221,6 +222,10 @@ public class SoatcAseguradoDatosFragment extends Fragment {
         etEmail.setText(datosAsegurado.PerCorreoElectronico);
         etDireccion.setText(datosAsegurado.PerDomicilioParticular);
 
+        // Pre-cargar fecha en formato API si ya existe
+        if (datosAsegurado.PerNacimientoFecha != null && !datosAsegurado.PerNacimientoFecha.isEmpty()) {
+            fechaNacimientoFormato = datosAsegurado.PerNacimientoFecha;
+        }
 
         setSpinnerValue(spinnerTipoDocumento, datosAsegurado.PerTParCliDocumentoIdentidadTipoDescripcion);
         setSpinnerValue(spinnerDeptoDocumento, datosAsegurado.PerTParGenDepartamentoDescripcionDocumentoIdentidad);
@@ -231,12 +236,14 @@ public class SoatcAseguradoDatosFragment extends Fragment {
         setSpinnerValue(spinnerNacionalidad, datosAsegurado.PerTParGenPaisDescripcionResidencia);
     }
 
-    // ... MÉTODOS DE VALIDACIÓN, SPINNERS Y DIÁLOGOS ...
     private void mostrarSelectorFecha() {
         final Calendar calendar = Calendar.getInstance();
         if (!etFechaNacimiento.getText().toString().isEmpty()) {
             try {
-                Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(etFechaNacimiento.getText().toString());
+                Date date = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    date = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(etFechaNacimiento.getText().toString());
+                }
                 calendar.setTime(date);
             } catch (ParseException e) { /* Ignorar error */ }
         }
@@ -247,7 +254,6 @@ public class SoatcAseguradoDatosFragment extends Fragment {
     }
 
     private void cargarDatosParametricos() {
-        // Carga de spinners desde cache
         obtenerDepartamentos();
         obtenerEstadoCivil();
         obtenerGenero();
@@ -331,7 +337,10 @@ public class SoatcAseguradoDatosFragment extends Fragment {
         }
 
         String celular = etCelular.getText().toString();
-        if (!celular.isEmpty() && !celular.matches("\\d{8}")) {
+        if (celular.isEmpty()) {
+            etCelular.setError("Este campo es obligatorio");
+            valido = false;
+        } else if (!celular.matches("\\d{8}")) {
             etCelular.setError("Número de celular inválido");
             valido = false;
         }
@@ -343,8 +352,24 @@ public class SoatcAseguradoDatosFragment extends Fragment {
         }
 
         String direccion = etDireccion.getText().toString();
-        if (direccion.length() > 100) {
+        if (direccion.isEmpty()) {
+            etDireccion.setError("Este campo es obligatorio");
+            valido = false;
+        } else if (direccion.length() > 100) {
             etDireccion.setError("Dirección demasiado larga");
+            valido = false;
+        }
+
+        Integer deptoResidenciaId = getSpinnerId(spinnerDeptoResidencia);
+        if (deptoResidenciaId == null || deptoResidenciaId <= 0) {
+
+            View view = spinnerDeptoResidencia.getSelectedView();
+            if (view instanceof TextView) {
+                TextView tv = (TextView) view;
+                tv.setTextColor(Color.RED);
+                tv.setError("Debe seleccionar el departamento");
+            }
+
             valido = false;
         }
 
@@ -353,8 +378,7 @@ public class SoatcAseguradoDatosFragment extends Fragment {
 
     private CliObtenerDatosResponse obtenerDatosAseguradoDesdeVista() {
         CliObtenerDatosResponse datos = new CliObtenerDatosResponse();
-       // DatosBusquedaAseguradoTomador dbat = ((PrincipalActivity) getActivity()).datosBusquedaAsegurado;
-
+        datos.EsNuevo=datosAsegurado.EsNuevo;
         datos.PerDocumentoIdentidadNumero = parseInteger(etNumeroDocumento.getText().toString());
         datos.PerDocumentoIdentidadExtension = getStringOrNull(etExtensionDocumento);
         datos.PerApellidoPaterno = getStringOrNull(etApellidoPaterno);
@@ -362,39 +386,34 @@ public class SoatcAseguradoDatosFragment extends Fragment {
         datos.PerApellidoCasada = getStringOrNull(etApellidoCasada);
         datos.PerNombrePrimero = getStringOrNull(etPrimerNombre);
         datos.PerNombreSegundo = getStringOrNull(etSegundoNombre);
+        
+        if (fechaNacimientoFormato == null || fechaNacimientoFormato.isEmpty()) {
+            String fechaUI = etFechaNacimiento.getText().toString();
+            if (fechaUI.matches("\\d{2}/\\d{2}/\\d{4}")) {
+                String[] parts = fechaUI.split("/");
+                fechaNacimientoFormato = parts[2] + "-" + parts[1] + "-" + parts[0];
+            }
+        }
         datos.PerNacimientoFecha = fechaNacimientoFormato;
+        
         datos.PerTelefonoMovil = getStringOrNull(etCelular);
         datos.PerCorreoElectronico = getStringOrNull(etEmail);
         datos.PerDomicilioParticular = getStringOrNull(etDireccion);
-        // Spinners
         datos.PerTParCliDocumentoIdentidadTipoFk = getSpinnerId(spinnerTipoDocumento);
         datos.PerTParGenDepartamentoFkDocumentoIdentidad = getSpinnerId(spinnerDeptoDocumento);
-       //RESIDENCIA ES PARA LA POLIZA
-       // datos.PerTParGenDe = getSpinnerId(spinnerDeptoResidencia);
         datos.PerTParCliGeneroFk = getSpinnerId(spinnerSexo);
         datos.PerTParCliEstadoCivilFk = getSpinnerId(spinnerEstadoCivil);
         datos.PerTParGenPaisFkNacionalidad = getSpinnerId(spinnerNacionalidad);
         datos.PerTParGenDepartamentoFkVenta=getSpinnerId(spinnerDeptoResidencia);
-//        if (dbat != null) {
-//            datos.PerTParCliDocumentoIdentidadTipoFk = dbat.TipoDocumentoIdentidad;
-//            datos.PerTParCliDocumentoIdentidadTipoDescripcion = dbat.TipoDocumentoIdentidadDescripcion;
-//            datos.PerDocumentoIdentidadNumero = dbat.NumeroDocumentoIdentidad;
-//            datos.PerTParGenDepartamentoDescripcionDocumentoIdentidad = dbat.DepartamentoDocumentoIdentidadDescripcion;
-//            datos.PerTParGenDepartamentoFkDocumentoIdentidad = dbat.DepartamentoDocumentoIdentidad;
-//            datos.PerDocumentoIdentidadExtension = dbat.Complemento;
-//        } else if (this.datosAsegurado != null) {
-//            datos.PerTParCliDocumentoIdentidadTipoFk = this.datosAsegurado.PerTParCliDocumentoIdentidadTipoFk;
-//            //... copiar los demás campos
-//        }
-//
-//        datos.PerApellidoPaterno = etApellidoPaterno.getText().toString();
-//        //... obtener el resto de datos de la UI
+
+        datos.PerTParCliDocumentoIdentidadTipoAbreviacion=datosAsegurado.PerTParCliDocumentoIdentidadTipoAbreviacion;
+        datos.PerTParGenDepartamentoDescripcionDocumentoIdentidad=datosAsegurado.PerTParGenDepartamentoDescripcionDocumentoIdentidad;
+
         return datos;
     }
     private Integer getSpinnerId(Spinner spinner) {
-        ParametricaGenerica parametrica = (ParametricaGenerica) spinner.getSelectedItem();
-        if (spinner.getSelectedItem() instanceof ParametricaGenerica) {
-            return parametrica.Identificador;
+        if (spinner != null && spinner.getSelectedItem() instanceof ParametricaGenerica) {
+            return ((ParametricaGenerica) spinner.getSelectedItem()).Identificador;
         }
         return null;
     }
@@ -431,7 +450,7 @@ public class SoatcAseguradoDatosFragment extends Fragment {
                 ApiResponse<Object> apiResponse = new Gson().fromJson(response, responseType);
                 if (apiResponse.exito) {
                     getFragmentManager().beginTransaction()
-                            .replace(R.id.contenedor_vistas, new SoatcBeneficiariosFragment())
+                            .replace(R.id.contenedor_vistas, new SoatcTomadorDiferenteFragment())
                             .addToBackStack(null)
                             .commit();
                 } else {

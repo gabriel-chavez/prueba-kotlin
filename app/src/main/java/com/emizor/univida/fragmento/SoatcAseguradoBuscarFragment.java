@@ -1,20 +1,17 @@
 package com.emizor.univida.fragmento;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,24 +19,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.emizor.univida.R;
 import com.emizor.univida.activities.PrincipalActivity;
-import com.emizor.univida.adapter.AseguradoAdapter;
-import com.emizor.univida.databinding.ActivityPrincipalBinding;
+import com.emizor.univida.adapter.AseguradoTomadorAdapter;
 import com.emizor.univida.modelo.dominio.univida.ApiResponse;
-import com.emizor.univida.modelo.dominio.univida.parametricas.ParametricaGenerica;
 import com.emizor.univida.modelo.dominio.univida.soatc.CliObtenerDatosResponse;
 import com.emizor.univida.modelo.dominio.univida.soatc.CliValidarCoberturaAseguradoResponse;
-import com.emizor.univida.modelo.dominio.univida.soatc.ClientesObtenerDatosResponse;
 import com.emizor.univida.modelo.dominio.univida.soatc.DatosBusquedaAseguradoTomador;
-import com.emizor.univida.modelo.dominio.univida.turnos.Punto;
 import com.emizor.univida.rest.ApiService;
 import com.emizor.univida.rest.DatosConexion;
 import com.emizor.univida.util.ValidarCampo;
-import com.emizor.univida.utils.ParametricasCache;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +46,7 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
     private EditText etNumeroDocumento;
     private RecyclerView rvResultados;
     private TextView tvMensajeResultadosMultiples;
-    private AseguradoAdapter aseguradoAdapter;
+    private AseguradoTomadorAdapter aseguradoAdapter;
 
     AlertDialog.Builder builder;
     public SoatcAseguradoBuscarFragment() {
@@ -82,12 +73,13 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root= inflater.inflate(R.layout.fragment_soatc_asegurado_buscar, container, false);
+
         etNumeroDocumento = root.findViewById(R.id.numeroDocumento);
         rvResultados = root.findViewById(R.id.rvResultados);
         tvMensajeResultadosMultiples = root.findViewById(R.id.tvMensajeResultadosMultiples);
 
         rvResultados.setLayoutManager(new LinearLayoutManager(getContext()));
-        aseguradoAdapter = new AseguradoAdapter(new ArrayList<>(), item -> {
+        aseguradoAdapter = new AseguradoTomadorAdapter(new ArrayList<>(), item -> {
             // Acción al seleccionar un asegurado de la lista
             item.EsNuevo=false;
             procesarSeleccionAsegurado(item);
@@ -119,7 +111,8 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
         dbat.Complemento = datosAsegurado.PerDocumentoIdentidadExtension;
         dbat.DepartamentoDocumentoIdentidad = datosAsegurado.PerTParGenDepartamentoFkDocumentoIdentidad;
         dbat.DepartamentoDocumentoIdentidadDescripcion = datosAsegurado.PerTParGenDepartamentoDescripcionDocumentoIdentidad;
-        ((PrincipalActivity) getActivity()).datosBusquedaAsegurado = dbat;
+        ((PrincipalActivity) getActivity()).datosBusquedaAseguradoTomador = dbat;
+        ((PrincipalActivity) getActivity()).datosBeneficiario = null;
 
         validarCoberturaAsegurado(datosAsegurado, resultado -> {
             if (resultado.exito) {
@@ -173,7 +166,7 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
                                     tvMensajeResultadosMultiples.setVisibility(View.GONE);
                                     if (apiResponse.datos != null && apiResponse.datos.size() == 1) {
                                         CliObtenerDatosResponse cliente = apiResponse.datos.get(0);
-                                        cliente.EsNuevo = true;
+                                        cliente.EsNuevo = false;
                                         procesarSeleccionAsegurado(cliente);
                                     } else if (apiResponse.datos != null && apiResponse.datos.size() > 1) {
                                         aseguradoAdapter.updateData(apiResponse.datos);
@@ -184,10 +177,22 @@ public class SoatcAseguradoBuscarFragment extends Fragment {
                                 else{
                                     //mostrar lista de asegurados si vienen en datos aunque exito sea falso
                                     if (apiResponse.mensaje.equals("La información del cliente no pudo ser obtenida.")) {
-                                        CliObtenerDatosResponse cliente = new CliObtenerDatosResponse();
-                                        cliente.EsNuevo = true;
-                                        cliente.PerDocumentoIdentidadNumero= Integer.parseInt(numeroDocumento);
-                                        procesarSeleccionAsegurado(cliente);
+                                        builder.setTitle("Atención")
+                                                .setIcon(android.R.drawable.ic_dialog_info)
+                                                .setMessage("El cliente no se encuentra registrado ¿desea registrarlo ahora?")
+                                                .setCancelable(false)
+                                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        CliObtenerDatosResponse cliente = new CliObtenerDatosResponse();
+                                                        cliente.EsNuevo = true;
+                                                        cliente.PerDocumentoIdentidadNumero = Integer.parseInt(numeroDocumento);
+                                                        procesarSeleccionAsegurado(cliente);
+                                                    }
+                                                })
+                                                .setNegativeButton("Cancelar", null);
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
                                     } else {
                                         rvResultados.setVisibility(View.GONE);
                                         tvMensajeResultadosMultiples.setVisibility(View.GONE);

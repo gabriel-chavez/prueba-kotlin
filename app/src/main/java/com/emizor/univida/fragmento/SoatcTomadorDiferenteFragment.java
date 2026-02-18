@@ -68,7 +68,7 @@ public class SoatcTomadorDiferenteFragment extends Fragment {
                 destino = new SoatcTomadorBuscarFragment();
             } else {
                 ((PrincipalActivity)getActivity()).datosTomador = null;
-                destino = new SoatcAseguradoDatosFragment();
+                destino = new SoatcBeneficiariosFragment();
             }
 
             FragmentTransaction transaction = requireActivity()

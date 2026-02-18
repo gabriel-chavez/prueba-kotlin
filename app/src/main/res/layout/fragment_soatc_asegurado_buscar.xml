@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_marginBottom="16dp"
-        tools:listitem="@layout/item_asegurado"/>
+        tools:listitem="@layout/item_asegurado_tomador"/>
 
 
     <!-- Espacio flexible -->

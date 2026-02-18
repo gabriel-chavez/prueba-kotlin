@@ -38,124 +38,240 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-
-            <!-- Tipo de Documento -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Tipo de Documento de Identidad:"
-                android:textStyle="bold" />
-
             <LinearLayout
+                android:id="@+id/llDocumentoExistente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_radio_option"
-                android:orientation="horizontal"
-                android:padding="8dp">
+                android:orientation="vertical"
 
-                <EditText
-                    android:id="@+id/etTipoDocumento"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginBottom="12dp"/>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:inputType="number"
-                    android:textSize="16sp"
-                    android:enabled="false"
-                    android:textColor="@android:color/darker_gray"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <!-- IZQUIERDA -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DOCUMENTO DE IDENTIDAD"
+                            android:textSize="13sp"
+                            android:textColor="#757575"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:id="@+id/tvDocumentoResumen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CIB - 6356939"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorPrimary"
+                            android:textStyle="bold"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#E0E0E0"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"/>
+
+                    <!-- DERECHA -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DEPARTAMENTO"
+                            android:textSize="13sp"
+                            android:textColor="#757575"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:id="@+id/tvDeptoResumen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NO DEFINIDO"
+                            android:textSize="16sp"
+                            android:textColor="@android:color/holo_green_dark"
+                            android:textStyle="bold"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llDocumentoNuevo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginBottom="12dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="DOCUMENTO DE IDENTIDAD"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="#757575"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tvNumeroDocumentoGrande"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="321324"
+                    android:gravity="center"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Tipo de Documento -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Tipo de Documento de Identidad:"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/bg_radio_option"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+
+                    <Spinner
+                        android:id="@+id/spinnerTipoDocumento"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:spinnerMode="dropdown" />
+
+                </LinearLayout>
+
+                <!-- Número de Documento NO VISIBLE-->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Número de Documento de Identidad:"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/bg_radio_option"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:padding="8dp">
+
+                    <EditText
+                        android:id="@+id/etNumeroDocumento"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:inputType="number"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/darker_gray"/>
+
+                </LinearLayout>
+
+                <!-- Extensión/Complemento -->
+                <TextView
+                    android:id="@+id/tvExtensionDocumento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Extensión/Complemento de Documento:"
+                    android:textStyle="bold"
                     />
 
-            </LinearLayout>
-
-            <!-- Número de Documento -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Número de Documento de Identidad:"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_radio_option"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <EditText
-                    android:id="@+id/etNumeroDocumento"
+                <LinearLayout
+                    android:id="@+id/llExtensionDocumento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:enabled="false"
-                    android:inputType="number"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/darker_gray"/>
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/bg_radio_option"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
 
-            </LinearLayout>
+                    <EditText
+                        android:id="@+id/etExtensionDocumento"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:background="@android:color/transparent"
 
-            <!-- Extensión/Complemento -->
-            <TextView
-                android:id="@+id/tvExtensionDocumento"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Extensión/Complemento de Documento:"
-                android:textStyle="bold"
-                />
+                        android:inputType="text"
+                        android:textSize="16sp"
+                        android:maxLength="10"/>
 
-            <LinearLayout
-                android:id="@+id/llExtensionDocumento"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_radio_option"
-                android:orientation="horizontal"
-                android:padding="8dp">
+                </LinearLayout>
 
-                <EditText
-                    android:id="@+id/etExtensionDocumento"
+
+                <!-- Departamento de Documento -->
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:enabled="false"
-                    android:inputType="text"
-                    android:textSize="16sp"
-                    android:maxLength="10"/>
-
-            </LinearLayout>
+                    android:layout_marginBottom="8dp"
+                    android:text="Departamento de Documento de Identidad:"
+                    android:textStyle="bold" />
 
 
-            <!-- Departamento de Documento -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Departamento de Documento de Identidad:"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_radio_option"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <EditText
-                    android:id="@+id/etDeptoDocumento"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:enabled="false"
-                    android:inputType="number"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/darker_gray"/>
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/bg_radio_option"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+                    <Spinner
+                        android:id="@+id/spinnerDeptoDocumento"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:spinnerMode="dropdown" />
+
+
+                </LinearLayout>
 
             </LinearLayout>
+
+
+
+
 
             <View
                 android:layout_width="match_parent"
@@ -184,7 +300,7 @@
                 <EditText
                     android:id="@+id/etApellidoPaterno"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:background="@android:color/transparent"
                     android:hint="Ingrese apellido paterno"
                     android:inputType="textCapWords"
@@ -212,7 +328,7 @@
                 <EditText
                     android:id="@+id/etApellidoMaterno"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:background="@android:color/transparent"
                     android:hint="Ingrese apellido materno"
                     android:inputType="textCapWords"
@@ -240,7 +356,7 @@
                 <EditText
                     android:id="@+id/etApellidoCasada"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:background="@android:color/transparent"
                     android:hint=""
                     android:inputType="textCapWords"
@@ -268,7 +384,7 @@
                 <EditText
                     android:id="@+id/etPrimerNombre"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:background="@android:color/transparent"
                     android:hint="Ingrese primer nombre"
                     android:inputType="textCapWords"
@@ -296,7 +412,7 @@
                 <EditText
                     android:id="@+id/etSegundoNombre"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:background="@android:color/transparent"
                     android:hint="Opcional"
                     android:inputType="textCapWords"
@@ -324,7 +440,7 @@
                 <EditText
                     android:id="@+id/etFechaNacimiento"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:background="@android:color/transparent"
                     android:clickable="true"
                     android:focusable="false"
@@ -335,54 +451,31 @@
 
             </LinearLayout>
 
-            <!-- Departamento de Residencia -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Departamento de Residencia:"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_radio_option"
-                android:orientation="horizontal"
-                android:padding="6dp">
-
-                <Spinner
-                    android:id="@+id/spinnerDeptoResidencia"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:spinnerMode="dropdown" />
-
-            </LinearLayout>
 
 
             <!-- Departamento de Contratación -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Departamento de Contratación:"
-                android:textStyle="bold" />
+            <!--            <TextView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginBottom="8dp"-->
+            <!--                android:text="Departamento de Contratación:"-->
+            <!--                android:textStyle="bold" />-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_radio_option"
-                android:orientation="horizontal"
-                android:padding="8dp">
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginBottom="16dp"-->
+            <!--                android:background="@drawable/bg_radio_option"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:padding="8dp">-->
 
-                <Spinner
-                    android:id="@+id/spinnerDeptoContratacion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:spinnerMode="dropdown" />
+            <!--                <Spinner-->
+            <!--                    android:id="@+id/spinnerDeptoContratacion"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="35dp"-->
+            <!--                    android:spinnerMode="dropdown" />-->
 
-            </LinearLayout>
+            <!--            </LinearLayout>-->
 
             <!-- Sexo -->
             <TextView
@@ -403,7 +496,7 @@
                 <Spinner
                     android:id="@+id/spinnerSexo"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:spinnerMode="dropdown" />
 
             </LinearLayout>
@@ -427,7 +520,7 @@
                 <Spinner
                     android:id="@+id/spinnerEstadoCivil"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:spinnerMode="dropdown" />
 
             </LinearLayout>
@@ -451,7 +544,7 @@
                 <Spinner
                     android:id="@+id/spinnerNacionalidad"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:spinnerMode="dropdown" />
 
             </LinearLayout>
@@ -475,7 +568,7 @@
                 <EditText
                     android:id="@+id/etCelular"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:background="@android:color/transparent"
                     android:hint="Ingrese número de celular"
                     android:inputType="phone"
@@ -504,7 +597,7 @@
                 <EditText
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:background="@android:color/transparent"
                     android:hint="Ingrese correo electrónico"
                     android:inputType="textEmailAddress"
@@ -531,7 +624,7 @@
                 <EditText
                     android:id="@+id/etDireccion"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:background="@android:color/transparent"
                     android:hint="Ingrese dirección completa"
                     android:inputType="textCapWords"

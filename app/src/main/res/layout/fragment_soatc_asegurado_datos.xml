@@ -244,8 +244,8 @@
                 <!-- Departamento de Documento -->
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
                     android:text="Departamento de Documento de Identidad:"
                     android:textStyle="bold" />
 
@@ -268,11 +268,7 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E0E0E0"
-                android:layout_marginTop="12dp"/>
+
 
 
 
@@ -315,7 +311,7 @@
             <!-- Apellido Materno -->
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Apellido Materno:"
                 android:textStyle="bold" />
@@ -343,7 +339,7 @@
             <!-- Apellido Casada/Viuda -->
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Apellido Casada/Viuda (si corresponde):"
                 android:textStyle="bold" />

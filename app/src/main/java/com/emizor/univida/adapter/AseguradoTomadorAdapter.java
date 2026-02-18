@@ -9,11 +9,10 @@ import android.widget.TextView;
 
 import com.emizor.univida.R;
 import com.emizor.univida.modelo.dominio.univida.soatc.CliObtenerDatosResponse;
-import com.emizor.univida.modelo.dominio.univida.soatc.ClientesObtenerDatosResponse;
 
 import java.util.List;
 
-public class AseguradoAdapter extends RecyclerView.Adapter<AseguradoAdapter.ViewHolder> {
+public class AseguradoTomadorAdapter extends RecyclerView.Adapter<AseguradoTomadorAdapter.ViewHolder> {
 
     private List<CliObtenerDatosResponse> mData;
     private OnItemClickListener mListener;
@@ -22,7 +21,7 @@ public class AseguradoAdapter extends RecyclerView.Adapter<AseguradoAdapter.View
         void onItemClick(CliObtenerDatosResponse item);
     }
 
-    public AseguradoAdapter(List<CliObtenerDatosResponse> data, OnItemClickListener listener) {
+    public AseguradoTomadorAdapter(List<CliObtenerDatosResponse> data, OnItemClickListener listener) {
         this.mData = data;
         this.mListener = listener;
     }
@@ -30,7 +29,7 @@ public class AseguradoAdapter extends RecyclerView.Adapter<AseguradoAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_asegurado, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_asegurado_tomador, parent, false);
         return new ViewHolder(view);
     }
 

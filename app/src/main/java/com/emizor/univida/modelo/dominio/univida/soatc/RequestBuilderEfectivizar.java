@@ -49,7 +49,7 @@ public class RequestBuilderEfectivizar {
         // Campos simples
         request.put("t_par_medio_pago_fk", 1);
         request.put("pol_mae_t_producto_plan_prima_fk", 25);
-        request.put("pol_mae_t_par_gen_departamento_fk", 1);
+        request.put("pol_mae_t_par_gen_departamento_fk", datosAsegurado.PerTParGenDepartamentoFkVenta);
 
         // e_datos_tomador
         request.put("e_datos_tomador", mapDatosPersona(datosTomador));

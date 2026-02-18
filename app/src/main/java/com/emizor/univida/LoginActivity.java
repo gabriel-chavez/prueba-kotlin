@@ -17,6 +17,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -93,6 +96,9 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
     private Autoupdater updater;
 
     private Context context;
+
+    private ImageButton btnVerClave;
+    private boolean esClaveVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,6 +216,26 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
                 }
                 // retornamos falso para que android continue con las acciones por defecto
                 return false;
+            }
+        });
+
+        btnVerClave = findViewById(R.id.btnVerClave);
+        btnVerClave.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (esClaveVisible) {
+                    // Ocultar contraseña
+                    etClave.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    btnVerClave.setImageResource(R.drawable.ic_visibility_black_24dp);
+                    esClaveVisible = false;
+                } else {
+                    // Mostrar contraseña
+                    etClave.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    btnVerClave.setImageResource(R.drawable.ic_visibility_off_black_24dp);
+                    esClaveVisible = true;
+                }
+                // Mantener el cursor al final del texto
+                etClave.setSelection(etClave.getText().length());
             }
         });
 
@@ -842,4 +868,3 @@ public class LoginActivity extends RootActivity implements DialogoEmizor.Notific
     }
 
 }
-

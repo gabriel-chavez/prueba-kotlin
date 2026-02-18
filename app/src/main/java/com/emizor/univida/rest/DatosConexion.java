@@ -85,6 +85,7 @@ public class DatosConexion {
     public static final String URL_UNIVIDA_CONCILIACION_ELABORAR = "/coretecnicoconciliacion/con-rcc-elaborar";
     public static final String URL_UNIVIDA_CONCILIACION_LISTAR = "/coretecnicoconciliacion/con-rcc-listar";
     public static final String URL_UNIVIDA_CONCILIACION_REVERTIR = "/coretecnicoconciliacion/con-rcc-revertir";
+    public static final String URL_UNIVIDA_CONCILIACION_OBTENER = "/coretecnicoconciliacion/con-rcc-obtener";
     public static final String URL_UNIVIDA_COBRANZAS_RECIBO_EMITIR = "/coretecnicocobranzas/cob-recibo-emitir";
     public static final String URL_UNIVIDA_EMISION_REVERTIR = "/coretecnicoemision/emi-poliza-reversion";
     public static final String URL_UNIVIDA_EMISION_NOTIFICACION = "/coretecnicoemision/emi-poliza-efectivizar-notificacion";

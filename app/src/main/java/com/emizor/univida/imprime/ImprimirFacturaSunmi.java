@@ -18,6 +18,7 @@ import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.ObtenerRcvR
 import com.emizor.univida.modelo.dominio.univida.reporte_cierre_caja.RcvListarVentaRespUnivida;
 import com.emizor.univida.modelo.dominio.univida.seguridad.User;
 import com.emizor.univida.modelo.dominio.univida.soatc.EmiPolizaObtenerResponse;
+import com.emizor.univida.modelo.dominio.univida.soatc.ListarRccResponse;
 import com.emizor.univida.modelo.dominio.univida.ventas.Datos;
 import com.emizor.univida.modelo.dominio.univida.ventas.Detalle;
 import com.emizor.univida.modelo.dominio.univida.ventas.EfectivizarRespUnivida;
@@ -389,6 +390,51 @@ public class ImprimirFacturaSunmi extends ImprimirFactura{
 
 
         }
+
+
+    }
+    public void prepararImpresionRcc(User user, ListarRccResponse rccResponse) {
+
+        LogUtils.i(TAG, "PREPARAMOS RCV REPORTE");
+
+        if (pImp != null){
+            pImp.clear();
+        }
+
+        if (rccResponse != null){
+
+
+
+                pImp = new Vector<>();
+
+                pImp.add(3);
+                pImp.add(linea);
+                pImp.add(-2);
+                pImp.add(("REPORTE CIERRE DE COBROS"));
+                pImp.add(3);
+                pImp.add(linea);
+                //pImp.add(101);
+                pImp.add("CÓDIGO RCV          : " + rccResponse.RepCieCobFormularioNumero);
+                //pImp.add(101);
+                pImp.add("FECHA               : " + rccResponse.RepCieCobComprobanteFechaFormato);
+                pImp.add("IMPORTE             : " + rccResponse.RepCieCobFormularioImporte);
+                pImp.add("CANTIDAD VALIDOS    : " + rccResponse.RepCieCobCantidadComprobanteValidos);
+                pImp.add("CANTIDAD REVERTIDOS : " + rccResponse.RepCieCobCantidadComprobanteRevertidos);
+                pImp.add("CANTIDAD ANULADOS   : " + rccResponse.RepCieCobCantidadComprobanteAnulados);
+                pImp.add("CANTIDAD TOTAL      : " + rccResponse.RepCieCobCantidadComprobante);
+                pImp.add(3);
+                pImp.add(linea);
+                pImp.add("SUCURSAL : " + user.getDatosUsuario().getSucursalNombre());
+                pImp.add("USUARIO  : " + user.getDatosUsuario().getEmpleadoNombreCompleto());
+                pImp.add("CARGO    : " + user.getDatosUsuario().getEmpleadoCargo());
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                pImp.addAll(formatearLineaCadena2("FECHA IMPRESIÓN : " + simpleDateFormat.format(new Date())));
+                pImp.add(3);
+                pImp.add(linea);
+            }
+
+
+
 
 
     }

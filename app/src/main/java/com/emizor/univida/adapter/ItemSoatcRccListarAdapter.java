@@ -18,9 +18,15 @@ import android.widget.Toast;
 
 import com.emizor.univida.R;
 import com.emizor.univida.activities.PrincipalActivity;
+import com.emizor.univida.excepcion.ImpresoraErrorException;
+import com.emizor.univida.excepcion.NoHayPapelException;
+import com.emizor.univida.excepcion.VoltageBajoException;
 import com.emizor.univida.fragmento.SoatcRccListarFragment;
+import com.emizor.univida.imprime.ImprimirFactura;
 import com.emizor.univida.modelo.dominio.univida.ApiResponse;
+import com.emizor.univida.modelo.dominio.univida.seguridad.User;
 import com.emizor.univida.modelo.dominio.univida.soatc.ListarRccResponse;
+import com.emizor.univida.modelo.manejador.ControladorSqlite2;
 import com.emizor.univida.rest.ApiService;
 import com.emizor.univida.rest.DatosConexion;
 import com.google.gson.Gson;
@@ -37,11 +43,13 @@ public class ItemSoatcRccListarAdapter extends BaseAdapter {
     private final Context context;
     private final List<ListarRccResponse> data = new ArrayList<>();
     private SoatcRccListarFragment.OnRccListadoListener rccListener;
+    private ImprimirFactura imprimirFactura;
 
     public ItemSoatcRccListarAdapter(Context context, SoatcRccListarFragment.OnRccListadoListener listener) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.rccListener = listener;
+        this.imprimirFactura = ImprimirFactura.obtenerImpresora(context);
     }
     public void setData(List<ListarRccResponse> nueva) {
         data.clear();
@@ -136,8 +144,41 @@ public class ItemSoatcRccListarAdapter extends BaseAdapter {
         }
     }
     private void reimprimir(ListarRccResponse item) {
-        // TODO: lógica para reimprimir
+
+        try {
+            ControladorSqlite2 controlador = new ControladorSqlite2(context);
+            User user = controlador.obtenerUsuario();
+            controlador.cerrarConexion();
+
+            if (user == null) {
+                Toast.makeText(context, "Error: Usuario no autenticado.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            imprimirFactura.prepararImpresionRcc(user, item);
+            ejecutarImpresion();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Error al preparar la impresión.", Toast.LENGTH_SHORT).show();
+        }
     }
+
+    private void ejecutarImpresion() {
+        try {
+            imprimirFactura.imprimirFactura2();
+        } catch (NoHayPapelException | ImpresoraErrorException | VoltageBajoException e) {
+            new AlertDialog.Builder(context)
+                    .setTitle("Impresión")
+                    .setMessage(e.getMessage())
+                    .setCancelable(false)
+                    .setPositiveButton("Reintentar", (dialog, which) -> ejecutarImpresion())
+                    .setNegativeButton("Cancelar", null)
+                    .show();
+        } catch (Exception e) {
+            Toast.makeText(context, "Error inesperado al imprimir.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void solicitarReversion(ListarRccResponse item) {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
         builder.setTitle("REVERSIÓN");

@@ -1,5 +1,6 @@
 package com.emizor.univida.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
@@ -200,14 +201,15 @@ public class ItemSoatcVentaListarAdapter extends BaseAdapter implements Imprimir
     private void anularVenta(ListarVentasResponse item) {
     }
 
-
     private void reimprimir(ListarVentasResponse item) {
         Map<String, Object> parametros = new HashMap<>();
         parametros.put("t_poliza_detalle_fk", item.PolDetSecuencialFk);
         ApiService apiService = new ApiService(context);
         String url = DatosConexion.SERVIDORUNIVIDA + DatosConexion.URL_UNIVIDA_EMISION_POLIZA_OBTENER;
         ((PrincipalActivity) context).mostrarLoading(true);
-        dialogReversion.dismiss();
+        if (dialogReversion != null && dialogReversion.isShowing()) {
+            dialogReversion.dismiss();
+        }
         apiService.solicitudPost(url, parametros, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -766,53 +768,62 @@ public class ItemSoatcVentaListarAdapter extends BaseAdapter implements Imprimir
     //impresion
     private void iniciarImprimir() {
 
-        ((AppCompatActivity) context).runOnUiThread(() -> {
-            //  contadorImprimir++;
+        if (context instanceof Activity) {
+            ((Activity) context).runOnUiThread(() -> {
+                //  contadorImprimir++;
 
-            new Thread(() -> {
-                try {
-                    imprimirFactura.imprimirFactura2();
-                } catch (ImpresoraErrorException e) {
-                    e.printStackTrace();
-                    // errorImp = true;
-                    mostrarMensaje("Error en la impresora.");
-                    //contadorImprimir = cantDocsImprimir;
-                } catch (NoHayPapelException e) {
-                    e.printStackTrace();
-                    //errorImp = true;
-                    mostrarMensaje("No hay papel para imprimir.");
-                    //contadorImprimir = cantDocsImprimir;
-                } catch (VoltageBajoException e) {
-                    e.printStackTrace();
-                    //errorImp = true;
-                    mostrarMensaje("Error de batería baja. No podrá imprimir con la batería baja.");
-                    //contadorImprimir = cantDocsImprimir;
-                } catch (ErrorPapelException e) {
-                    e.printStackTrace();
-                    //errorImp = true;
-                    mostrarMensaje("Error en la impresora");
-                    //contadorImprimir = cantDocsImprimir;
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    ///errorImp = true;
-                    mostrarMensaje("Error al imprimir los datos. Si esto persiste, comuníquese con el encargado.");
-                    //  contadorImprimir = cantDocsImprimir;
-                }
-            }).start();
-        });
+                new Thread(() -> {
+                    try {
+                        imprimirFactura.imprimirFactura2();
+                    } catch (ImpresoraErrorException e) {
+                        e.printStackTrace();
+                        // errorImp = true;
+                        mostrarMensajeImpresora("Error en la impresora.");
+                        //contadorImprimir = cantDocsImprimir;
+                    } catch (NoHayPapelException e) {
+                        e.printStackTrace();
+                        //errorImp = true;
+                        mostrarMensajeImpresora("No hay papel para imprimir.");
+                        //contadorImprimir = cantDocsImprimir;
+                    } catch (VoltageBajoException e) {
+                        e.printStackTrace();
+                        //errorImp = true;
+                        mostrarMensajeImpresora("Error de batería baja. No podrá imprimir con la batería baja.");
+                        //contadorImprimir = cantDocsImprimir;
+                    } catch (ErrorPapelException e) {
+                        e.printStackTrace();
+                        //errorImp = true;
+                        mostrarMensajeImpresora("Error en la impresora");
+                        //contadorImprimir = cantDocsImprimir;
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        ///errorImp = true;
+                        mostrarMensajeImpresora("Error al imprimir los datos. Si esto persiste, comuníquese con el encargado.");
+                        //  contadorImprimir = cantDocsImprimir;
+                    }
+                }).start();
+            });
+        }
 
     }
-    private void mostrarMensaje(final String mensaje) {
-        try {
-            new AlertDialog.Builder(context)
-                    .setTitle("Atención")
-                    .setMessage(mensaje)
-                    .setPositiveButton("Aceptar", (dialog, which) -> {
-                        dialog.dismiss();
-                    }).show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+    private void mostrarMensajeImpresora(final String mensaje) {
+        // En un Adapter no existe isAdded(), usamos el context
+        if (context == null) return;
+
+        ((Activity) context).runOnUiThread(() -> {
+            try {
+                new android.app.AlertDialog.Builder(context) // Usar el context del adapter
+                        .setTitle("Atención")
+                        .setMessage(mensaje)
+                        .setCancelable(false)
+                        .setPositiveButton("Aceptar", (dialog, which) -> {
+                            dialog.dismiss();
+
+                        }).show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
     @Override
     public void terminoDeImprimir() {

@@ -106,22 +106,38 @@
                     android:text="Contraseña *"
                     android:textColor="@color/colorTexto" />
 
-                <com.beardedhen.androidbootstrap.BootstrapEditText
-                    android:id="@+id/etClave"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_vpn_key_black_24dp"
-                    android:hint="@string/prompt_password"
-                    android:text=""
-                    android:imeActionId="@+id/btnLoguear"
-                    android:imeActionLabel="@string/accion_loguear_peq"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:textColor="@color/colorTexto"
-                    app:bootstrapBrand="danger"
-                    app:bootstrapSize="lg"
-                    app:roundedCorners="true" />
+                    android:layout_height="wrap_content">
+
+                    <com.beardedhen.androidbootstrap.BootstrapEditText
+                        android:id="@+id/etClave"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_vpn_key_black_24dp"
+                        android:hint="@string/prompt_password"
+                        android:text=""
+                        android:imeActionId="@+id/btnLoguear"
+                        android:imeActionLabel="@string/accion_loguear_peq"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:textColor="@color/colorTexto"
+                        app:bootstrapBrand="danger"
+                        app:bootstrapSize="lg"
+                        app:roundedCorners="true" />
+
+                    <ImageButton
+                        android:id="@+id/btnVerClave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_visibility_black_24dp" />
+
+                </RelativeLayout>
 
             </LinearLayout>
         </ScrollView>
